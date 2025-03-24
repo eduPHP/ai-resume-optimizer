@@ -1,0 +1,36 @@
+{
+    "id": "chatcmpl-BEHp1dfqj2qsdOMaZmFjivlB1tUeU",
+    "object": "chat.completion",
+    "created": 1742744799,
+    "model": "gpt-4o-2024-08-06",
+    "choices": [
+        {
+            "index": 0,
+            "message": {
+                "role": "assistant",
+                "content": "```json\n{\n  \"resume\": \"<h1>Eduardo Fleck Dalla Vecchia</h1><p><strong>Independent Software Engineer</strong></p><ul><li>Website: <a href='http://rdo.blog.br'>rdo.blog.br</a></li><li>GitHub: <a href='http://github.com/eduPHP'>github.com/eduPHP</a></li><li>LinkedIn: <a href='http://linkedin.com/in/edu-php/'>linkedin.com/in/edu-php/</a></li><li>Location: Itapema, SC, Brazil</li><li>Email: <a href='mailto:eduphp83@gmail.com'>eduphp83@gmail.com</a></li><li>Phone: +55 54 98121 2631</li></ul><h2>Technical Skills</h2><ul><li>9+ years: PHP, MySQL</li><li>7+ years: Laravel, TDD, Git</li><li>6+ years: Vue, ES6, TypeScript</li><li>5 years: Docker, Bash Scripting</li><li>4 years: Tailwind, Alpine.js, Livewire</li><li>Other: Java, Clojure, Rust, React, React Native, C#</li></ul><h2>Personal Statement</h2><p>Experienced Full Stack Developer specializing in high-impact, contract-based projects. Since 2017, I have been delivering scalable software solutions across various industries, integrating payment gateways, and managing transactions exceeding $3M. Proficient in Laravel and its ecosystem, I excel in fast-paced remote settings, ensuring maintainable, high-performance applications through TDD, BDD, and clean code principles. Skilled in asynchronous collaboration across time zones.</p><h2>Work Experience</h2><ul><li><strong>Full Stack Engineer - s90 Technologies</strong>, San Francisco, CA (Remote) <em>May 2022 - Present</em><ul><li>Develop TALL stack applications for diverse industries including energy, water treatment, and insurance.</li><li>Maintain and enhance applications using Vue.js.</li><li><strong>Technologies:</strong> PHP, JavaScript, Redis, AWS S3, Livewire, Laravel, Tailwind, Alpine.js, Vue</li></ul></li><li><strong>Backend Engineer - Atlas Technologies</strong>, Pelotas, RS, Brazil (Remote) <em>December 2021 - April 2022</em><ul><li>Developed and maintained Laravel applications and microservices.</li><li>Enhanced automated testing, code reviews, and deployments to production.</li><li><strong>Technologies:</strong> Laravel, PHP, Vue, Docker, Jira</li></ul></li><li><strong>Project Leader - BuilderAll</strong>, Orlando, FL (Remote) <em>April 2021 - December 2021</em><ul><li>Managed and mentored a team of 5, ensuring excellence in performance, documentation, and client support.</li></ul></li><li><strong>Full Stack Developer - BuilderAll</strong>, Orlando, FL (Remote) <em>February 2018 - April 2021</em><ul><li>Built a payment platform supporting 12 payment gateways such as Stripe and PayPal.</li><li>Developed an advanced account/payments admin tool using REST and Vue.js.</li><li>Rebuilt a legacy payment system using microservices for reliability.</li><li><strong>Technologies:</strong> Laravel, PHP, Redis, Node, Vue, Tailwind CSS, TypeScript, WebSockets, Queues</li></ul></li><li><strong>Backend Developer - BuilderAll</strong>, Orlando, FL (Remote) <em>July 2017 - February 2018</em><ul><li>Developed marketplace tool backend using Laravel with automated tests.</li><li>Implemented PayPal split payments for commission distribution.</li><li><strong>Technologies:</strong> Laravel, PHP, Angular, Material CSS, PayPal</li></ul></li></ul><h2>Education & Certifications</h2><ul><li>Many Patterns and Software Architecture Courses, <strong>Laracasts (2024), Alura (2021)</strong></li><li>Bootcamp in Node.js Ecosystem, <strong>Rocketseat (2020)</strong></li><li>Bachelor in Systems Analysis and Development, <strong>University of Passo Fundo (UPF), 2015 - 2018</strong></li></ul><h2>Languages</h2><ul><li>English: Advanced (C1 - EF SET)</li><li>Portuguese: Native</li></ul><h2>Previous Experience</h2><ul><li><strong>Tech Lead - Base Informática</strong>, Soledade, RS, Brazil <em>March 2014 - July 2017</em></li><li><strong>Support Analyst - Coagrisol NET</strong>, Soledade, RS, Brazil <em>July 2011 - August 2013</em></li></ul><h2>Side Projects</h2><ul><li><strong>Laravel Ecosystem Contributor:</strong> Developed a Docker-based environment management tool.</li><li><strong>Biblioteka:</strong> Library management tool built with Laravel and Vue.js.</li><li><strong>RSS News Aggregator:</strong> Study project using Next.js, TailwindCSS, and MongoDB.</li></ul>\",\n  \"reasoning\": \"The improved resume is formatted with a clear section hierarchy, making it easier to quickly glean key details. It features a professional summary introducing Eduardo succinctly, aligning with the role's wizard unicorn ninja developer's expectations by emphasizing high-impact projects and expertise in advanced technologies. Technical skills are broken down into easily digestible categories, and specific achievements in each role are highlighted, better showcasing Eduardo\u2019s experience and impact. Formatting is consistent, with clear headers and bullet points to improve readability.\"\n}\n```",
+                "refusal": null,
+                "annotations": []
+            },
+            "logprobs": null,
+            "finish_reason": "stop"
+        }
+    ],
+    "usage": {
+        "prompt_tokens": 865,
+        "completion_tokens": 1056,
+        "total_tokens": 1921,
+        "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "audio_tokens": 0,
+            "accepted_prediction_tokens": 0,
+            "rejected_prediction_tokens": 0
+        }
+    },
+    "service_tier": "default",
+    "system_fingerprint": "fp_90d33c15d4"
+}
