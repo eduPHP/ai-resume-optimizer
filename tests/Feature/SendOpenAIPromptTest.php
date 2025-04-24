@@ -26,7 +26,7 @@ Resume:
     $response = $this->withToken($user->api_token)->postJson('api/optimize', [
         'content' => $content,
         'role_details' => $role_details,
-    ]);
+    ]); // updated
 
     $response->assertSuccessful();
 
