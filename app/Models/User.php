@@ -50,4 +50,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Resume::class);
     }
+
+    public function optimizations(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Optimization::class);
+    }
 }

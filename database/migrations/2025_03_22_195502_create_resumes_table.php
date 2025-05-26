@@ -16,9 +16,6 @@ return new class extends Migration
             $table->string('path');
 
             $table->text('detected_content')->nullable();
-            $table->text('role_details')->nullable();
-            $table->text('optimized_result')->nullable();
-            $table->text('reasoning')->nullable();
 
             $table->foreignIdFor(\App\Models\User::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
