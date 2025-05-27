@@ -73,6 +73,31 @@ const uploadResume = (page: Page, state: State, uploadedResume: File): AxiosProm
             state.loading = false;
         })
 }
+
+const updateAdditionalInformation = (page: Page, state: State) => {
+    state.loading = true
+
+    const axios = Axios(page)
+    const options: AxiosRequestConfig = {
+        headers: {
+            'X-CurrentStep': 2
+        }
+    }
+
+    axios.put(route('optimizations.update', state.form.optimizationId), state.form.additional, options).then(() => {
+        state.clearErrors()
+        state.nextStep()
+    })
+        .catch((error: any) => {
+            Object.keys(error.response.data.errors).forEach(key => {
+                state.form.errors[key] = error.response.data.errors[key][0]
+            })
+        })
+        .finally(() => {
+            state.loading = false
+        })
+}
+
 const updateResume = (page: Page, state: State) => {
     state.loading = true
 
@@ -98,4 +123,10 @@ const updateResume = (page: Page, state: State) => {
 }
 
 
-export { Axios, createOrUpdateOptimization, updateResume, uploadResume }
+export {
+    Axios,
+    createOrUpdateOptimization,
+    updateResume,
+    uploadResume,
+    updateAdditionalInformation
+}

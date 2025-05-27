@@ -31,6 +31,7 @@ class Optimization extends Model
             'make_grammatical_corrections' => 'boolean',
             'change_professional_summary' => 'boolean',
             'change_target_role' => 'boolean',
+            'mention_relocation_availability' => 'boolean',
         ];
     }
 }

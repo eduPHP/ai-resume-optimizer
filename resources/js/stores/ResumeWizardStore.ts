@@ -32,6 +32,11 @@ export type Optimization = {
     role_description: string;
     role_company: string;
     resume_id?: number;
+    role_location?: string;
+    make_grammatical_corrections: boolean;
+    change_professional_summary: boolean;
+    change_target_role: boolean;
+    mention_relocation_availability: boolean;
 }
 
 export type AdditionalInformationForm = {
@@ -128,6 +133,11 @@ export const useResumeWizardStore = defineStore('resume-wizard', {
             this.form.role.description = optimization.role_description;
             this.form.role.company = optimization.role_company;
             this.form.resume.id = optimization.resume_id;
+            this.form.additional.targetCountry = optimization.role_location ? optimization.role_location : '';
+            this.form.additional.makeGrammaticalCorrections = optimization.make_grammatical_corrections;
+            this.form.additional.changeProfessionalSummary = optimization.change_professional_summary;
+            this.form.additional.changeTargetRole = optimization.change_target_role;
+            this.form.additional.mentionRelocationAvailability = optimization.mention_relocation_availability;
         },
         nextStep() {
             this.step++

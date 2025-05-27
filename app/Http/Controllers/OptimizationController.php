@@ -15,7 +15,7 @@ class OptimizationController
         ]);
     }
 
-    public function update(Request $request, Optimization $optimization)
+    public function update(Request $request, Optimization $optimization): \Illuminate\Http\JsonResponse
     {
         // current step
         $step = (int) $request->header('X-CurrentStep');
@@ -30,7 +30,7 @@ class OptimizationController
 
         $optimization = $this->{$handlers[$step]}($request, $optimization);
 
-        return Inertia::render('ResumeWizard', [
+        return response()->json([
             'step' => $step,
             'optimization' => $optimization,
         ]);
@@ -94,7 +94,7 @@ class OptimizationController
         return $optimization->fresh();
     }
 
-    private function handleAdditionalInformation(Request $request, Optimization $optimization = null): Optimization
+    private function handleAdditionalInformation(Request $request, Optimization $optimization): Optimization
     {
         $request->validate([
             'makeGrammaticalCorrections' => 'boolean',
@@ -103,10 +103,21 @@ class OptimizationController
             'mentionRelocationAvailability' => 'boolean',
             'targetCountry' => 'nullable|string|max:30',
         ]);
+
+        $optimization->update([
+            'current_step' => 2,
+            'make_grammatical_corrections' => $request->input('makeGrammaticalCorrections'),
+            'change_professional_summary' => $request->input('changeProfessionalSummary'),
+            'change_target_role' => $request->input('changeTargetRole'),
+            'mention_relocation_availability' => $request->input('mentionRelocationAvailability'),
+            'role_location' => $request->input('targetCountry'),
+        ]);
+
+        return $optimization->fresh();
     }
 
-    private function handleCompletion(Request $request, Optimization $optimization = null): Optimization
+    private function handleCompletion(Request $request, Optimization $optimization): Optimization
     {
-        //
+        // send to AI agent
     }
 }
