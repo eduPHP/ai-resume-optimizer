@@ -20,6 +20,12 @@ return new class extends Migration
             $table->foreignIdFor(\App\Models\Resume::class)->nullable()->constrained()->cascadeOnDelete();
             $table->string('role_location')->nullable();
             $table->tinyInteger('current_step')->default(0);
+
+            $table->boolean('make_grammatical_corrections')->default(true);
+            $table->boolean('change_professional_summary')->default(true);
+            $table->boolean('change_target_role')->default(true);
+            $table->boolean('mention_relocation_availability')->default(false);
+
             $table->timestamps();
         });
     }

@@ -23,4 +23,14 @@ class Optimization extends Model
     {
         return $this->belongsTo(Resume::class);
     }
+
+    public function casts(): array
+    {
+        return [
+            'current_step' => 'boolean',
+            'make_grammatical_corrections' => 'boolean',
+            'change_professional_summary' => 'boolean',
+            'change_target_role' => 'boolean',
+        ];
+    }
 }
