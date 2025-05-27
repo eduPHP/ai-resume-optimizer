@@ -36,6 +36,7 @@ class ResumesController
 
     public function store(Request $request)
     {
+        sleep(5);
         $request->validate([
             'upload' => 'required|file|mimes:pdf,docx,doc|max:10240'
         ], [

@@ -1,44 +1,28 @@
 <script setup lang="ts">
-    import { UploadIcon } from 'lucide-vue-next';
-    import { useResumeWizardStore } from '@/stores/ResumeWizardStore';
+    import { UploadIcon, Loader } from 'lucide-vue-next';
+    import { useResumeWizardStore, Resume } from '@/stores/ResumeWizardStore';
     import { Buttons } from '@/components/ui/steps';
     import { useForm, usePage } from '@inertiajs/vue3';
     import { onBeforeMount, ref } from 'vue';
-    import { Axios, uploadResume } from '@/lib/axios';
+    import { Axios, uploadResume, updateResume } from '@/lib/axios';
     import InputError from '@/components/InputError.vue';
 
     const state = useResumeWizardStore()
-
-    type Resume = {
-        id: number,
-        name: string,
-        created: string,
-    }
+    const page = usePage()
 
     const resumes = ref<Resume[]>([])
     const uploadedFile = ref<File | null>(null)
+    const flashSuccess = ref(false)
 
     onBeforeMount(() => {
-        Axios(usePage()).get('/api/resumes').then(response => {
+        Axios(usePage()).get(route('resumes.index')).then(response => {
             resumes.value = response.data as Resume[]
             state.form.resume.id = response.data[0]?.id
         })
     })
 
     const submit = () => {
-        state.loading = true
-        // form.post(route('optimizations.store'), {
-        //     headers: {
-        //         'X-CurrentStep': state.step.toString(),
-        //     },
-        //     onSuccess: () => {
-        //         state.form.resume = form.data()
-        //         state.nextStep()
-        //     },
-        //     onFinish: () => {
-        //         state.loading = false
-        //     }
-        // });
+        updateResume(page, state)
     }
 
     type FileUploadEvent = Event & {
@@ -57,10 +41,13 @@
             return
         }
 
-
-        uploadResume(usePage(), state, uploadedResume).then(response => {
+        uploadResume(page, state, uploadedResume).then(response => {
             resumes.value.unshift(response.data as Resume);
             state.form.resume.id = response.data.id;
+            flashSuccess.value = true
+            setTimeout(() => {
+                flashSuccess.value = false
+            }, 3000)
         });
 
     }
@@ -85,12 +72,12 @@
             </ul>
             <InputError :message="state.form.errors.id" />
 
-            <label class="mt-6 flex flex-col gap-4 items-center justify-center py-12  dark:bg-[#363636] rounded-md border border-dashed cursor-pointer" :class="{
+            <label class="mt-6 flex flex-col gap-4 items-center justify-center py-12 dark:bg-[#363636] rounded-md border border-dashed cursor-pointer" :class="{
                 ' border-white/30 text-gray-400': ! state.form.errors.upload,
                 ' border-red-400 text-red-400': !! state.form.errors.upload,
             }">
-                <UploadIcon size="50" />
-                Drag or click here to upload a new resume.
+                <UploadIcon class="transition-colors duration-1000" :class="{'motion-safe:animate-bounce': state.loading, 'text-green-400': flashSuccess}" size="50" />
+                <span>Drag or click here to upload a new resume.</span>
                 <input type="file" class="sr-only" @input="handleResumeSubmit">
             </label>
             <InputError :message="state.form.errors.upload" />

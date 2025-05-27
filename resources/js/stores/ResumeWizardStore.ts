@@ -20,6 +20,12 @@ export type RoleForm = {
     description: string;
 }
 
+export type Resume = {
+    id: number,
+    name: string,
+    created: string,
+}
+
 export type Optimization = {
     id?: string;
     role_name: string;
