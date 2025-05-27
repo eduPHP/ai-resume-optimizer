@@ -44,7 +44,7 @@ class OptimizationControllerTest extends TestCase
         ]);
         $resume = \App\Models\Resume::factory()->create();
         $response = $this->withHeader('X-CurrentStep', 1)
-            ->actingAs($user = User::factory()->create())
+            ->actingAs($optimization->user)
             ->put('/optimizations/'.$optimization->id, [
                 'id' => $resume->id,
             ]);
@@ -53,12 +53,12 @@ class OptimizationControllerTest extends TestCase
 
         $this->assertDatabaseCount('optimizations', 1);
         $this->assertDatabaseHas('optimizations', [
-            'role_name' => 'Backend Engineer',
+            'id' => $optimization->id,
             'current_step' => '1',
-            'user_id' => $user->id,
+            'user_id' => $optimization->user_id,
             'resume_id' => $resume->id,
         ]);
 
-        $this->assertTrue($optimization->resume->is($resume));
+        $this->assertTrue($optimization->fresh()->resume->is($resume));
     }
 }

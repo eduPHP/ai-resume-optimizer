@@ -13,7 +13,7 @@ const Axios = (page: Page): AxiosInstance => {
     return instance;
 }
 
-const createOrUpdateOptimization = (page: Page, state: State) => {
+const createOrUpdateOptimization = (page: Page, state: State): AxiosPromise => {
     state.loading = true
 
     const axios = Axios(page)
@@ -40,6 +40,8 @@ const createOrUpdateOptimization = (page: Page, state: State) => {
         .finally(() => {
             state.loading = false
         })
+
+    return request
 }
 
 const uploadResume = (page: Page, state: State, uploadedResume: File): AxiosPromise => {

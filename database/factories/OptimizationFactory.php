@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,6 +18,7 @@ class OptimizationFactory extends Factory
     public function definition(): array
     {
         return [
+            'user_id' => User::factory(),
             'role_name' => fake()->randomElement(['Developer', 'Designer', 'Manager', 'Engineer']),
             'role_company' => fake()->company,
             'role_description' => fake()->text,

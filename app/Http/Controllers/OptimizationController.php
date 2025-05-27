@@ -54,6 +54,7 @@ class OptimizationController
         return response()->json([
             'step' => $step,
             'optimization' => $optimization,
+            'created' => $optimization->wasRecentlyCreated,
         ]);
     }
 
