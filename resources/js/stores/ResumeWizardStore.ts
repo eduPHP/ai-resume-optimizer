@@ -56,8 +56,8 @@ export type Form = {
 
 export const useResumeWizardStore = defineStore('resume-wizard', {
     state: (): State => ({
-        step: 1,
-        latestStep: 1,
+        step: 2,
+        latestStep: 2,
         loading: false,
         steps: [
             {

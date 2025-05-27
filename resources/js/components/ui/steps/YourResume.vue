@@ -1,8 +1,8 @@
 <script setup lang="ts">
-    import { UploadIcon, Loader } from 'lucide-vue-next';
+    import { UploadIcon } from 'lucide-vue-next';
     import { useResumeWizardStore, Resume } from '@/stores/ResumeWizardStore';
     import { Buttons } from '@/components/ui/steps';
-    import { useForm, usePage } from '@inertiajs/vue3';
+    import { usePage } from '@inertiajs/vue3';
     import { onBeforeMount, ref } from 'vue';
     import { Axios, uploadResume, updateResume } from '@/lib/axios';
     import InputError from '@/components/InputError.vue';
@@ -11,7 +11,6 @@
     const page = usePage()
 
     const resumes = ref<Resume[]>([])
-    const uploadedFile = ref<File | null>(null)
     const flashSuccess = ref(false)
 
     onBeforeMount(() => {
@@ -78,7 +77,7 @@
             }">
                 <UploadIcon class="transition-colors duration-1000" :class="{'motion-safe:animate-bounce': state.loading, 'text-green-400': flashSuccess}" size="50" />
                 <span>Drag or click here to upload a new resume.</span>
-                <input type="file" class="sr-only" @input="handleResumeSubmit">
+                <input type="file" :disabled="state.loading" class="sr-only" @input="handleResumeSubmit">
             </label>
             <InputError :message="state.form.errors.upload" />
         </div>
