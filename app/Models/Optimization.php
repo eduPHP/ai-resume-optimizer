@@ -27,11 +27,12 @@ class Optimization extends Model
     public function casts(): array
     {
         return [
-            'current_step' => 'boolean',
+            'current_step' => 'int',
             'make_grammatical_corrections' => 'boolean',
             'change_professional_summary' => 'boolean',
             'change_target_role' => 'boolean',
             'mention_relocation_availability' => 'boolean',
+            'status' => 'string',
         ];
     }
 }

@@ -23,7 +23,7 @@ class OpenAIPrompter implements AIAgentPrompter
                 ],
                 [
                     'role' => 'system',
-                    'content' => 'your answer will always consistently be in the following plain json format: {"resume": "html formatted resume, body content only, with basic tailwindcss like styling", "reasoning": "any addittion or commentary you want to express"}',
+                    'content' => 'your answer will always consistently be in the following plain json format: {"resume": "html formatted resume, body content only, with basic tailwindcss like styling", "reasoning": "any addition or commentary you want to express"}',
                 ],
                 [
                     'role' => 'user',

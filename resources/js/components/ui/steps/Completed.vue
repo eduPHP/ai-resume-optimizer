@@ -2,11 +2,17 @@
 import { CheckCircle } from 'lucide-vue-next';
 import { Buttons } from '@/components/ui/steps';
 import { useResumeWizardStore } from '@/stores/ResumeWizardStore';
+import { usePage } from '@inertiajs/vue3';
+import { completeWizard } from '@/lib/axios';
 
 const state = useResumeWizardStore()
 
 const finish = () => {
-    console.log('completed', state.form)
+    completeWizard(usePage(), state).then(response => {
+        console.log('completed', response)
+        state.setOptimization(response.data.optimization)
+        state.form.status = 'completed'
+    })
 }
 
 </script>

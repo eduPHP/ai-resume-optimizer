@@ -122,11 +122,33 @@ const updateResume = (page: Page, state: State) => {
         })
 }
 
+const completeWizard = (page: Page, state: State) => {
+    state.loading = true
+
+    const axios = Axios(page)
+    const options: AxiosRequestConfig = {
+        headers: {
+            'X-CurrentStep': 3
+        }
+    }
+
+    return axios.put(route('optimizations.update', state.form.optimizationId), {}, options)
+        .catch((error: any) => {
+            Object.keys(error.response.data.errors).forEach(key => {
+                state.form.errors[key] = error.response.data.errors[key][0]
+            })
+        })
+        .finally(() => {
+            state.loading = false
+        })
+}
+
 
 export {
     Axios,
     createOrUpdateOptimization,
     updateResume,
     uploadResume,
-    updateAdditionalInformation
+    updateAdditionalInformation,
+    completeWizard,
 }

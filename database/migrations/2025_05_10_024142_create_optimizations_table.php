@@ -26,6 +26,11 @@ return new class extends Migration
             $table->boolean('change_target_role')->default(true);
             $table->boolean('mention_relocation_availability')->default(false);
 
+            $table->string('status')->default('pending');
+
+            $table->text('optimized_result')->nullable();
+            $table->text('reasoning')->nullable();
+
             $table->timestamps();
         });
     }

@@ -4,7 +4,7 @@ import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
 import { Steps } from '../components/ui/steps';
 import { useResumeWizardStore, Optimization } from '@/stores/ResumeWizardStore';
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue';
 
 const props = defineProps({
     step: {
@@ -18,19 +18,30 @@ const props = defineProps({
 })
 const state = useResumeWizardStore()
 
-onMounted(() => {
-    if (props.optimization) {
-        state.setOptimization(props.optimization as Optimization)
-    }
-})
 
-const breadcrumbs: BreadcrumbItem[] = [
+const breadcrumbs = ref<BreadcrumbItem[]>([
     {
         title: 'New Optimization',
         href: '/optimizations/create',
     },
-];
+]);
 
+onMounted(() => {
+    if (props.optimization) {
+        state.setOptimization(props.optimization as Optimization)
+        breadcrumbs.value = [
+            {
+                title: 'Optimizations',
+                href: '#',
+            },
+
+            {
+                title: state.form.role.company,
+                href: '/optimizations/'+state.form.optimizationId,
+            },
+        ]
+    }
+})
 
 </script>
 
@@ -39,9 +50,12 @@ const breadcrumbs: BreadcrumbItem[] = [
 
     <AppLayout :breadcrumbs="breadcrumbs">
 
-        <div class="mx-auto flex h-full w-[950px] flex-1 flex-col gap-4 rounded-xl p-4">
+        <div v-show="state.form.status !== 'completed'" class="mx-auto flex h-full w-[950px] flex-1 flex-col gap-4 rounded-xl p-4">
             <Steps />
             <component :is="{...state.currentStep.stepComponent}" />
+        </div>
+        <div v-show="state.form.status === 'completed'" class="mx-auto flex h-full w-[950px] flex-1 flex-col gap-4 rounded-xl p-4">
+            Option
         </div>
     </AppLayout>
 </template>

@@ -37,6 +37,8 @@ export type Optimization = {
     change_professional_summary: boolean;
     change_target_role: boolean;
     mention_relocation_availability: boolean;
+    current_step: number;
+    status: string;
 }
 
 export type AdditionalInformationForm = {
@@ -49,6 +51,7 @@ export type AdditionalInformationForm = {
 
 export type Form = {
     optimizationId: string | undefined;
+    status: string;
     role: RoleForm;
     resume: {
         id: number | undefined;
@@ -61,8 +64,8 @@ export type Form = {
 
 export const useResumeWizardStore = defineStore('resume-wizard', {
     state: (): State => ({
-        step: 2,
-        latestStep: 2,
+        step: 0,
+        latestStep: 0,
         loading: false,
         steps: [
             {
@@ -84,6 +87,7 @@ export const useResumeWizardStore = defineStore('resume-wizard', {
         ],
 
         form: {
+            status: 'pending',
             optimizationId: undefined,
             role: {
                 company: '',
@@ -128,6 +132,8 @@ export const useResumeWizardStore = defineStore('resume-wizard', {
             this.form.errors[key] = message;
         },
         setOptimization(optimization: Optimization) {
+            this.step = optimization.current_step || 0;
+            this.latestStep = optimization.current_step || 0;
             this.form.optimizationId = optimization.id;
             this.form.role.name = optimization.role_name;
             this.form.role.description = optimization.role_description;
@@ -138,6 +144,7 @@ export const useResumeWizardStore = defineStore('resume-wizard', {
             this.form.additional.changeProfessionalSummary = optimization.change_professional_summary;
             this.form.additional.changeTargetRole = optimization.change_target_role;
             this.form.additional.mentionRelocationAvailability = optimization.mention_relocation_availability;
+            this.form.status = optimization.status;
         },
         nextStep() {
             this.step++

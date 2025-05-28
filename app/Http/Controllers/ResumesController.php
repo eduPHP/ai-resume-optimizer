@@ -17,18 +17,7 @@ class ResumesController
             'href' => route('resumes.show', $resume),
             'name' => $resume->name,
             'created' => $resume->created_at->format('Y-m-d g:i A'),
-        ]);
-
-        if ($request->has('grouped')) {
-            $resumes = $resumes->map(function ($resume) {
-                return [
-                    ...$resume,
-                    'group' => $this->getDayGroup($resume['created']),
-                ];
-            })->groupBy('group');
-        } else {
-            $resumes = $resumes->values();
-        }
+        ])->values();
 
         // dd($resumes);
         return response()->json($resumes);
@@ -36,7 +25,7 @@ class ResumesController
 
     public function store(Request $request)
     {
-        sleep(5);
+        // sleep(5);
         $request->validate([
             'upload' => 'required|file|mimes:pdf,docx,doc|max:10240'
         ], [
