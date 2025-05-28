@@ -11,7 +11,7 @@ const finish = () => {
     completeWizard(usePage(), state).then(response => {
         console.log('completed', response)
         state.setOptimization(response.data.optimization)
-        state.form.status = 'completed'
+        state.form.status = 'complete'
     })
 }
 

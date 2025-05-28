@@ -50,11 +50,11 @@ onMounted(() => {
 
     <AppLayout :breadcrumbs="breadcrumbs">
 
-        <div v-show="state.form.status !== 'completed'" class="mx-auto flex h-full w-[950px] flex-1 flex-col gap-4 rounded-xl p-4">
+        <div v-show="state.form.status !== 'complete'" class="mx-auto flex h-full w-[950px] flex-1 flex-col gap-4 rounded-xl p-4">
             <Steps />
             <component :is="{...state.currentStep.stepComponent}" />
         </div>
-        <div v-show="state.form.status === 'completed'" class="mx-auto flex h-full w-[950px] flex-1 flex-col gap-4 rounded-xl p-4">
+        <div v-show="state.form.status === 'complete'" class="mx-auto flex h-full w-[950px] flex-1 flex-col gap-4 rounded-xl p-4">
             Option
         </div>
     </AppLayout>
