@@ -3,7 +3,7 @@
 namespace Modules\OpenAI;
 
 
-use App\Contracts\AIAgentPrompter;
+use App\DTO\Contracts\AIAgentPrompter;
 use Illuminate\Support\ServiceProvider;
 
 class OpenAIServiceProvider extends ServiceProvider

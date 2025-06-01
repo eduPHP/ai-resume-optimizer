@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Contracts\AIAgentPrompter;
+use App\DTO\AIInputOptions;
+use App\DTO\Contracts\AIAgentPrompter;
 use App\Models\Optimization;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -179,34 +180,18 @@ class OptimizationController
     {
         $content = $optimization->resume->detected_content;
 
-        $prompt = "
-Please improve the following resume, following the {$optimization->role_location} pattern and best practices for a higher employee selection rate,
-";
-        if ($optimization->make_grammatical_corrections) {
-            $prompt .= "Make grammatical corrections,
-";
-        }
-        if ($optimization->change_professional_summary) {
-            $prompt .= "Replace the Professional Summary section with a role specific summary emphasizing the candidate's strengths (keep the title),
-";
-        }
-        if ($optimization->change_target_role) {
-            $prompt .= "Replace the Target Role with: {$optimization->role_name},
-";
-        }
-        if ($optimization->mention_relocation_availability) {
-            $prompt .= "Add \"Available for remote work or relocation to [country] through visa sponsorship\" where the country is: {$optimization->role_location},
-";
-        }
-        $prompt .= "Company: {$optimization->role_company}
-Role:
-{$optimization->role_description}
+        /** @var AIAgentPrompter $prompter */
+        $prompter = app()->make(AIAgentPrompter::class);
 
-Resume:
-{$content}
-";
-
-        $agentResponse = app()->make(AIAgentPrompter::class)->handle($prompt);
+        $agentResponse = $prompter->handle($content, new AIInputOptions(
+            makeGrammaticalCorrections: $optimization->make_grammatical_corrections,
+            changeProfessionalSummary: $optimization->change_professional_summary,
+            changeTargetRole: $optimization->change_target_role,
+            mentionRelocationAvailability: $optimization->mention_relocation_availability,
+            roleName: $optimization->role_name,
+            roleLocation: $optimization->role_location,
+            roleCompany: $optimization->role_company
+        ));
 
         return [
             'prompt' => $prompt,

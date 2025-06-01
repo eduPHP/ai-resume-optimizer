@@ -2,7 +2,7 @@
 
 namespace Modules\OpenAI;
 
-use App\Contracts\AIResponseDTO;
+use App\DTO\Contracts\AIResponseDTO;
 
 class OpenAiResponse implements AIResponseDTO
 {

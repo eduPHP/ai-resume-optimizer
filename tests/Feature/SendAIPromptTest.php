@@ -1,9 +1,8 @@
 <?php
 
-use App\Contracts\AIAgentPrompter;
-use Illuminate\Support\Facades\Http;
+use App\DTO\Contracts\AIAgentPrompter;
 
-class FakeAIResponse implements \App\Contracts\AIResponseDTO {
+class FakeAIResponse implements \App\DTO\Contracts\AIResponseDTO {
 
     public function getResponse(): string
     {
@@ -18,7 +17,7 @@ class FakeAIResponse implements \App\Contracts\AIResponseDTO {
 
 class AiAgentPrompterStub implements AiAgentPrompter {
 
-    public function handle(string $prompt): \App\Contracts\AIResponseDTO
+    public function handle(string $prompt): \App\DTO\Contracts\AIResponseDTO
     {
         return new FakeAIResponse;
     }

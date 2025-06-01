@@ -7,6 +7,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property bool $make_grammatical_corrections
+ * @property bool $change_professional_summary
+ * @property bool $change_target_role
+ * @property bool $mention_relocation_availability
+ * @property string $role_name
+ * @property string $role_location
+ * @property string $role_company
+ */
 class Optimization extends Model
 {
     /** @use HasFactory<\Database\Factories\OptimizationFactory> */
