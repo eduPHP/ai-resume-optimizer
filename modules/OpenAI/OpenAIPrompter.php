@@ -36,7 +36,7 @@ class OpenAIPrompter implements AIAgentPrompter
                 ...$options,
                 [
                     'role' => 'user',
-                    'content' => "Please improve the resume, following the {$options->roleLocation} pattern and best practices for a higher employee selection rate",
+                    'content' => "Please improve the resume, following {$options->roleLocation}'s pattern and best practices for a higher employee selection rate",
                 ],
             ]
         ]);

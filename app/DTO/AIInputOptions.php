@@ -33,11 +33,11 @@ class AIInputOptions implements Arrayable, IteratorAggregate
             ] : false,
             $this->mentionRelocationAvailability ? [
                 'role' => 'system',
-                'content' => "Should add \"Available for remote work or relocation to [country] through visa sponsorship\" where the country is: {$this->roleLocation}"
+                'content' => "at the bottom, should add \"Available for remote work or relocation to [country] through visa sponsorship\" where the country is: {$this->roleLocation}"
             ] : false,
             $this->makeGrammaticalCorrections ? [
                 'role' => 'system',
-                'content' => 'Should make grammatical corrections'
+                'content' => 'should make grammatical corrections'
             ] : false,
         ];
 
