@@ -45,6 +45,7 @@ onMounted(() => {
                 href: '/optimizations/'+state.form.optimizationId,
             },
         ]
+        document.title = state.form.role.company + ' - ' + state.form.role.name + ' - Resume Optimization'
     }
     if (props.optimization && state.form.status === 'complete') {
         const score = state.form.response.compatibility_score;

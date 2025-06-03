@@ -13,7 +13,15 @@ class DownloadOptimizedResumeController
         $pdf = Pdf::setBasePath(public_path())->loadView('pdfs.optimized-resume', ['optimization' => $optimization]);
         $date = now()->format('Y-m-d H:i');
 
-        return $pdf->download("Resume {$optimization->role_name} - {$optimization->role_company} {$date}.pdf");
+        $request->headers->set('Content-Type', 'application/pdf');
+        $filename = "Resume {$optimization->role_name} - {$optimization->role_company} {$date}.pdf";
+
+        $result = $pdf->download($filename);
+
+        $result->header('Content-Type', 'application/pdf');
+        $result->header('Content-Disposition', 'attachment; filename="'.$filename.'"');
+
+        return $result;
     }
 
     public function sample(): \Illuminate\Contracts\View\View
