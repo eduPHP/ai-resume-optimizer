@@ -26,6 +26,21 @@ export type Resume = {
     created: string,
 }
 
+type Alignment = {
+    title: string;
+    description: string;
+}
+
+type AIResponse = {
+    resume: string;
+    compatibility_score: number;
+    professional_summary: string;
+    strong_alignments: Alignment[];
+    moderate_gaps: Alignment[];
+    missing_requirements: Alignment[];
+    reasoning: string;
+}
+
 export type Optimization = {
     id?: string;
     role_name: string;
@@ -39,6 +54,7 @@ export type Optimization = {
     mention_relocation_availability: boolean;
     current_step: number;
     status: string;
+    ai_response: AIResponse;
 }
 
 export type AdditionalInformationForm = {
@@ -59,7 +75,8 @@ export type Form = {
     additional: AdditionalInformationForm;
     errors: {
         [key: string]: string | undefined;
-    }
+    },
+    response: AIResponse;
 }
 
 export const useResumeWizardStore = defineStore('resume-wizard', {
@@ -102,7 +119,8 @@ export const useResumeWizardStore = defineStore('resume-wizard', {
                 mentionRelocationAvailability: false,
                 targetCountry: ''
             },
-            errors: {}
+            errors: {},
+            response: {} as AIResponse,
         },
     }),
 
@@ -145,6 +163,7 @@ export const useResumeWizardStore = defineStore('resume-wizard', {
             this.form.additional.changeTargetRole = optimization.change_target_role;
             this.form.additional.mentionRelocationAvailability = optimization.mention_relocation_availability;
             this.form.status = optimization.status;
+            this.form.response = optimization.ai_response;
         },
         nextStep() {
             this.step++
@@ -163,3 +182,5 @@ export const useResumeWizardStore = defineStore('resume-wizard', {
         },
     },
 })
+
+export type ResumeWizardStore = ReturnType<typeof useResumeWizardStore>

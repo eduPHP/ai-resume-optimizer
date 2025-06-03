@@ -1,9 +1,33 @@
-import { Page } from '@inertiajs/core';
+import { Page, PageProps } from '@inertiajs/core';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosPromise, AxiosResponse } from 'axios';
-import { Optimization, State, Resume } from '@/stores/ResumeWizardStore';
+import { Optimization, ResumeWizardStore, Resume } from '@/stores/ResumeWizardStore';
+interface User {
+    id: number;
+    name: string;
+    email: string;
+    api_token: string;
+}
 
-const Axios = (page: Page): AxiosInstance => {
-    const token = page.props.auth?.user.api_token
+interface AuthProps {
+    user?: User | undefined;
+}
+interface AppPageProps extends PageProps {
+    auth?: AuthProps | undefined;
+}
+
+type AppPage = Page<AppPageProps>;
+
+const getAuthToken = (page: AppPage): string => {
+    if (!page.props.auth?.user) {
+        return '';
+    }
+
+    const token = page.props.auth.user.api_token;
+    return token ? `Bearer ${token}` : '';
+};
+
+const Axios = (page: AppPage): AxiosInstance => {
+    const token = getAuthToken(page);
 
     const instance: AxiosInstance = axios.create()
 
@@ -13,7 +37,7 @@ const Axios = (page: Page): AxiosInstance => {
     return instance;
 }
 
-const createOrUpdateOptimization = (page: Page, state: State): AxiosPromise<AxiosResponse<{optimization: Optimization, created: boolean}>> => {
+const createOrUpdateOptimization = (page: Page, state: ResumeWizardStore): AxiosPromise<AxiosResponse<{optimization: Optimization, created: boolean}>> => {
     state.loading = true
 
     const axios = Axios(page)
@@ -44,7 +68,7 @@ const createOrUpdateOptimization = (page: Page, state: State): AxiosPromise<Axio
     return request
 }
 
-const uploadResume = (page: Page, state: State, uploadedResume: File): AxiosPromise<Resume> => {
+const uploadResume = (page: Page, state: ResumeWizardStore, uploadedResume: File): AxiosPromise<Resume> => {
     state.loading = true
 
     if (!uploadedResume) {
@@ -74,7 +98,7 @@ const uploadResume = (page: Page, state: State, uploadedResume: File): AxiosProm
         })
 }
 
-const updateAdditionalInformation = (page: Page, state: State) => {
+const updateAdditionalInformation = (page: Page, state: ResumeWizardStore) => {
     state.loading = true
 
     const axios = Axios(page)
@@ -98,7 +122,7 @@ const updateAdditionalInformation = (page: Page, state: State) => {
         })
 }
 
-const updateResume = (page: Page, state: State) => {
+const updateResume = (page: Page, state: ResumeWizardStore) => {
     state.loading = true
 
     const axios = Axios(page)
@@ -122,7 +146,7 @@ const updateResume = (page: Page, state: State) => {
         })
 }
 
-const completeWizard = (page: Page, state: State) => {
+const completeWizard = (page: Page, state: ResumeWizardStore) => {
     state.loading = true
 
     const axios = Axios(page)
@@ -143,6 +167,26 @@ const completeWizard = (page: Page, state: State) => {
         })
 }
 
+/* Credits: https://stackoverflow.com/a/75039478/29766047 */
+const downloadPDF: (page: Page, state: ResumeWizardStore) => Promise<void> = (page: Page, state: ResumeWizardStore) => {
+    const axios = Axios(page)
+
+    const options: AxiosRequestConfig = {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        responseType: 'blob',
+    }
+    return axios.post(`/api/download-optimized/${state.form.optimizationId}`, {}, options).then(function (response) {
+        const a = document.createElement('a');
+        a.href = window.URL.createObjectURL(response.data);
+        a.download = `resume.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    });
+};
+
 
 export {
     Axios,
@@ -151,4 +195,5 @@ export {
     uploadResume,
     updateAdditionalInformation,
     completeWizard,
+    downloadPDF,
 }

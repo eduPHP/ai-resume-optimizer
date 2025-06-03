@@ -169,7 +169,8 @@ class OptimizationController
         // show processing page
         $optimization->update([
             'status' => 'complete',
-            'optimized_result' => $result['response'],
+            'optimized_result' => $result['resume'],
+            'ai_response' => $result['response'],
             'reasoning' => $result['reasoning'],
         ]);
 
@@ -194,8 +195,8 @@ class OptimizationController
         ));
 
         return [
-            'prompt' => $prompt,
-            'response' => $agentResponse->getResponse(),
+            'response' => $agentResponse->toArray(),
+            'resume' => $agentResponse->getResume(),
             'reasoning' => $agentResponse->getReasoning(),
         ];
     }

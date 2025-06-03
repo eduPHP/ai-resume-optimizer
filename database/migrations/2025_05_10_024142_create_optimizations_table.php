@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('status')->default('pending');
 
             $table->text('optimized_result')->nullable();
+            $table->json('ai_response')->nullable();
             $table->text('reasoning')->nullable();
 
             $table->timestamps();

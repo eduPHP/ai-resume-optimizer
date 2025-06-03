@@ -2,9 +2,9 @@
 
 use App\DTO\Contracts\AIAgentPrompter;
 
-class FakeAIResponse implements \App\DTO\Contracts\AIResponseDTO {
+class FakeAIResponse implements \App\DTO\Contracts\AIResponseDTO, \Illuminate\Contracts\Support\Arrayable {
 
-    public function getResponse(): string
+    public function getResume(): string
     {
         return "All looks great for me, no need to change anything at all.";
     }
@@ -12,6 +12,36 @@ class FakeAIResponse implements \App\DTO\Contracts\AIResponseDTO {
     public function getReasoning(): string
     {
         return 'Beer drinking is such a great skill to have on a job interview.';
+    }
+
+    public function getCompatibilityScore(): string
+    {
+        return "";
+    }
+
+    public function getProfessionalSummary(): string
+    {
+        return "";
+    }
+
+    public function getStrongAlignments(): array
+    {
+        return [];
+    }
+
+    public function getModerateGaps(): array
+    {
+        return [];
+    }
+
+    public function getMissingRequirements(): array
+    {
+        return [];
+    }
+
+    public function toArray(): array
+    {
+        return [];
     }
 }
 
@@ -48,5 +78,5 @@ Resume:
     $response->assertSuccessful();
 
     $this->assertStringContainsString($prompt, $response->json('prompt'));
-    $this->assertStringContainsString((new FakeAIResponse)->getResponse(), $response->json('response'));
+    $this->assertStringContainsString((new FakeAIResponse)->getResume(), $response->json('response'));
 });

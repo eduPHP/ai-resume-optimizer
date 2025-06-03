@@ -42,6 +42,7 @@ class Optimization extends Model
             'change_target_role' => 'boolean',
             'mention_relocation_availability' => 'boolean',
             'status' => 'string',
+            'ai_response' => 'json',
         ];
     }
 }

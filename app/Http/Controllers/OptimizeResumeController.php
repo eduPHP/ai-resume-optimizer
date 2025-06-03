@@ -27,13 +27,13 @@ Resume:
 
         $resume->update([
             'role_details' => $role_details,
-            'optimized_result' => $agentResponse->getResponse(),
+            'optimized_result' => $agentResponse->getResume(),
             'reasoning' => $agentResponse->getReasoning(),
         ]);
 
         return response()->json([
             'prompt' => $prompt,
-            'response' => $agentResponse->getResponse(),
+            'response' => $agentResponse->getResume(),
             'reasoning' => $agentResponse->getReasoning(),
         ]);
     }

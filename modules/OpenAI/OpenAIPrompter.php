@@ -28,22 +28,56 @@ class OpenAIPrompter implements AIAgentPrompter
                 ],
                 [
                     'role' => 'system',
-                    'content' => 'your answer will always consistently be in the following plain json format: {
-                      "resume": "html formatted resume, body content only, with basic tailwindcss like styling",
+                    'content' => '
+                        contact information should be kept in one like separated by a pipe symbol: |
+                        sections should have a consistent format with the following template: <h2 class="section-title">Section Title</h2><div>Section Content</div>
+                        title (name) should have a consistent format with the following template: <h1 class="name">Full Name</h1><h3 class"job-title">Job Title</h3>
+                        experience should have a consistent format with the following template: <h3 class="exp-title">Title</h3><p class"exp-period">place and period</p><ul>Description</ul>',
+                ],
+                [
+                    'role' => 'system',
+                    'content' => 'your answer will always consistently and strictly be in the following plain json format: {
+                      "resume": "html formatted resume, body content only, with basic styling",
+                      "compatibility_score": "a compatibility percentage score from 0 to 100, i.e. 90",
+                      "professional_summary": "same professional summary returned on the resume",
+                      "strong_alignments": [
+                        {
+                            "title": "strong alignment title",
+                            "description": "strong alignment description"
+                        {
+                            "title": "another strong alignment title",
+                            "description": "another strong alignment description"
+                        },
+                        ...remaining strong alignments
+                      ],
+                      "moderate_gaps": [
+                        {
+                            "title": "moderate gap title",
+                            "description": "moderate gap description"
+                        },
+                        ...remaining moderate gaps
+                      ],
+                      "missing_requirements": [
+                        {
+                            "title": "missing requirement title",
+                            "description": "missing requirement description"
+                        },
+                        ...remaining missing requirements
+                      ],
                       "reasoning": "any addition or commentary you want to express"
                     }',
                 ],
                 ...$options,
                 [
                     'role' => 'user',
-                    'content' => "Please improve the resume, following {$options->roleLocation}'s pattern and best practices for a higher employee selection rate",
+                    'content' => "Please improve the resume, following {$options->roleLocation}'s pattern and best practices for a higher employee selection rate, reorganize the sections according with the country's requirements and keep the title.",
                 ],
             ]
         ]);
 
-        $answer = $this->cleanup($response->json('choices.0.message.content'));
-
-        return new OpenAiResponse($answer['resume'], $answer['reasoning']);
+        return new OpenAiResponse(
+            ...$this->cleanup($response->json('choices.0.message.content'))
+        );
     }
 
     private function cleanup(string $response): array
