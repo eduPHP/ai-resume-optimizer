@@ -13,6 +13,8 @@ In short, tailoring your resume is a strategic move that not only increases your
 
 ## Requirements
 
+> This app required poppler to read the uploaded resume content and save your AI agent usage tokens
+
 Ubuntu or Debian:
 
 ```apt-get install poppler-utils```
@@ -24,3 +26,16 @@ On a mac:
 If you're on RedHat, CentOS, Rocky Linux or Fedora:
 
 ```yum install poppler-utils```
+
+## Installation
+
+```composer install```
+
+```php artisan key:generate && php artisan migrate --seed```
+
+```npm run build```
+
+```php artisan serve```
+
+
+access: http://localhost:8000
