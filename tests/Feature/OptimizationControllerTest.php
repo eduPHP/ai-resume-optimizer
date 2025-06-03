@@ -28,7 +28,7 @@ class OptimizationControllerTest extends TestCase
             'role_name' => 'Backend Engineer',
             'role_company' => 'Laravel',
             'role_description' => 'Lore Ipsum!',
-            'current_step' => '0',
+            'current_step' => '1',
             'user_id' => $user->id,
         ]);
 
@@ -54,7 +54,7 @@ class OptimizationControllerTest extends TestCase
         $this->assertDatabaseCount('optimizations', 1);
         $this->assertDatabaseHas('optimizations', [
             'id' => $optimization->id,
-            'current_step' => '1',
+            'current_step' => '2',
             'user_id' => $optimization->user_id,
             'resume_id' => $resume->id,
         ]);

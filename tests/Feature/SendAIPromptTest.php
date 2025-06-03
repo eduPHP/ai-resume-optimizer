@@ -47,7 +47,7 @@ class FakeAIResponse implements \App\DTO\Contracts\AIResponseDTO, \Illuminate\Co
 
 class AiAgentPrompterStub implements AiAgentPrompter {
 
-    public function handle(string $prompt): \App\DTO\Contracts\AIResponseDTO
+    public function handle(string $resume, \App\DTO\AIInputOptions $options): \App\DTO\Contracts\AIResponseDTO
     {
         return new FakeAIResponse;
     }
