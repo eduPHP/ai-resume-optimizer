@@ -3,20 +3,20 @@ import InputError from '@/components/InputError.vue';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { OptimizationType, useResumeWizardStore } from '@/stores/ResumeWizardStore';
+import { OptimizationType, useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
 import { Buttons } from '@/components/ui/steps';
 import { createOrUpdateOptimization } from '@/lib/axios';
 import { usePage } from '@inertiajs/vue3';
 
-const state = useResumeWizardStore()
+const state = useOptimizationWizardStore()
 const page = usePage()
-
 
 const submit = () => {
     createOrUpdateOptimization(page, state).then(response => {
         if (response.data.created) {
             state.setOptimization(response.data.optimization as OptimizationType)
             window?.history.pushState({},"", route('optimizations.show', response.data.optimization.id) );
+            document?.dispatchEvent(new CustomEvent('optimization-created', { detail: state.form.optimizationId }))
         }
     })
 }

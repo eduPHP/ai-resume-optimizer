@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { AdditionalInformation, Completed, RoleInformation, YourResume } from '@/components/ui/steps';
 import { Component } from 'vue';
+
 type Step = {
     name: string;
     stepComponent: Component;
@@ -10,6 +11,7 @@ export type State = {
     step: number;
     latestStep: number;
     loading: boolean;
+    pageTitle: string;
     steps: Step[];
     form: Form;
 }
@@ -35,6 +37,7 @@ type AIResponse = {
     resume: string;
     compatibility_score: number;
     professional_summary: string;
+    cover_letter: string[];
     strong_alignments: Alignment[];
     moderate_gaps: Alignment[];
     missing_requirements: Alignment[];
@@ -79,11 +82,12 @@ export type Form = {
     response: AIResponse;
 }
 
-export const useResumeWizardStore = defineStore('resume-wizard', {
+export const useOptimizationWizardStore = defineStore('resume-wizard', {
     state: (): State => ({
         step: 0,
         latestStep: 0,
         loading: false,
+        pageTitle: 'New Optimization',
         steps: [
             {
                 name: 'Role Information',
@@ -164,6 +168,9 @@ export const useResumeWizardStore = defineStore('resume-wizard', {
             this.form.additional.mentionRelocationAvailability = optimization.mention_relocation_availability;
             this.form.status = optimization.status;
             this.form.response = optimization.ai_response;
+            if (optimization.id) {
+                this.pageTitle = optimization.role_company + ' - ' + optimization.role_name + ' - Resume Optimization'
+            }
         },
         nextStep() {
             this.step++
@@ -183,4 +190,4 @@ export const useResumeWizardStore = defineStore('resume-wizard', {
     },
 })
 
-export type ResumeWizardStore = ReturnType<typeof useResumeWizardStore>
+export type OptimizationWizardStore = ReturnType<typeof useOptimizationWizardStore>

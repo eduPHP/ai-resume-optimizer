@@ -49,7 +49,7 @@ class OptimizationController
         return 'Previous Days';
     }
 
-    public function show(Request $request, Optimization $optimization): \Inertia\Response
+    public function show(Optimization $optimization): \Inertia\Response
     {
         return Inertia::render('Optimization', [
             'optimization' => $optimization,

@@ -4,10 +4,10 @@ import { completeWizard, downloadPDF } from '@/lib/axios';
 import { Button } from '@/components/ui/button';
 import { Edit, File, Recycle } from 'lucide-vue-next';
 import { usePage } from '@inertiajs/vue3';
-import { useResumeWizardStore } from '@/stores/ResumeWizardStore';
+import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
 import { onMounted, ref } from 'vue';
 
-const state = useResumeWizardStore()
+const state = useOptimizationWizardStore()
 const page = usePage();
 const compatibilityPercentageStyle = ref<string>('')
 
@@ -38,11 +38,13 @@ const enableEdit = () => {
 const regenerate = () => {
     state.loading = true;
 
-    completeWizard(page, state).then(() => {
-        state.form.status = 'complete';
+    completeWizard(page, state).then((response) => {
+        state.setOptimization(response.data.optimization)
+        state.form.status = 'complete'
         setupOptimization()
     })
 }
+
 </script>
 
 <template>
@@ -54,7 +56,7 @@ const regenerate = () => {
             <h2 class="mt-6 font-bold">Role Specific Professional Summary</h2>
             <p class="text-gray-400">{{ state.form.response.professional_summary }}</p>
 
-            <hr class="my-8 max-w-xl border-t border-gray-300">
+            <hr class="my-8 mx-auto max-w-xl border-t border-gray-300 dark:border-gray-500">
 
             <h4 class="mt-4">Compatibility score: <span class="font-bold" :class="compatibilityPercentageStyle">{{state.form.response.compatibility_score}}%</span> Match</h4>
             <h2 class="mt-4 font-bold">Strong Alignments:</h2>
@@ -83,6 +85,13 @@ const regenerate = () => {
                         <span class="block text-red-400/70">{{ missing.description }}</span>
                     </li>
                 </ul>
+            </div>
+
+            <hr class="my-8 mx-auto max-w-xl border-t border-gray-300 dark:border-gray-500">
+
+            <h2 v-if="state.form.response.cover_letter.length" class="mt-6 font-bold">Cover Letter:</h2>
+            <div v-for="(paragraph, index) in state.form.response.cover_letter" :key="`${paragraph}-${index}`" class="mt-4">
+                <p class="text-gray-400">{{ paragraph }}</p>
             </div>
         </div>
 

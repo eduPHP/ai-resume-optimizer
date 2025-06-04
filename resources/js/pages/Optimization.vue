@@ -6,9 +6,9 @@ import { onMounted, ref } from 'vue';
 import type { BreadcrumbItem } from '@/types';
 import ResumeWizard from '@/pages/ResumeWizard.vue';
 import CompleteOptimization from '@/components/CompleteOptimization.vue';
-import { OptimizationType, useResumeWizardStore } from '@/stores/ResumeWizardStore';
+import { OptimizationType, useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
 
-const state = useResumeWizardStore()
+const state = useOptimizationWizardStore()
 
 const props = defineProps({
     step: {
@@ -31,7 +31,7 @@ const breadcrumbs = ref<BreadcrumbItem[]>([
 onMounted(() => {
     state.setOptimization(props.optimization as OptimizationType)
 
-    if (props.optimization) {
+    if (state.form.optimizationId) {
         breadcrumbs.value = [
             {
                 title: 'Optimizations',
@@ -43,14 +43,13 @@ onMounted(() => {
                 href: '/optimizations/'+state.form.optimizationId,
             },
         ]
-        document.title = state.form.role.company + ' - ' + state.form.role.name + ' - Resume Optimization'
     }
 })
 
 </script>
 
 <template>
-    <Head title="New Optimization" />
+    <Head :title="state.pageTitle" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <ResumeWizard v-if="state.form.status !== 'complete'" />

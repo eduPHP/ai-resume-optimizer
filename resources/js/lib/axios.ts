@@ -1,6 +1,6 @@
 import { Page, PageProps } from '@inertiajs/core';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosPromise, AxiosResponse } from 'axios';
-import { OptimizationType, ResumeWizardStore, Resume } from '@/stores/ResumeWizardStore';
+import { OptimizationType, OptimizationWizardStore, Resume } from '@/stores/OptimizationWizardStore';
 interface User {
     id: number;
     name: string;
@@ -15,7 +15,7 @@ interface AppPageProps extends PageProps {
     auth?: AuthProps | undefined;
 }
 
-type AppPage = Page<AppPageProps>;
+export type AppPage = Page<AppPageProps>;
 
 const getAuthToken = (page: AppPage): string => {
     if (!page.props.auth?.user) {
@@ -37,7 +37,7 @@ const Axios = (page: AppPage): AxiosInstance => {
     return instance;
 }
 
-const createOrUpdateOptimization = (page: Page, state: ResumeWizardStore): AxiosPromise<AxiosResponse<{optimization: OptimizationType, created: boolean}>> => {
+const createOrUpdateOptimization = (page: Page, state: OptimizationWizardStore): AxiosPromise<{optimization: OptimizationType, created: boolean}> => {
     state.loading = true
 
     const axios = Axios(page)
@@ -68,7 +68,7 @@ const createOrUpdateOptimization = (page: Page, state: ResumeWizardStore): Axios
     return request
 }
 
-const uploadResume = (page: Page, state: ResumeWizardStore, uploadedResume: File): AxiosPromise<Resume> => {
+const uploadResume = (page: Page, state: OptimizationWizardStore, uploadedResume: File): AxiosPromise<Resume> => {
     state.loading = true
 
     if (!uploadedResume) {
@@ -98,7 +98,7 @@ const uploadResume = (page: Page, state: ResumeWizardStore, uploadedResume: File
         })
 }
 
-const updateAdditionalInformation = (page: Page, state: ResumeWizardStore) => {
+const updateAdditionalInformation = (page: Page, state: OptimizationWizardStore) => {
     state.loading = true
 
     const axios = Axios(page)
@@ -122,7 +122,7 @@ const updateAdditionalInformation = (page: Page, state: ResumeWizardStore) => {
         })
 }
 
-const updateResume = (page: Page, state: ResumeWizardStore) => {
+const updateResume = (page: Page, state: OptimizationWizardStore) => {
     state.loading = true
 
     const axios = Axios(page)
@@ -146,7 +146,7 @@ const updateResume = (page: Page, state: ResumeWizardStore) => {
         })
 }
 
-const completeWizard = (page: Page, state: ResumeWizardStore) => {
+const completeWizard = (page: Page, state: OptimizationWizardStore) => {
     state.loading = true
 
     const axios = Axios(page)
@@ -168,7 +168,7 @@ const completeWizard = (page: Page, state: ResumeWizardStore) => {
 }
 
 /* Credits: https://stackoverflow.com/a/75039478/29766047 */
-const downloadPDF: (page: Page, state: ResumeWizardStore) => Promise<void> = (page: Page, state: ResumeWizardStore) => {
+const downloadPDF: (page: Page, state: OptimizationWizardStore) => Promise<void> = (page: Page, state: OptimizationWizardStore) => {
     const axios = Axios(page)
 
     const options: AxiosRequestConfig = {

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Steps } from '../components/ui/steps';
-import { useResumeWizardStore } from '@/stores/ResumeWizardStore';
+import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
 
-const state = useResumeWizardStore()
+const state = useOptimizationWizardStore()
 
 </script>
 

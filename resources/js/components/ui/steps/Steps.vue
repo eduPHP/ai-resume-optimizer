@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { CheckIcon } from '@heroicons/vue/20/solid'
-import { useResumeWizardStore } from '@/stores/ResumeWizardStore';
+import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
 
-let state = useResumeWizardStore()
+let state = useOptimizationWizardStore()
 
 </script>
 <template>

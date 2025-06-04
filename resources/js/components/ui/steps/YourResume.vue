@@ -1,13 +1,13 @@
 <script setup lang="ts">
     import { UploadIcon } from 'lucide-vue-next';
-    import { useResumeWizardStore, Resume } from '@/stores/ResumeWizardStore';
+    import { useOptimizationWizardStore, Resume } from '@/stores/OptimizationWizardStore';
     import { Buttons } from '@/components/ui/steps';
     import { usePage } from '@inertiajs/vue3';
     import { onBeforeMount, ref } from 'vue';
     import { Axios, uploadResume, updateResume } from '@/lib/axios';
     import InputError from '@/components/InputError.vue';
 
-    const state = useResumeWizardStore()
+    const state = useOptimizationWizardStore()
     const page = usePage()
 
     const resumes = ref<Resume[]>([])

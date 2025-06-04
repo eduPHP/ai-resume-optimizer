@@ -1,19 +1,16 @@
 <script setup lang="ts">
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type SharedData, type NavGroup, type NavItem } from '@/types';
+import { type NavGroup, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 import { File } from 'lucide-vue-next';
 import { onMounted, ref } from 'vue';
-import axios from 'axios';
+import { Axios } from '@/lib/axios';
 
 const items = ref<NavGroup[]>([])
+const page = usePage();
 
 onMounted(async () => {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${page.props.auth.user.api_token}`
-    axios.defaults.headers.common['Accept'] = `application/json`
-    axios.defaults.headers.common['Content-Type'] = `application/json`
-
-    const request = await axios.get<NavItem[]>(route('optimizations.index', {grouped: true}))
+    const request = await Axios(page).get<NavItem[]>(route('optimizations.index', {grouped: true}))
 
     items.value = Object.keys(request.data).map((key: string): NavGroup => ({
         title: key,
@@ -21,7 +18,6 @@ onMounted(async () => {
     }));
 })
 
-const page = usePage<SharedData>();
 </script>
 
 <template>

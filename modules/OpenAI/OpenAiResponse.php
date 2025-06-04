@@ -11,6 +11,7 @@ class OpenAiResponse implements AIResponseDTO, Arrayable
         public string $resume,
         public string $compatibility_score,
         public string $professional_summary,
+        public array $cover_letter = [],
         public array $strong_alignments = [],
         public array $moderate_gaps = [],
         public array $missing_requirements = [],
