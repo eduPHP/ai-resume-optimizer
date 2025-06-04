@@ -45,7 +45,7 @@ class OptimizationControllerTest extends TestCase
         $resume = \App\Models\Resume::factory()->create();
         $response = $this->withHeader('X-CurrentStep', 1)
             ->actingAs($optimization->user)
-            ->put('/optimizations/'.$optimization->id, [
+            ->put(route('optimizations.update', $optimization), [
                 'id' => $resume->id,
             ]);
 

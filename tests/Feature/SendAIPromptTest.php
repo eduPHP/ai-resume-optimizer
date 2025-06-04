@@ -54,29 +54,21 @@ class AiAgentPrompterStub implements AiAgentPrompter {
 }
 
 test('it sends the resume content as a prompt to AI', function () {
-    $resume = \App\Models\Resume::factory()->create([
-        'role_details' => "we require a wizard unicorn ninja developer!",
+    $optimization = \App\Models\Optimization::factory()->create([
+        'role_description' => $desc = "we require a wizard unicorn ninja developer!",
+        'resume_id' => \App\Models\Resume::factory()->create([
+            'detected_content' => $resume = 'All looks great for me, no need to change anything at all.'
+        ])->id,
     ]);
-
-    $user = \App\Models\User::factory()->create();
-
-    $prompt = "
-Please improve the following resume, following the USA pattern and best practices for a higher employee selection rate
-Role:
-{$resume->role_details}
-
-Resume:
-{$resume->content}
-";
 
     $this->instance(AIAgentPrompter::class, new AiAgentPrompterStub);
 
-    $response = $this->withToken($user->api_token)->postJson("api/optimize/{$resume->id}}", [
-        'role_details' => $resume->role_details,
-    ]);
+    $response = $this->actingAs($optimization->user)
+        ->withHeader('X-CurrentStep', 3)
+        ->put(route('optimizations.update', $optimization), []);
 
     $response->assertSuccessful();
 
-    $this->assertStringContainsString($prompt, $response->json('prompt'));
-    $this->assertStringContainsString((new FakeAIResponse)->getResume(), $response->json('response'));
+    $this->assertStringContainsString($desc, $response->json('optimization.role_description'));
+    $this->assertStringContainsString((new FakeAIResponse)->getResume(), $response->json('optimization.optimized_result'));
 });

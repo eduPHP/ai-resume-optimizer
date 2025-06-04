@@ -60,6 +60,7 @@ class ResumesController
             'id' => $resume->id,
             'href' => route('resumes.show', $resume),
             'name' => $resume->name,
+            'content' => $content,
             'created' => $resume->created_at->format('Y-m-d g:i A'),
         ]);
     }

@@ -15,7 +15,7 @@ class AIInputOptions implements Arrayable, IteratorAggregate
         public bool $changeTargetRole = false,
         public bool $mentionRelocationAvailability = false,
         public string $roleName = '',
-        public string $roleLocation = '',
+        public ?string $roleLocation = '',
         public string $roleCompany = ''
     ) {
     }
