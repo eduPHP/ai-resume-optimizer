@@ -54,7 +54,7 @@ const regenerate = () => {
             <h1 class="text-2xl">{{ state.form.role.company }} {{ state.form.role.name }} Application</h1>
 
             <h2 class="mt-6 font-bold">Role Specific Professional Summary</h2>
-            <p class="text-gray-400">{{ state.form.response.professional_summary }}</p>
+            <p class="text-gray-600 dark:text-gray-400">{{ state.form.response.professional_summary }}</p>
 
             <hr class="my-8 mx-auto max-w-xl border-t border-gray-300 dark:border-gray-500">
 
@@ -62,7 +62,7 @@ const regenerate = () => {
             <h2 class="mt-4 font-bold">Strong Alignments:</h2>
             <div v-for="alignment in state.form.response.strong_alignments" :key="alignment.title" class="mt-4">
                 <h3>{{alignment.title}}</h3>
-                <p class="text-gray-400">{{ alignment.description }}</p>
+                <p class="text-gray-600 dark:text-gray-400">{{ alignment.description }}</p>
             </div>
 
             <h2 v-if="state.form.response.moderate_gaps.length" class="mt-6 text-yellow-400 font-bold">Moderate Gaps:</h2>
@@ -90,8 +90,9 @@ const regenerate = () => {
             <hr class="my-8 mx-auto max-w-xl border-t border-gray-300 dark:border-gray-500">
 
             <h2 v-if="state.form.response.cover_letter.length" class="mt-6 font-bold">Cover Letter:</h2>
-            <div v-for="(paragraph, index) in state.form.response.cover_letter" :key="`${paragraph}-${index}`" class="mt-4">
-                <p class="text-gray-400">{{ paragraph }}</p>
+            <div class="mt-4">
+                <p v-for="(paragraph, index) in state.form.response.cover_letter" :key="`${paragraph}-${index}`" class="py-2 text-gray-600 dark:text-gray-400">{{ paragraph }}</p>
+                <p>Regards,<br>{{page.props.auth?.user.name}}</p>
             </div>
         </div>
 
