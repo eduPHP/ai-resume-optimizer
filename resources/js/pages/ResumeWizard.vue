@@ -5,8 +5,8 @@ import { Head, usePage } from '@inertiajs/vue3';
 import { Steps } from '../components/ui/steps';
 import { useResumeWizardStore, Optimization } from '@/stores/ResumeWizardStore';
 import { onMounted, ref } from 'vue';
-import { File } from 'lucide-vue-next';
-import { downloadPDF } from '@/lib/axios';
+import { File, Recycle, Edit } from 'lucide-vue-next';
+import { completeWizard, downloadPDF } from '@/lib/axios';
 import { Button } from '@/components/ui/button';
 
 const props = defineProps({
@@ -30,7 +30,7 @@ const breadcrumbs = ref<BreadcrumbItem[]>([
     },
 ]);
 
-onMounted(() => {
+const setupOptimization = () => {
     state.setOptimization(props.optimization as Optimization)
 
     if (props.optimization) {
@@ -60,7 +60,25 @@ onMounted(() => {
                 compatibilityPercentageStyle.value = 'text-green-400 text-xl'
         }
     }
+}
+
+onMounted(() => {
+    setupOptimization()
 })
+
+const enableEdit = () => {
+    state.form.status = 'pending'
+    state.step = 0
+    state.latestStep = 3
+}
+const regenerate = () => {
+    state.loading = true;
+
+    completeWizard(page, state).then(() => {
+        state.form.status = 'complete';
+        setupOptimization()
+    })
+}
 
 </script>
 
@@ -75,6 +93,7 @@ onMounted(() => {
         </div>
         <div v-if="state.form.status === 'complete' && state.form.response" class="mx-auto flex h-full w-[950px] flex-1 flex-col gap-4 rounded-xl p-4">
             <div class="bg-gray-300/10 dark:bg-[#202020] px-8 py-6">
+
                 <h1 class="text-2xl">{{ state.form.role.company }} {{ state.form.role.name }} Application</h1>
 
                 <h2 class="mt-6 font-bold">Role Specific Professional Summary</h2>
@@ -112,9 +131,15 @@ onMounted(() => {
                 </div>
             </div>
 
-            <div class="flex justify-end">
-                <Button type="button" @click="downloadPDF(page, state)">
-                    <File class="!w-4 !h-4" />
+            <div class="flex justify-end gap-2">
+                <Button :disabled="state.loading" :variant="state.loading ? 'ghost' : 'outline'" type="button" @click="regenerate">
+                    <Recycle /> Regenerate
+                </Button>
+                <Button :disabled="state.loading" :variant="state.loading ? 'ghost' : 'outline'" type="button" @click="enableEdit">
+                    <Edit /> Edit
+                </Button>
+                <Button :disabled="state.loading" type="button" @click="downloadPDF(page, state)">
+                    <File />
                     Download Optimized Resume
                 </Button>
             </div>
