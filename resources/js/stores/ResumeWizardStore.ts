@@ -41,7 +41,7 @@ type AIResponse = {
     reasoning: string;
 }
 
-export type Optimization = {
+export type OptimizationType = {
     id?: string;
     role_name: string;
     role_description: string;
@@ -149,7 +149,7 @@ export const useResumeWizardStore = defineStore('resume-wizard', {
         setError(key: string, message: string) {
             this.form.errors[key] = message;
         },
-        setOptimization(optimization: Optimization) {
+        setOptimization(optimization: OptimizationType) {
             this.step = optimization.current_step || 0;
             this.latestStep = optimization.current_step || 0;
             this.form.optimizationId = optimization.id;

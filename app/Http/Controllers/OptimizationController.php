@@ -51,7 +51,7 @@ class OptimizationController
 
     public function show(Request $request, Optimization $optimization): \Inertia\Response
     {
-        return Inertia::render('ResumeWizard', [
+        return Inertia::render('Optimization', [
             'optimization' => $optimization,
         ]);
     }

@@ -1,6 +1,6 @@
 import { Page, PageProps } from '@inertiajs/core';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosPromise, AxiosResponse } from 'axios';
-import { Optimization, ResumeWizardStore, Resume } from '@/stores/ResumeWizardStore';
+import { OptimizationType, ResumeWizardStore, Resume } from '@/stores/ResumeWizardStore';
 interface User {
     id: number;
     name: string;
@@ -37,7 +37,7 @@ const Axios = (page: AppPage): AxiosInstance => {
     return instance;
 }
 
-const createOrUpdateOptimization = (page: Page, state: ResumeWizardStore): AxiosPromise<AxiosResponse<{optimization: Optimization, created: boolean}>> => {
+const createOrUpdateOptimization = (page: Page, state: ResumeWizardStore): AxiosPromise<AxiosResponse<{optimization: OptimizationType, created: boolean}>> => {
     state.loading = true
 
     const axios = Axios(page)
