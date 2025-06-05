@@ -24,12 +24,14 @@
         .name {
             font-size: 1.5rem;
             font-weight: bold;
+            text-align: center;
         }
         .job-title {
-            margin-top: 1rem;
+            margin-top: .25rem;
             font-size: 1rem;
-            margin-bottom: 1rem;
+            margin-bottom: .25rem;
             font-weight: bold;
+            text-align: center;
         }
         .section-title {
             font-size: 1.35rem;
@@ -39,8 +41,12 @@
             font-size: 1.1rem;
             margin: 0.75rem 0 0 0;
         }
+        .contact-info {
+            font-size: .9rem;
+            text-align: center;
+        }
         .exp-period {
-            font-size: .8rem;
+            font-size: .9rem;
             margin-bottom: .9rem;
         }
         ul {

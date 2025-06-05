@@ -12,7 +12,7 @@ test('it sends the resume content as a prompt to OpenAI', function () {
 
     Http::preventStrayRequests();
     Http::fake([
-        'https://api.openai.com/v1/chat/completions' => Http::response(json_decode(
+        'https://api.openai.com/v1/responses' => Http::response(json_decode(
             file_get_contents(__DIR__.'/../Fixtures/response-sample.json'), true
         )),
     ]);
@@ -25,7 +25,7 @@ test('it sends the resume content as a prompt to OpenAI', function () {
 
     $this->assertStringContainsString('TDD', $response->json('optimization.optimized_result'));
     $this->assertStringContainsString(
-        'technical expertise, leadership experience, and the ability to work remotely',
+        'Canadian employers will appreciate your readiness and impact!',
         $response->json('optimization.ai_response.reasoning')
     );
 });

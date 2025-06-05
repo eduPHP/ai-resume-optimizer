@@ -29,15 +29,15 @@ onMounted(async () => {
             <span>New Optimization</span>
         </Link>
     </SidebarMenuButton>
-    <SidebarGroup v-for="group in items" :key="group.title" class="py-0 mb-2">
+    <SidebarGroup v-for="group in items" :key="group.title" class="p-0 mb-2">
         <SidebarGroupLabel>{{ group.title }}</SidebarGroupLabel>
         <SidebarMenu>
             <SidebarMenuItem v-for="item in group.items" :key="item.id">
                 <SidebarMenuButton
                     as-child :is-active="item.href === page.url"
-                    :tooltip="item.title"
+                    :tooltip="item.tooltip"
                 >
-                    <Link :href="item.href" class=" mb-4 py-2 dark:bg-[#262626]">
+                    <Link :href="item.href" class="mb-2 p-2">
                         <File class="!w-7 !h-7" />
                         <span class="flex flex-col">
                             <span>{{ item.title }}</span>

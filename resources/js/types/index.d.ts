@@ -19,6 +19,7 @@ export interface NavGroup {
 export interface NavItem {
     id?: number
     title: string;
+    tooltip?: string;
     href: string;
     created?: string;
     icon?: LucideIcon | DefineComponent;

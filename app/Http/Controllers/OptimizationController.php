@@ -14,10 +14,11 @@ class OptimizationController
 {
     public function index(Request $request): JsonResponse
     {
-        $optimizations = $request->user()->optimizations()->latest('created_at')->get()->map(fn($optimization) => [
+        $optimizations = $request->user()->optimizations()->latest('created_at')->get()->map(fn(Optimization $optimization) => [
             'id' => $optimization->id,
             'href' => route('optimizations.show', $optimization),
             'title' => $optimization->role_company,
+            'tooltip' => $optimization->role_name,
             'created' => $optimization->created_at->format('Y-m-d g:i A'),
         ]);
 
