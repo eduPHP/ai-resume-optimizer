@@ -62,6 +62,8 @@
         .footer {
             font-size: .9rem;
             margin-top: 1rem;
+            width: 100%;
+            text-align: center;
         }
 
         em {
