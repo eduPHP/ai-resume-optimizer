@@ -2,12 +2,10 @@
 import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
 import { Button } from '@/components/ui/button';
 
-defineProps({
-    action: {
-        required: true,
-        type: Function,
-    },
-})
+defineProps<{
+    action: () => void
+}>()
+
 const state = useOptimizationWizardStore()
 
 </script>
