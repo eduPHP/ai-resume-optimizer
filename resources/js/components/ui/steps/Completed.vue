@@ -23,7 +23,7 @@ const finish = () => {
             <CheckCircle class="text-green-500 h-16 w-16" />
             <p>That’s all the information we need!</p>
             <div class="text-center">
-                <p>By clicking “Finish”, you agree to store your information and that it might be used to train LLM models.</p>
+                <p>By clicking “Optimize”, you agree to store your information and that it might be used to train LLM models.</p>
                 <p>Your resume will be processed and will soon be available for download.</p>
                 <p>If it takes too long, be sure to have browser notifications allowed to be notified.</p>
             </div>

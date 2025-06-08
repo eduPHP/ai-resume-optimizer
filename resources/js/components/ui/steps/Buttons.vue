@@ -28,6 +28,6 @@ const state = useOptimizationWizardStore()
                 v-if="state.step === state.steps.length - 1"
                 :disabled="state.loading"
                 @click.prevent="action"
-        >Finish</Button>
+        >Optimize</Button>
     </div>
 </template>
