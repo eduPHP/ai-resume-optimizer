@@ -53,12 +53,16 @@ const regenerate = () => {
 
             <h1 class="text-2xl">{{ state.form.role.company }} {{ state.form.role.name }} Application</h1>
 
+            <h4 class="mt-4">Compatibility score: <span class="font-bold" :class="compatibilityPercentageStyle">{{state.form.response.compatibility_score}}%</span> Match</h4>
+            <p class="text-gray-600 dark:text-gray-400">{{ state.form.response.reasoning }}</p>
+
+            <hr class="my-8 mx-auto max-w-xl border-t border-gray-300 dark:border-gray-500">
+
             <h2 class="mt-6 font-bold">Role Specific Professional Summary</h2>
             <p class="text-gray-600 dark:text-gray-400">{{ state.form.response.professional_summary }}</p>
 
             <hr class="my-8 mx-auto max-w-xl border-t border-gray-300 dark:border-gray-500">
 
-            <h4 class="mt-4">Compatibility score: <span class="font-bold" :class="compatibilityPercentageStyle">{{state.form.response.compatibility_score}}%</span> Match</h4>
             <h2 class="mt-4 font-bold">Strong Alignments:</h2>
             <div v-for="alignment in state.form.response.strong_alignments" :key="alignment.title" class="mt-4">
                 <h3>{{alignment.title}}</h3>

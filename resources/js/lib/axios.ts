@@ -1,5 +1,5 @@
 import { Page, PageProps } from '@inertiajs/core';
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosPromise, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosPromise } from 'axios';
 import { OptimizationType, OptimizationWizardStore, Resume } from '@/stores/OptimizationWizardStore';
 interface User {
     id: number;
@@ -148,6 +148,7 @@ const updateResume = (page: Page, state: OptimizationWizardStore) => {
 
 const completeWizard = (page: Page, state: OptimizationWizardStore) => {
     state.loading = true
+    state.optimizing = true
 
     const axios = Axios(page)
     const options: AxiosRequestConfig = {
@@ -164,6 +165,7 @@ const completeWizard = (page: Page, state: OptimizationWizardStore) => {
         })
         .finally(() => {
             state.loading = false
+            state.optimizing = false
         })
 }
 
