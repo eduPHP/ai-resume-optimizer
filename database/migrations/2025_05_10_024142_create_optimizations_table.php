@@ -15,7 +15,7 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->string('role_name');
             $table->string('role_company');
-            $table->string('role_description');
+            $table->text('role_description');
             $table->foreignIdFor(\App\Models\User::class)->nullable()->constrained()->cascadeOnDelete();
             $table->foreignIdFor(\App\Models\Resume::class)->nullable()->constrained()->cascadeOnDelete();
             $table->string('role_location')->nullable();
