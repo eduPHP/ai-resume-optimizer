@@ -11,7 +11,7 @@ import AppLogo from './AppLogo.vue';
 const footerNavItems: NavItem[] = [
     {
         title: 'Github Repo',
-        href: 'https://github.com/eduPHP',
+        href: 'https://github.com/eduPHP/ai-resume-optimizer',
         icon: GithubIcon,
     },
 ];
