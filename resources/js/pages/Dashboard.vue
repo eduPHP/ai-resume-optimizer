@@ -2,6 +2,7 @@
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
+import { Button } from '@/components/ui/button';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -21,6 +22,9 @@ const breadcrumbs: BreadcrumbItem[] = [
             <p class="text-lg mb-4">
                 A resume should be tailored for each role to significantly increase the chances of catching the attention of hiring managers and applicant tracking systems (ATS). Every job posting highlights a unique combination of skills, qualifications, and experiences that the employer is seeking. When you customize your resume to align closely with those specific requirements, you demonstrate that you’ve taken the time to understand the role and that you’re a strong, relevant candidate.
             </p>
+            <div class="pb-4 w-full flex justify-center">
+                <Button as="a" size="lg" :href="route('optimizations.create')">Generate a New Optimized Resume</Button>
+            </div>
             <h2 class="text-2xl font-semibold mb-3">Benefits of Tailoring Your Resume</h2>
             <ul class="list-disc pl-5 space-y-2 mb-6">
                 <li><strong>Highlight the most relevant experience:</strong> Align your accomplishments and responsibilities with the job description to show your suitability for the role.</li>
