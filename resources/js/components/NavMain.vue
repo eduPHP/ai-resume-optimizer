@@ -22,10 +22,10 @@ onMounted(async () => {
 
 <template>
     <SidebarMenuButton
-        as-child :is-active="'/optimizations/create' === page.url"
+        as-child :is-active="route('optimizations.create') === page.url"
         :tooltip="'New Optimization'"
     >
-        <Link :href="'/optimizations/create'" class="justify-center bg-gray-200 dark:bg-gray-800">
+        <Link :href="route('optimizations.create')" class="justify-center bg-gray-200 dark:bg-gray-800 py-6">
             <span>New Optimization</span>
         </Link>
     </SidebarMenuButton>
