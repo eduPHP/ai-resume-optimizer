@@ -48,7 +48,7 @@ const regenerate = () => {
 </script>
 
 <template>
-    <div class="mx-auto flex h-full w-[950px] flex-1 flex-col gap-4 rounded-xl p-4">
+    <div class="mx-auto flex h-full w-full xl:w-[950px] flex-1 flex-col gap-4 rounded-xl p-4">
         <div class="bg-gray-300/10 dark:bg-[#202020] px-8 py-6">
 
             <h1 class="text-2xl">{{ state.form.role.company }} {{ state.form.role.name }} Application</h1>
@@ -100,7 +100,7 @@ const regenerate = () => {
             </div>
         </div>
 
-        <div class="flex justify-end gap-2">
+        <div class="mt-2 xl:mt-0 flex flex-col-reverse xl:flex-row justify-end gap-2">
             <Button :disabled="state.loading" :variant="state.loading ? 'ghost' : 'outline'" type="button" @click="regenerate">
                 <Recycle /> Regenerate
             </Button>
