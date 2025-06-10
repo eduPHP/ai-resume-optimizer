@@ -100,14 +100,14 @@ const regenerate = () => {
             </div>
         </div>
 
-        <div class="mt-2 xl:mt-0 flex flex-col-reverse xl:flex-row justify-end gap-2">
-            <Button :disabled="state.loading" :variant="state.loading ? 'ghost' : 'outline'" type="button" @click="regenerate">
+        <div class="flex flex-col-reverse xl:flex-row justify-end gap-2">
+            <Button :disabled="state.loading" :variant="state.loading ? 'ghost' : 'outline'" type="button" size="lg" @click="regenerate">
                 <Recycle /> Regenerate
             </Button>
-            <Button :disabled="state.loading" :variant="state.loading ? 'ghost' : 'outline'" type="button" @click="enableEdit">
+            <Button :disabled="state.loading" :variant="state.loading ? 'ghost' : 'outline'" type="button" size="lg" @click="enableEdit">
                 <Edit /> Edit
             </Button>
-            <Button :disabled="state.loading" type="button" @click="downloadPDF(page, state)">
+            <Button :disabled="state.loading" type="button" size="lg" @click="downloadPDF(page, state)">
                 <File />
                 Download Optimized Resume
             </Button>
