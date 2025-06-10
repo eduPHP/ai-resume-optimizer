@@ -53,8 +53,8 @@
 </script>
 
 <template>
-    <div class="bg-gray-300/10 dark:bg-[#202020] px-8 py-6">
-        <h3 class="text-xl mb-6">Your Resume</h3>
+    <div class="bg-gray-300/10 dark:bg-[#202020] px-8 py-6 min-w-80">
+        <h3 class="hidden xl:block text-xl mb-6">Your Resume</h3>
         <p class="text-gray-400">Select a previously uploaded resume or upload a new one</p>
         <div class="py-6">
 
@@ -71,7 +71,7 @@
             </ul>
             <InputError :message="state.form.errors.id" />
 
-            <label class="mt-6 flex flex-col gap-4 items-center justify-center py-12 dark:bg-[#363636] rounded-md border border-dashed cursor-pointer" :class="{
+            <label class="mt-6 px-12 text-center flex flex-col gap-4 items-center justify-center py-12 dark:bg-[#363636] rounded-md border border-dashed cursor-pointer" :class="{
                 ' border-white/30 text-gray-400': ! state.form.errors.upload,
                 ' border-red-400 text-red-400': !! state.form.errors.upload,
             }">

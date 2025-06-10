@@ -12,6 +12,7 @@ export type State = {
     latestStep: number;
     loading: boolean;
     optimizing: boolean;
+    windowWidth: number;
     pageTitle: string;
     steps: Step[];
     form: Form;
@@ -89,6 +90,7 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
         latestStep: 0,
         loading: false,
         optimizing: false,
+        windowWidth: 4000,
         pageTitle: 'New Optimization',
         steps: [
             {

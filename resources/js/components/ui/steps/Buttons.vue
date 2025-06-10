@@ -10,9 +10,11 @@ const state = useOptimizationWizardStore()
 
 </script>
 <template>
-    <div class="flex justify-end items-center gap-4">
+    <div class="mt-2 xl:mt-0 flex xl:justify-end xl:items-center gap-2 xl:gap-4">
         <Button type="button"
-                variant="ghost"
+                size="lg"
+                class="flex-1 xl:flex-none"
+                variant="outline"
                 v-if="state.step > 0"
                 :disabled="state.loading"
                 @click.prevent="state.prevStep"
@@ -20,9 +22,13 @@ const state = useOptimizationWizardStore()
         <Button v-if="state.step < state.steps.length - 1"
                 :disabled="state.loading"
                 type="button"
+                size="lg"
+                class="flex-1 xl:flex-none"
                 @click.prevent="action"
         >Next</Button>
         <Button type="button"
+                size="lg"
+                class="flex-1 xl:flex-none"
                 v-if="state.step === state.steps.length - 1"
                 :disabled="state.loading"
                 @click.prevent="action"

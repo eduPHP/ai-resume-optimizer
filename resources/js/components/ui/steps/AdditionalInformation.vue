@@ -18,10 +18,10 @@ const submit = () => {
 </script>
 
 <template>
-    <div class="bg-gray-300/10 dark:bg-[#202020] px-8 py-6">
-        <h3 class="text-xl mb-6">Additional Information</h3>
+    <div class="bg-gray-300/10 dark:bg-[#202020] px-8 py-6 w-full min-w-80">
+        <h3 class="hidden xl:block text-xl mb-6">Additional Information</h3>
         <p class="text-gray-400">Select the options that match your goal</p>
-        <div class="py-6 grid grid-cols-2 gap-6">
+        <div class="py-6 grid xl:grid-cols-2 gap-6">
             <Toggle v-model="state.form.additional.makeGrammaticalCorrections">
                 Make grammatical corrections
             </Toggle>
@@ -35,7 +35,7 @@ const submit = () => {
                 Mention relocation availability
             </Toggle>
         </div>
-        <div class="mt-4 grid gap-2 w-1/2">
+        <div class="mt-4 grid gap-2 xl:w-1/2">
             <Label for="country">Target Country</Label>
             <Input id="country" type="text" required autofocus :tabindex="1" v-model="state.form.additional.targetCountry" />
             <InputError :message="state.form.errors.targetCountry" />
