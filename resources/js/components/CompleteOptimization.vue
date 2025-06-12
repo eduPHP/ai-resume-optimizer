@@ -94,7 +94,7 @@ const regenerate = () => {
             <hr class="my-8 mx-auto max-w-xl border-t border-gray-300 dark:border-gray-500">
 
             <h2 v-if="state.form.response.cover_letter.length" class="mt-6 font-bold">Cover Letter:</h2>
-            <div class="mt-4">
+            <div v-if="state.form.response.cover_letter.length" class="mt-4">
                 <p class="text-gray-600 dark:text-gray-400">Dear Hiring manager,</p>
                 <p v-for="(paragraph, index) in state.form.response.cover_letter" :key="`${paragraph}-${index}`" class="py-2 text-gray-600 dark:text-gray-400">{{ paragraph }}</p>
                 <p>Regards,<br>{{page.props.auth?.user.name}}</p>
@@ -108,7 +108,7 @@ const regenerate = () => {
             <Button :disabled="state.loading" :variant="state.loading ? 'ghost' : 'outline'" type="button" size="lg" @click="enableEdit">
                 <Edit /> Edit
             </Button>
-            <Button :disabled="state.loading" :variant="state.loading ? 'ghost' : 'outline'" type="button" size="lg" @click="downloadCoverLetter(page, state)">
+            <Button :disabled="state.loading || ! state.form.response.cover_letter.length" :variant="state.loading || ! state.form.response.cover_letter.length ? 'ghost' : 'outline'" type="button" size="lg" @click="downloadCoverLetter(page, state)">
                 <File />
                 Download Cover Letter
             </Button>

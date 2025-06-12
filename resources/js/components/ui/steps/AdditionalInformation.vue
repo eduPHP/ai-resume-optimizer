@@ -28,6 +28,9 @@ const submit = () => {
             <Toggle v-model="state.form.additional.changeProfessionalSummary">
                 Change Professional Summary
             </Toggle>
+            <Toggle v-model="state.form.additional.generateCoverLetter">
+                Generate a cover letter
+            </Toggle>
             <Toggle v-model="state.form.additional.changeTargetRole">
                 Change Target Role
             </Toggle>

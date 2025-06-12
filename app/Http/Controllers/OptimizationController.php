@@ -142,6 +142,7 @@ class OptimizationController
         $request->validate([
             'makeGrammaticalCorrections' => 'boolean',
             'changeProfessionalSummary' => 'boolean',
+            'generateCoverLetter' => 'boolean',
             'changeTargetRole' => 'boolean',
             'mentionRelocationAvailability' => 'boolean',
             'targetCountry' => 'nullable|string|max:30',
@@ -151,6 +152,7 @@ class OptimizationController
             'current_step' => 3,
             'make_grammatical_corrections' => $request->input('makeGrammaticalCorrections'),
             'change_professional_summary' => $request->input('changeProfessionalSummary'),
+            'generate_cover_letter' => $request->input('generateCoverLetter'),
             'change_target_role' => $request->input('changeTargetRole'),
             'mention_relocation_availability' => $request->input('mentionRelocationAvailability'),
             'role_location' => $request->input('targetCountry'),
@@ -188,6 +190,7 @@ class OptimizationController
         $agentResponse = $prompter->handle($content, new AIInputOptions(
             makeGrammaticalCorrections: $optimization->make_grammatical_corrections,
             changeProfessionalSummary: $optimization->change_professional_summary,
+            generateCoverLetter: $optimization->generate_cover_letter,
             changeTargetRole: $optimization->change_target_role,
             mentionRelocationAvailability: $optimization->mention_relocation_availability,
             roleName: $optimization->role_name,

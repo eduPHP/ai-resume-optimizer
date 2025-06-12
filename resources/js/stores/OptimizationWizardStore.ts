@@ -55,6 +55,7 @@ export type OptimizationType = {
     role_location?: string;
     make_grammatical_corrections: boolean;
     change_professional_summary: boolean;
+    generate_cover_letter: boolean;
     change_target_role: boolean;
     mention_relocation_availability: boolean;
     current_step: number;
@@ -65,6 +66,7 @@ export type OptimizationType = {
 export type AdditionalInformationForm = {
     makeGrammaticalCorrections: boolean;
     changeProfessionalSummary: boolean;
+    generateCoverLetter: boolean;
     changeTargetRole: boolean;
     mentionRelocationAvailability: boolean;
     targetCountry: string;
@@ -124,6 +126,7 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
                 changeProfessionalSummary: true,
                 changeTargetRole: true,
                 makeGrammaticalCorrections: true,
+                generateCoverLetter: true,
                 mentionRelocationAvailability: false,
                 targetCountry: ''
             },
@@ -168,6 +171,7 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
             this.form.additional.targetCountry = optimization.role_location ? optimization.role_location : '';
             this.form.additional.makeGrammaticalCorrections = optimization.make_grammatical_corrections;
             this.form.additional.changeProfessionalSummary = optimization.change_professional_summary;
+            this.form.additional.generateCoverLetter = optimization.generate_cover_letter;
             this.form.additional.changeTargetRole = optimization.change_target_role;
             this.form.additional.mentionRelocationAvailability = optimization.mention_relocation_availability;
             this.form.status = optimization.status;

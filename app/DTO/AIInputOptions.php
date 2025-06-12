@@ -12,6 +12,7 @@ class AIInputOptions implements Arrayable, IteratorAggregate
     public function __construct(
         public bool $makeGrammaticalCorrections = false,
         public bool $changeProfessionalSummary = false,
+        public bool $generateCoverLetter = false,
         public bool $changeTargetRole = false,
         public bool $mentionRelocationAvailability = false,
         public string $roleName = '',

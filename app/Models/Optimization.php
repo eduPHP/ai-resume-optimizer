@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property bool $make_grammatical_corrections
  * @property bool $change_professional_summary
+ * @property bool $generate_cover_letter
  * @property bool $change_target_role
  * @property bool $mention_relocation_availability
  * @property string $role_name
@@ -55,6 +56,7 @@ class Optimization extends Model
             'current_step' => 'int',
             'make_grammatical_corrections' => 'boolean',
             'change_professional_summary' => 'boolean',
+            'generate_cover_letter' => 'boolean',
             'change_target_role' => 'boolean',
             'mention_relocation_availability' => 'boolean',
             'status' => 'string',
