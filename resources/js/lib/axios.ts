@@ -181,7 +181,10 @@ const downloadCoverLetter: (page: Page, state: OptimizationWizardStore) => Promi
     return downloadFile(page, url)
 }
 
-/* Credits: https://stackoverflow.com/a/75039478/29766047 */
+/*
+ * Credits: https://stackoverflow.com/a/75039478/29766047,
+ *          https://gist.github.com/javilobo8/097c30a233786be52070986d8cdb1743?permalink_comment_id=3788793#gistcomment-3788793
+ */
 const downloadFile: (page: Page, url: string) => Promise<void> = (page: Page, url: string) => {
     const axios = Axios(page)
 
