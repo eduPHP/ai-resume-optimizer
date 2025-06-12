@@ -42,6 +42,13 @@ class Optimization extends Model
         return "{$this->user->name} {$this->role_name} at {$this->role_company} {$date}.pdf";
     }
 
+    public function coverLetterFileName(): string
+    {
+        $date = now()->format('YmdHi');
+
+        return "Cover Letter {$this->user->name} for {$this->role_company} {$date}.pdf";
+    }
+
     public function casts(): array
     {
         return [

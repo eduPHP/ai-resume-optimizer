@@ -169,8 +169,20 @@ const completeWizard = (page: Page, state: OptimizationWizardStore) => {
         })
 }
 
+const downloadOptimizedResume: (page: Page, state: OptimizationWizardStore) => Promise<void> = (page: Page, state: OptimizationWizardStore) => {
+    const url: string = route('optimizations.download', state.form.optimizationId)
+
+    return downloadFile(page, url)
+}
+
+const downloadCoverLetter: (page: Page, state: OptimizationWizardStore) => Promise<void> = (page: Page, state: OptimizationWizardStore) => {
+    const url: string = route('optimizations.download-cover', state.form.optimizationId)
+
+    return downloadFile(page, url)
+}
+
 /* Credits: https://stackoverflow.com/a/75039478/29766047 */
-const downloadPDF: (page: Page, state: OptimizationWizardStore) => Promise<void> = (page: Page, state: OptimizationWizardStore) => {
+const downloadFile: (page: Page, url: string) => Promise<void> = (page: Page, url: string) => {
     const axios = Axios(page)
 
     const options: AxiosRequestConfig = {
@@ -179,10 +191,10 @@ const downloadPDF: (page: Page, state: OptimizationWizardStore) => Promise<void>
         },
         responseType: 'blob',
     }
-    return axios.post(route('optimizations.download', state.form.optimizationId), {}, options).then(function (response) {
+    return axios.post(url, {}, options).then(function (response) {
         const a = document.createElement('a');
         const contentDisposition = response.headers['content-disposition'];
-        let fileName = 'unknown';
+        let fileName = 'file.pdf';
         if (contentDisposition) {
             const fileNameMatch = contentDisposition.match(/filename="(.+)"/);
             if (fileNameMatch.length === 2)
@@ -204,5 +216,6 @@ export {
     uploadResume,
     updateAdditionalInformation,
     completeWizard,
-    downloadPDF,
+    downloadOptimizedResume,
+    downloadCoverLetter,
 }

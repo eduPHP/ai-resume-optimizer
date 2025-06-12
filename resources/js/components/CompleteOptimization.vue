@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { completeWizard, downloadPDF } from '@/lib/axios';
+import { completeWizard, downloadCoverLetter, downloadOptimizedResume } from '@/lib/axios';
 import { Button } from '@/components/ui/button';
 import { Edit, File, Recycle } from 'lucide-vue-next';
 import { usePage } from '@inertiajs/vue3';
@@ -95,6 +95,7 @@ const regenerate = () => {
 
             <h2 v-if="state.form.response.cover_letter.length" class="mt-6 font-bold">Cover Letter:</h2>
             <div class="mt-4">
+                <p class="text-gray-600 dark:text-gray-400">Dear Hiring manager,</p>
                 <p v-for="(paragraph, index) in state.form.response.cover_letter" :key="`${paragraph}-${index}`" class="py-2 text-gray-600 dark:text-gray-400">{{ paragraph }}</p>
                 <p>Regards,<br>{{page.props.auth?.user.name}}</p>
             </div>
@@ -107,7 +108,11 @@ const regenerate = () => {
             <Button :disabled="state.loading" :variant="state.loading ? 'ghost' : 'outline'" type="button" size="lg" @click="enableEdit">
                 <Edit /> Edit
             </Button>
-            <Button :disabled="state.loading" type="button" size="lg" @click="downloadPDF(page, state)">
+            <Button :disabled="state.loading" :variant="state.loading ? 'ghost' : 'outline'" type="button" size="lg" @click="downloadCoverLetter(page, state)">
+                <File />
+                Download Cover Letter
+            </Button>
+            <Button :disabled="state.loading" type="button" size="lg" @click="downloadOptimizedResume(page, state)">
                 <File />
                 Download Optimized Resume
             </Button>

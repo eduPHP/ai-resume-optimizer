@@ -77,4 +77,24 @@ class OptimizationControllerTest extends TestCase
         $this->assertSame('application/pdf', $response->headers->get('content-type'));
         $this->assertSame('attachment; filename="'.$optimization->optimizedResumeFileName().'"', $response->headers->get('content-disposition'));
     }
+
+    #[Test]
+    function a_cover_letter_can_be_downloaded()
+    {
+        // an optimized resume can be downloaded
+        $optimization = \App\Models\Optimization::factory()->create([
+            'ai_response' => [
+                'cover_letter' => [
+                    '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad aliquam animi architecto at dicta distinctio, eius est eveniet labore magni nobis quisquam sapiente! Accusantium consequatur dicta fuga laudantium non rem.</p>'
+                ],
+            ]
+        ]);
+
+        $response = $this->withToken($optimization->user->api_token)->post(route('optimizations.download-cover', $optimization));
+
+        $response->assertSuccessful();
+
+        $this->assertSame('application/pdf', $response->headers->get('content-type'));
+        $this->assertSame('attachment; filename="'.$optimization->coverLetterFileName().'"', $response->headers->get('content-disposition'));
+    }
 }

@@ -7,6 +7,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('resumes', [\App\Http\Controllers\ResumesController::class, 'store'])->name('resumes.store');
     Route::get('resumes/{resume}', [\App\Http\Controllers\ResumesController::class, 'show'])->name('resumes.show');
     Route::get('optimizations', [\App\Http\Controllers\OptimizationController::class, 'index'])->name('optimizations.index');
-    Route::post('download-optimized/{optimization}', \App\Http\Controllers\DownloadOptimizedResumeController::class)->name('optimizations.download');
+    Route::post('download-optimized/{optimization}', [\App\Http\Controllers\DownloadOptimizedResumeController::class, 'resume'])->name('optimizations.download');
+    Route::post('download-cover/{optimization}', [\App\Http\Controllers\DownloadOptimizedResumeController::class, 'cover'])->name('optimizations.download-cover');
 });
-// Route::get('view-download-optimized',[ \App\Http\Controllers\DownloadOptimizedResumeController::class, 'sample']);
+Route::get('view',[ \App\Http\Controllers\DownloadOptimizedResumeController::class, 'sample']);

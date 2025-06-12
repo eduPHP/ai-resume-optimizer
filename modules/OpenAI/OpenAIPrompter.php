@@ -39,7 +39,7 @@ class OpenAIPrompter implements AIAgentPrompter
                             "resume": "html formatted resume, body content only, with basic styling",
                             "compatibility_score": "a compatibility percentage score from 0 to 100, i.e. 90",
                             "professional_summary": "same professional summary returned on the resume",
-                            "cover_letter": "a cover letter, with casual phrasing, 3 paragraphs in the as an array, i.e. [\"paragraph 1\", \"paragraph 2\", \"paragraph 3\"]",
+                            "cover_letter": "a cover letter, with casual phrasing, 3 paragraphs as an array, no introduction (i.e. dear hiring manager or so), no signature, i.e. [\"paragraph 1\", \"paragraph 2\", \"paragraph 3\"]",
                             "strong_alignments": [
                               {
                                   "title": "strong alignment title",

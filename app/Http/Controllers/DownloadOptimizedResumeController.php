@@ -3,18 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Models\Optimization;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class DownloadOptimizedResumeController
 {
-    public function __invoke(Request $request, Optimization $optimization): \Illuminate\Http\Response
+    public function resume(Optimization $optimization): \Illuminate\Http\Response
     {
         $pdf = Pdf::setBasePath(public_path())->loadView('pdfs.optimized-resume', ['optimization' => $optimization]);
-        $date = now()->format('Y-m-d H:i');
 
-        $request->headers->set('Content-Type', 'application/pdf');
         $filename = $optimization->optimizedResumeFileName();
+
+        $result = $pdf->download($filename);
+
+        $result->header('Content-Type', 'application/pdf');
+        $result->header('Content-Disposition', 'attachment; filename="'.$filename.'"');
+
+        return $result;
+    }
+
+    public function cover(Optimization $optimization): \Illuminate\Http\Response
+    {
+        $pdf = Pdf::setBasePath(public_path())->loadView('pdfs.cover-letter', ['optimization' => $optimization]);
+
+        $filename = $optimization->coverLetterFileName();
 
         $result = $pdf->download($filename);
 
@@ -26,6 +37,6 @@ class DownloadOptimizedResumeController
 
     public function sample(): \Illuminate\Contracts\View\View
     {
-        return view('pdfs.optimized-resume', ['optimization' => Optimization::find('01jwvh5shkdff9ke9py9evm89q')]);
+        return view('pdfs.cover-letter', ['optimization' => Optimization::find('01jx0kt0m6n77zsvd7gd9ytf4t')]);
     }
 }
