@@ -181,8 +181,15 @@ const downloadPDF: (page: Page, state: OptimizationWizardStore) => Promise<void>
     }
     return axios.post(route('optimizations.download', state.form.optimizationId), {}, options).then(function (response) {
         const a = document.createElement('a');
+        const contentDisposition = response.headers['content-disposition'];
+        let fileName = 'unknown';
+        if (contentDisposition) {
+            const fileNameMatch = contentDisposition.match(/filename="(.+)"/);
+            if (fileNameMatch.length === 2)
+                fileName = fileNameMatch[1];
+        }
         a.href = window.URL.createObjectURL(response.data);
-        a.download = `resume.pdf`;
+        a.download = fileName;
         document.body.appendChild(a);
         a.click();
         a.remove();

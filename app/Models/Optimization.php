@@ -39,7 +39,7 @@ class Optimization extends Model
     {
         $date = now()->format('YmdHi');
 
-        return "{$this->user->name} resume {$this->role_name} at {$this->role_company} {$date}.pdf";
+        return "{$this->user->name} {$this->role_name} at {$this->role_company} {$date}.pdf";
     }
 
     public function casts(): array
