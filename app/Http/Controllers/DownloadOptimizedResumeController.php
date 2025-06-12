@@ -14,7 +14,7 @@ class DownloadOptimizedResumeController
         $date = now()->format('Y-m-d H:i');
 
         $request->headers->set('Content-Type', 'application/pdf');
-        $filename = "Resume {$optimization->role_name} - {$optimization->role_company} {$date}.pdf";
+        $filename = $optimization->optimizedResumeFileName();
 
         $result = $pdf->download($filename);
 

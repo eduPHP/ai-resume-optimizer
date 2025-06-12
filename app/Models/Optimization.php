@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $role_name
  * @property string $role_location
  * @property string $role_company
+ * @property \App\Models\User $user
+ * @property \App\Models\Resume $resume
  */
 class Optimization extends Model
 {
@@ -31,6 +33,13 @@ class Optimization extends Model
     public function resume(): BelongsTo
     {
         return $this->belongsTo(Resume::class);
+    }
+
+    public function optimizedResumeFileName(): string
+    {
+        $date = now()->format('YmdHi');
+
+        return "{$this->user->name} resume {$this->role_name} at {$this->role_company} {$date}.pdf";
     }
 
     public function casts(): array

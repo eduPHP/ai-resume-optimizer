@@ -61,4 +61,20 @@ class OptimizationControllerTest extends TestCase
 
         $this->assertTrue($optimization->fresh()->resume->is($resume));
     }
+
+    #[Test]
+    function an_optimized_resume_can_be_downloaded()
+    {
+        // an optimized resume can be downloaded
+        $optimization = \App\Models\Optimization::factory()->create([
+            'optimized_result' => '<h1>John doe</h1><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto cum doloribus necessitatibus praesentium quae quis sunt, voluptates. Cumque eos esse, ex facere, in maiores nobis obcaecati omnis placeat, recusandae veritatis!</p>'
+        ]);
+
+        $response = $this->withToken($optimization->user->api_token)->post(route('optimizations.download', $optimization));
+
+        $response->assertSuccessful();
+
+        $this->assertSame('application/pdf', $response->headers->get('content-type'));
+        $this->assertSame('attachment; filename="'.$optimization->optimizedResumeFileName().'"', $response->headers->get('content-disposition'));
+    }
 }
