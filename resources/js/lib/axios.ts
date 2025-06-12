@@ -179,7 +179,7 @@ const downloadPDF: (page: Page, state: OptimizationWizardStore) => Promise<void>
         },
         responseType: 'blob',
     }
-    return axios.post(`/api/download-optimized/${state.form.optimizationId}`, {}, options).then(function (response) {
+    return axios.post(route('optimizations.download', state.form.optimizationId), {}, options).then(function (response) {
         const a = document.createElement('a');
         a.href = window.URL.createObjectURL(response.data);
         a.download = `resume.pdf`;
