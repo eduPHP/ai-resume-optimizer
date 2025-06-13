@@ -169,13 +169,13 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
             this.form.role.company = optimization.role_company;
             this.form.resume.id = optimization.resume_id;
             this.form.additional.targetCountry = optimization.role_location ? optimization.role_location : '';
-            this.form.additional.makeGrammaticalCorrections = optimization.make_grammatical_corrections;
-            this.form.additional.changeProfessionalSummary = optimization.change_professional_summary;
-            this.form.additional.generateCoverLetter = optimization.generate_cover_letter;
-            this.form.additional.changeTargetRole = optimization.change_target_role;
-            this.form.additional.mentionRelocationAvailability = optimization.mention_relocation_availability;
-            this.form.status = optimization.status;
-            this.form.response = optimization.ai_response;
+            this.form.additional.makeGrammaticalCorrections = optimization.make_grammatical_corrections ?? true;
+            this.form.additional.changeProfessionalSummary = optimization.change_professional_summary ?? true;
+            this.form.additional.generateCoverLetter = optimization.generate_cover_letter ?? true;
+            this.form.additional.changeTargetRole = optimization.change_target_role ?? true;
+            this.form.additional.mentionRelocationAvailability = optimization.mention_relocation_availability ?? false;
+            this.form.status = optimization.status ?? 'pending';
+            this.form.response = optimization.ai_response ?? {} as AIResponse;
             if (optimization.id) {
                 this.pageTitle = optimization.role_company + ' - ' + optimization.role_name + ' - Resume Optimization'
             }
