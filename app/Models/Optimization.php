@@ -43,11 +43,12 @@ class Optimization extends Model
             $this->role_name,
             "at",
             $this->role_company,
+            now()->format('YmdHi'),
         ]);
 
-        return str($bits->join("-"))
-            ->slug()
-            ->append(now()->format('YmdHi'), ".pdf")
+        return str($bits->join(" "))
+            ->replace(['/', '\\'], '')
+            ->append(".pdf")
             ->__toString();
     }
 
@@ -58,11 +59,12 @@ class Optimization extends Model
             $this->user->name,
             "for",
             $this->role_company,
+            now()->format('YmdHi')
         ]);
 
-        return str($bits->join("-"))
-            ->slug()
-            ->append(now()->format('YmdHi'), ".pdf")
+        return str($bits->join(" "))
+            ->replace(['/', '\\'], '')
+            ->append(".pdf")
             ->__toString();
     }
 
