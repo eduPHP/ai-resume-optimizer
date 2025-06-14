@@ -38,16 +38,32 @@ class Optimization extends Model
 
     public function optimizedResumeFileName(): string
     {
-        $date = now()->format('YmdHi');
+        $bits = collect([
+            $this->user->name,
+            $this->role_name,
+            "at",
+            $this->role_company,
+        ]);
 
-        return "{$this->user->name} {$this->role_name} at {$this->role_company} {$date}.pdf";
+        return str($bits->join("-"))
+            ->slug()
+            ->append(now()->format('YmdHi'), ".pdf")
+            ->__toString();
     }
 
     public function coverLetterFileName(): string
     {
-        $date = now()->format('YmdHi');
+        $bits = collect([
+            "Cover Letter",
+            $this->user->name,
+            "for",
+            $this->role_company,
+        ]);
 
-        return "Cover Letter {$this->user->name} for {$this->role_company} {$date}.pdf";
+        return str($bits->join("-"))
+            ->slug()
+            ->append(now()->format('YmdHi'), ".pdf")
+            ->__toString();
     }
 
     public function casts(): array
