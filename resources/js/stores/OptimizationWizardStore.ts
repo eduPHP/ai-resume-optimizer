@@ -178,6 +178,8 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
             this.form.response = optimization.ai_response ?? {} as AIResponse;
             if (optimization.id) {
                 this.pageTitle = optimization.role_company + ' - ' + optimization.role_name + ' - Resume Optimization'
+            } else {
+                this.pageTitle = 'New Optimization'
             }
         },
         nextStep() {
