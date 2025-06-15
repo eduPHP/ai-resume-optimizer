@@ -13,7 +13,6 @@ export type State = {
     loading: boolean;
     optimizing: boolean;
     windowWidth: number;
-    pageTitle: string;
     steps: Step[];
     form: Form;
 }
@@ -93,7 +92,6 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
         loading: false,
         optimizing: false,
         windowWidth: 4000,
-        pageTitle: 'New Optimization',
         steps: [
             {
                 name: 'Role Information',
@@ -140,6 +138,13 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
         currentStep: (state: State): Step => {
             return state.steps[state.step]
         },
+        pageTitle: (state: State) => {
+            if (state.form.role.company && state.form.role.name) {
+                return `${state.form.role.company} - ${state.form.role.name} - Resume Optimization`
+            }
+
+            return 'New Optimization'
+        }
     },
 
     actions: {
@@ -176,11 +181,6 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
             this.form.additional.mentionRelocationAvailability = optimization.mention_relocation_availability ?? false;
             this.form.status = optimization.status ?? 'pending';
             this.form.response = optimization.ai_response ?? {} as AIResponse;
-            if (optimization.id) {
-                this.pageTitle = optimization.role_company + ' - ' + optimization.role_name + ' - Resume Optimization'
-            } else {
-                this.pageTitle = 'New Optimization'
-            }
         },
         nextStep() {
             this.step++
