@@ -6,10 +6,14 @@ use App\Models\Resume;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Spatie\PdfToText\Pdf;
+use App\Contracts\ResumeParser;
 
 class ResumesController
 {
+    public function __construct(private ResumeParser $parser)
+    {
+    }
+
     public function index(Request $request): \Illuminate\Http\JsonResponse
     {
         $resumes = $request->user()->resumes()->latest('created_at')->limit(5)->get()->map(fn($resume) => [
@@ -43,7 +47,7 @@ class ResumesController
         }
 
         // todo: parse content
-        $content = str(Pdf::getText(Storage::disk('local')->path($path)))
+        $content = str($this->parser->getText(Storage::disk('local')->path($path)))
             ->replaceMatches('/[^0-9A-z\n -.\/]/', '')
             ->replaceMatches('/\n\s*\n\s*\n/', '')
         ;
