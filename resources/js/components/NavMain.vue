@@ -1,13 +1,25 @@
 <script setup lang="ts">
-import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import {
+    SidebarGroup,
+    SidebarGroupLabel,
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem,
+    useSidebar
+} from '@/components/ui/sidebar';
 import { type NavGroup, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { File } from 'lucide-vue-next';
+import { File, Plus } from 'lucide-vue-next';
 import { onMounted, ref } from 'vue';
 import { Axios } from '@/lib/axios';
+import { Button } from '@/components/ui/button';
+import Tooltip from '@/components/ui/tooltip/Tooltip.vue';
+import TooltipContent from '@/components/ui/tooltip/TooltipContent.vue';
+import TooltipTrigger from '@/components/ui/tooltip/TooltipTrigger.vue';
 
 const items = ref<NavGroup[]>([])
 const page = usePage();
+const { state: sidebarState, isMobile } = useSidebar();
 
 onMounted(async () => {
     const request = await Axios(page).get<NavItem[]>(route('optimizations.index', {grouped: true}))
@@ -21,14 +33,12 @@ onMounted(async () => {
 </script>
 
 <template>
-    <SidebarMenuButton
-        as-child :is-active="route('optimizations.create') === page.url"
-        :tooltip="'New Optimization'"
-    >
-        <Link :href="route('optimizations.create')" class="justify-center bg-gray-200 dark:bg-gray-800 py-6">
-            <span>New Optimization</span>
-        </Link>
-    </SidebarMenuButton>
+    <Button as="a" :href="route('optimizations.create')" variant="outline" class="my-4">
+        <span v-if="sidebarState === 'collapsed'">
+            <Plus />
+        </span>
+        <span v-else>New Optimization</span>
+    </Button>
     <SidebarGroup v-for="group in items" :key="group.title" class="p-0 mb-2">
         <SidebarGroupLabel>{{ group.title }}</SidebarGroupLabel>
         <SidebarMenu>
