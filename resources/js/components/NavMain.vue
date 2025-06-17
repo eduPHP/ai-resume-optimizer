@@ -13,13 +13,10 @@ import { File, Plus } from 'lucide-vue-next';
 import { onMounted, ref } from 'vue';
 import { Axios } from '@/lib/axios';
 import { Button } from '@/components/ui/button';
-import Tooltip from '@/components/ui/tooltip/Tooltip.vue';
-import TooltipContent from '@/components/ui/tooltip/TooltipContent.vue';
-import TooltipTrigger from '@/components/ui/tooltip/TooltipTrigger.vue';
 
 const items = ref<NavGroup[]>([])
 const page = usePage();
-const { state: sidebarState, isMobile } = useSidebar();
+const { state: sidebarState } = useSidebar();
 
 onMounted(async () => {
     const request = await Axios(page).get<NavItem[]>(route('optimizations.index', {grouped: true}))
