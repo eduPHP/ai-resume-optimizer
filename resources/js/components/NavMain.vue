@@ -30,7 +30,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <Button as="a" :href="route('optimizations.create')" variant="outline" class="my-4">
+    <Button size="lg" as="a" :href="route('optimizations.create')" variant="outline" class="my-4">
         <span v-if="sidebarState === 'collapsed'">
             <Plus />
         </span>
