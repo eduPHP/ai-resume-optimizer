@@ -61,7 +61,7 @@ onMounted(async () => {
         </Button>
         <div class="relative">
             <Input v-if="sidebarState !== 'collapsed'" class="mt-3 h-10" placeholder="Search" v-model="filter" />
-            <Button @click.prevent="filter = ''" variant="ghost" class="absolute inset-0 top-0 bottom-0 left-auto px-2 m-1">
+            <Button v-if="filter.length" @click.prevent="filter = ''" variant="ghost" class="absolute inset-0 top-0 bottom-0 left-auto px-2 m-1">
                 <X :size="16" class="text-red-400" />
             </Button>
         </div>
