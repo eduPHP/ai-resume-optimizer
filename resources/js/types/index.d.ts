@@ -17,7 +17,7 @@ export interface NavGroup {
 }
 
 export interface NavItem {
-    id?: number
+    id?: number|string
     title: string;
     tooltip?: string;
     href: string;
