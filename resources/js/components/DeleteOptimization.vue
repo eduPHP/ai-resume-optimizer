@@ -11,16 +11,15 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { OptimizationType, useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
-import { router, usePage } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 import { deleteOptimization } from '@/lib/axios';
 import { useToastsStore } from '@/stores/ToastsStore';
 
 const state = useOptimizationWizardStore()
-const page = usePage();
 const toast = useToastsStore();
 
 const handleDeleteOptimization = () => {
-    deleteOptimization(page, state)
+    deleteOptimization()
     state.setOptimization({} as OptimizationType)
     toast.success('Removed!', 'The optimization was successfully removed.')
 

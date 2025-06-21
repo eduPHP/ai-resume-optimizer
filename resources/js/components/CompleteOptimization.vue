@@ -2,14 +2,14 @@
 
 import { completeWizard, downloadCoverLetter, downloadOptimizedResume } from '@/lib/axios';
 import { Button } from '@/components/ui/button';
-import { EllipsisVerticalIcon, Edit, File, Recycle, Trash } from 'lucide-vue-next';
-import { usePage } from '@inertiajs/vue3';
+import { EllipsisVerticalIcon, Edit, File, Recycle } from 'lucide-vue-next';
 import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
 import { onMounted, ref } from 'vue';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { SidebarMenuButton } from '@/components/ui/sidebar';
 import DeleteOptimization from '@/components/DeleteOptimization.vue';
 import { useToastsStore } from '@/stores/ToastsStore';
+import { usePage } from '@inertiajs/vue3';
 
 const state = useOptimizationWizardStore()
 const page = usePage();
@@ -43,7 +43,7 @@ const enableEdit = () => {
 const regenerate = () => {
     state.loading = true;
 
-    completeWizard(page, state).then((response) => {
+    completeWizard(state).then((response) => {
         state.setOptimization(response.data.optimization)
         state.form.status = 'complete'
         toast.success('Complete Optimization', 'The optimization was successfully re-generated.')
@@ -134,11 +134,11 @@ const regenerate = () => {
         </div>
 
         <div class="flex flex-col-reverse xl:flex-row justify-end gap-2">
-            <Button :disabled="state.loading || ! state.form.response.cover_letter?.length" :variant="state.loading || ! state.form.response.cover_letter?.length ? 'ghost' : 'outline'" type="button" size="lg" @click="downloadCoverLetter(page, state)">
+            <Button :disabled="state.loading || ! state.form.response.cover_letter?.length" :variant="state.loading || ! state.form.response.cover_letter?.length ? 'ghost' : 'outline'" type="button" size="lg" @click="downloadCoverLetter(state)">
                 <File />
                 Download Cover Letter
             </Button>
-            <Button :disabled="state.loading" type="button" size="lg" @click="downloadOptimizedResume(page, state)">
+            <Button :disabled="state.loading" type="button" size="lg" @click="downloadOptimizedResume(state)">
                 <File />
                 Download Optimized Resume
             </Button>

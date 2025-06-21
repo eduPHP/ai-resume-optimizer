@@ -3,16 +3,14 @@ import { Toggle } from '@/components/ui/toggle';
 import { Input } from '@/components/ui/input';
 import InputError from '@/components/InputError.vue';
 import { Label } from '@/components/ui/label';
-import { usePage } from '@inertiajs/vue3';
 import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
 import { Buttons } from '@/components/ui/steps';
 import { updateAdditionalInformation } from '@/lib/axios';
 
 const state = useOptimizationWizardStore()
-const page = usePage()
 
 const submit = () => {
-    updateAdditionalInformation(page, state)
+    updateAdditionalInformation(state)
 }
 
 </script>

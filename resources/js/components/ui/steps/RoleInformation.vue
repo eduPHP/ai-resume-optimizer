@@ -6,15 +6,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { OptimizationType, useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
 import { Buttons } from '@/components/ui/steps';
 import { createOrUpdateOptimization } from '@/lib/axios';
-import { router, usePage } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 import { useNavigationItemsStore } from '@/stores/NavigationItemsStore';
 
 const state = useOptimizationWizardStore()
 const nav = useNavigationItemsStore()
-const page = usePage()
 
 const submit = () => {
-    createOrUpdateOptimization(page, state).then(response => {
+    createOrUpdateOptimization().then(response => {
         if (response.data.created) {
             state.setOptimization(response.data.optimization as OptimizationType)
             nav.addItem(response.data.optimization.role_company, response.data.optimization.id as string)

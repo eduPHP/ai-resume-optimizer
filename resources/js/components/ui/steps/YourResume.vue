@@ -2,26 +2,24 @@
     import { UploadIcon } from 'lucide-vue-next';
     import { useOptimizationWizardStore, Resume } from '@/stores/OptimizationWizardStore';
     import { Buttons } from '@/components/ui/steps';
-    import { usePage } from '@inertiajs/vue3';
     import { onBeforeMount, ref } from 'vue';
     import { Axios, uploadResume, updateResume } from '@/lib/axios';
     import InputError from '@/components/InputError.vue';
 
     const state = useOptimizationWizardStore()
-    const page = usePage()
 
     const resumes = ref<Resume[]>([])
     const flashSuccess = ref(false)
 
     onBeforeMount(() => {
-        Axios(usePage()).get(route('resumes.index')).then(response => {
+        Axios().get(route('resumes.index')).then(response => {
             resumes.value = response.data as Resume[]
             state.form.resume.id = response.data[0]?.id
         })
     })
 
     const submit = () => {
-        updateResume(page, state)
+        updateResume(state)
     }
 
     type FileUploadEvent = Event & {
@@ -40,7 +38,7 @@
             return
         }
 
-        uploadResume(page, state, uploadedResume).then(response => {
+        uploadResume(state, uploadedResume).then(response => {
             resumes.value.unshift(response.data as Resume);
             state.form.resume.id = response.data.id;
             flashSuccess.value = true
