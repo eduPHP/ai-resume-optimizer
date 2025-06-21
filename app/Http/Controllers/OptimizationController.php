@@ -69,7 +69,7 @@ class OptimizationController
             3 => 'handleCompletion',
         ];
 
-        $optimization = $this->{$handlers[$step]}(request(), $optimization);
+        $optimization = $this->{$handlers[$step]}($optimization);
 
         return response()->json([
             'step' => $step,
@@ -90,7 +90,7 @@ class OptimizationController
             3 => 'handleCompletion',
         ];
 
-        $optimization = $this->{$handlers[$step]}(request());
+        $optimization = $this->{$handlers[$step]}();
 
         return response()->json([
             'step' => $step,
