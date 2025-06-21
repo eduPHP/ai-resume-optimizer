@@ -1,5 +1,5 @@
 import { Page, PageProps } from '@inertiajs/core';
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosPromise } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosPromise, AxiosResponse } from 'axios';
 import { OptimizationType, OptimizationWizardStore, Resume } from '@/stores/OptimizationWizardStore';
 interface User {
     id: number;
@@ -161,7 +161,7 @@ const updateResume = (page: Page, state: OptimizationWizardStore) => {
         })
 }
 
-const completeWizard = (page: Page, state: OptimizationWizardStore) => {
+const completeWizard = (page: Page, state: OptimizationWizardStore): AxiosPromise<{optimization: OptimizationType, errors: {[key: string]: string}}> => {
     state.loading = true
     state.optimizing = true
 
@@ -172,7 +172,7 @@ const completeWizard = (page: Page, state: OptimizationWizardStore) => {
         }
     }
 
-    return axios.put(route('optimizations.update', state.form.optimizationId), {}, options)
+    return axios.put<{optimization: OptimizationType, errors: {[key: string]: string}}>(route('optimizations.update', state.form.optimizationId), {}, options)
         .catch((error: any) => {
             Object.keys(error.response.data.errors).forEach(key => {
                 state.form.errors[key] = error.response.data.errors[key][0]

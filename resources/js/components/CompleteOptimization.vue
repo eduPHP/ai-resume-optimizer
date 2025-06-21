@@ -9,10 +9,12 @@ import { onMounted, ref } from 'vue';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { SidebarMenuButton } from '@/components/ui/sidebar';
 import DeleteOptimization from '@/components/DeleteOptimization.vue';
+import { useToastsStore } from '@/stores/ToastsStore';
 
 const state = useOptimizationWizardStore()
 const page = usePage();
 const compatibilityPercentageStyle = ref<string>('')
+const toast = useToastsStore();
 
 const setupOptimization = () => {
     if (state.form.status === 'complete') {
@@ -44,6 +46,7 @@ const regenerate = () => {
     completeWizard(page, state).then((response) => {
         state.setOptimization(response.data.optimization)
         state.form.status = 'complete'
+        toast.success('Complete Optimization', 'The optimization was successfully re-generated.')
         setupOptimization()
     })
 }
