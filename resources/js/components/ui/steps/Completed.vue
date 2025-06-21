@@ -2,7 +2,6 @@
 import { CheckCircle } from 'lucide-vue-next';
 import { Buttons } from '@/components/ui/steps';
 import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
-import { usePage } from '@inertiajs/vue3';
 import { completeWizard } from '@/lib/axios';
 import { useToastsStore } from '@/stores/ToastsStore';
 
@@ -10,7 +9,7 @@ const state = useOptimizationWizardStore()
 const toast = useToastsStore();
 
 const finish = () => {
-    completeWizard(usePage(), state).then(response => {
+    completeWizard(state).then(response => {
         state.setOptimization(response.data.optimization)
         state.form.status = 'complete'
         toast.success('Complete Optimization', 'The optimization was successfully re-generated.')
