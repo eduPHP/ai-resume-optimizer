@@ -12,7 +12,7 @@ const finish = () => {
     completeWizard(state).then(response => {
         state.setOptimization(response.data.optimization)
         state.form.status = 'complete'
-        toast.success('Complete Optimization', 'The optimization was successfully re-generated.')
+        toast.success('Complete', 'Resume optimization was successfully completed.')
     })
 }
 
