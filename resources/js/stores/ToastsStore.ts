@@ -6,7 +6,12 @@ export type Toast = {
     type: 'success' | 'error';
     id?: string;
     duration?: number;
-}
+    state: 'active' | 'closed';
+    timeout?: number;
+    progress: number;
+    progressInterval?: number;
+};
+
 export const useToastsStore = defineStore('toasts', {
     state: () => ({
         toasts: [] as Toast[],
@@ -18,7 +23,9 @@ export const useToastsStore = defineStore('toasts', {
                 title,
                 description,
                 type: 'success',
-                duration,
+                duration: duration ?? 5000,
+                state: 'active',
+                progress: 100,
             })
         },
 
@@ -27,22 +34,44 @@ export const useToastsStore = defineStore('toasts', {
                 title,
                 description,
                 type: 'error',
-                duration,
+                duration: duration ?? 5000,
+                state: 'active',
+                progress: 100,
             })
         },
 
         addToast(toast: Toast) {
-            if (! toast.id) toast.id = Math.random().toString()
+            if (!toast.id) toast.id = Math.random().toString()
 
             this.toasts.push(toast)
 
-            setTimeout(() => {
-                this.toasts = this.toasts.filter(t => t.id !== toast.id)
-            }, toast.duration ?? 5000)
+            // Update progress every 10ms
+            const duration = toast.duration ?? 5000
+            const step = 100 / (duration / 10)
+
+            toast.progressInterval = setInterval(() => {
+                const index = this.toasts.findIndex(t => t.id === toast.id)
+                if (index !== -1) {
+                    this.toasts[index].progress = Math.max(0, this.toasts[index].progress - step)
+                }
+            }, 10)
+
+            toast.timeout = setTimeout(() => {
+                this.removeToast(toast)
+            }, duration)
         },
 
         removeToast(toast: Toast) {
-            this.toasts = this.toasts.filter(t => t.id !== toast.id)
+            const toastItemIndex = this.toasts.findIndex(t => t.id === toast.id)
+            if (toastItemIndex === -1) return
+
+            clearTimeout(this.toasts[toastItemIndex].timeout)
+            clearInterval(this.toasts[toastItemIndex].progressInterval)
+            this.toasts[toastItemIndex].state = 'closed'
+
+            setTimeout(() => {
+                this.toasts = this.toasts.filter(t => t.id !== toast.id)
+            }, 400)
         }
     },
 })
