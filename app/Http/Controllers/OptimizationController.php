@@ -210,6 +210,6 @@ class OptimizationController
 
         $optimization->delete();
 
-        return response()->json(['message' => 'Optimization deleted']);
+        return response()->json([], 201);
     }
 }
