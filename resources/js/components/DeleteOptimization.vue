@@ -1,0 +1,53 @@
+<script lang="ts" setup>
+
+import { Trash } from 'lucide-vue-next';
+import {
+    Dialog, DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle, DialogTrigger
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { OptimizationType, useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
+import { router, usePage } from '@inertiajs/vue3';
+import { deleteOptimization } from '@/lib/axios';
+
+const state = useOptimizationWizardStore()
+const page = usePage();
+
+const handleDeleteOptimization = () => {
+    deleteOptimization(page, state)
+    state.setOptimization({} as OptimizationType)
+
+    router.visit('/dashboard', { method: 'get', preserveState: true })
+}
+</script>
+
+<template>
+    <Dialog>
+        <DialogTrigger as-child>
+            <Button :disabled="state.loading" variant="destructive" type="button" size="lg">
+                <Trash /> Remove
+            </Button>
+        </DialogTrigger>
+        <DialogContent>
+            <DialogHeader class="space-y-3">
+                <DialogTitle>Are you sure you want to delete this optimization?</DialogTitle>
+                <DialogDescription>
+                    Once it is deleted, all of its resources and data will also be permanently deleted.
+                </DialogDescription>
+            </DialogHeader>
+            <DialogFooter class="gap-2">
+                <DialogClose as-child>
+                    <Button variant="secondary"> Cancel </Button>
+                </DialogClose>
+
+                <Button variant="destructive" :disabled="state.loading">
+                    <button type="button" @click.prevent="handleDeleteOptimization">Delete Optimization</button>
+                </Button>
+            </DialogFooter>
+        </DialogContent>
+    </Dialog>
+</template>

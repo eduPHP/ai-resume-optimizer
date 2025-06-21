@@ -11,6 +11,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/optimizations/{optimization}', [\App\Http\Controllers\OptimizationController::class, 'show'])->name('optimizations.show');
     Route::post('/optimizations/create', [\App\Http\Controllers\OptimizationController::class, 'store'])->name('optimizations.store');
     Route::put('/optimizations/{optimization}', [\App\Http\Controllers\OptimizationController::class, 'update'])->name('optimizations.update');
+    Route::delete('/optimizations/{optimization}', [\App\Http\Controllers\OptimizationController::class, 'destroy'])->name('optimizations.destroy');
     Route::get('view-optimized/{optimization}', [\App\Http\Controllers\DownloadOptimizedResumeController::class, 'sample']);
 
 });

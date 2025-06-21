@@ -204,4 +204,13 @@ class OptimizationController
             'reasoning' => $agentResponse->getReasoning(),
         ];
     }
+
+    public function destroy(Request $request, Optimization $optimization): \Illuminate\Http\JsonResponse
+    {
+        abort_unless($optimization->user->is($request->user()), 403);
+
+        $optimization->delete();
+
+        return response()->json(['message' => 'Optimization deleted']);
+    }
 }

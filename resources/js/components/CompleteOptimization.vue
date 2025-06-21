@@ -2,12 +2,13 @@
 
 import { completeWizard, downloadCoverLetter, downloadOptimizedResume } from '@/lib/axios';
 import { Button } from '@/components/ui/button';
-import { EllipsisVerticalIcon, Edit, File, Recycle } from 'lucide-vue-next';
+import { EllipsisVerticalIcon, Edit, File, Recycle, Trash } from 'lucide-vue-next';
 import { usePage } from '@inertiajs/vue3';
 import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
 import { onMounted, ref } from 'vue';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { SidebarMenuButton } from '@/components/ui/sidebar';
+import DeleteOptimization from '@/components/DeleteOptimization.vue';
 
 const state = useOptimizationWizardStore()
 const page = usePage();
@@ -95,14 +96,14 @@ const regenerate = () => {
 
             <hr class="my-8 mx-auto max-w-xl border-t border-gray-300 dark:border-gray-500">
 
-            <h2 v-if="state.form.response.cover_letter.length" class="mt-6 font-bold">Cover Letter:</h2>
-            <div v-if="state.form.response.cover_letter.length" class="mt-4">
+            <h2 v-if="state.form.response.cover_letter?.length" class="mt-6 font-bold">Cover Letter:</h2>
+            <div v-if="state.form.response.cover_letter?.length" class="mt-4">
                 <p class="text-gray-600 dark:text-gray-400">Dear Hiring manager,</p>
-                <p v-for="(paragraph, index) in state.form.response.cover_letter" :key="`${paragraph}-${index}`" class="py-2 text-gray-600 dark:text-gray-400">{{ paragraph }}</p>
+                <p v-for="(paragraph, index) in state.form.response.cover_letter ?? []" :key="`${paragraph}-${index}`" class="py-2 text-gray-600 dark:text-gray-400">{{ paragraph }}</p>
                 <p>Regards,<br>{{page.props.auth?.user.name}}</p>
             </div>
             <div class="absolute right-2 top-3" v-show="!state.loading">
-                <DropdownMenu>
+                <DropdownMenu v-if="state.form.optimizationId">
                     <DropdownMenuTrigger as-child>
                         <SidebarMenuButton size="lg" class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground px-4">
                             <EllipsisVerticalIcon class="ml-auto size-4" />
@@ -121,6 +122,8 @@ const regenerate = () => {
                             <Button :disabled="state.loading" :variant="state.loading ? 'ghost' : 'outline'" type="button" size="lg" @click="enableEdit">
                                 <Edit /> Edit
                             </Button>
+                            <DeleteOptimization />
+
                         </div>
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -128,7 +131,7 @@ const regenerate = () => {
         </div>
 
         <div class="flex flex-col-reverse xl:flex-row justify-end gap-2">
-            <Button :disabled="state.loading || ! state.form.response.cover_letter.length" :variant="state.loading || ! state.form.response.cover_letter.length ? 'ghost' : 'outline'" type="button" size="lg" @click="downloadCoverLetter(page, state)">
+            <Button :disabled="state.loading || ! state.form.response.cover_letter?.length" :variant="state.loading || ! state.form.response.cover_letter?.length ? 'ghost' : 'outline'" type="button" size="lg" @click="downloadCoverLetter(page, state)">
                 <File />
                 Download Cover Letter
             </Button>

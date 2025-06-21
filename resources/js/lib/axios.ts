@@ -37,6 +37,18 @@ const Axios = (page: AppPage): AxiosInstance => {
     return instance;
 }
 
+const deleteOptimization = async (page: Page, state: OptimizationWizardStore): void => {
+    state.loading = true
+
+    const axios = Axios(page)
+
+    await axios.delete(route('optimizations.destroy', state.form.optimizationId)).then(() => {
+        state.clearErrors()
+    })
+
+    state.loading = false
+}
+
 const createOrUpdateOptimization = (page: Page, state: OptimizationWizardStore): AxiosPromise<{optimization: OptimizationType, created: boolean}> => {
     state.loading = true
 
@@ -221,4 +233,5 @@ export {
     completeWizard,
     downloadOptimizedResume,
     downloadCoverLetter,
+    deleteOptimization,
 }
