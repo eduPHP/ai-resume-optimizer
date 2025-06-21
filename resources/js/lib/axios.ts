@@ -38,7 +38,7 @@ const Axios = (page: AppPage): AxiosInstance => {
     return instance;
 }
 
-const deleteOptimization = async (page: Page, state: OptimizationWizardStore): void => {
+const deleteOptimization = async (page: Page, state: OptimizationWizardStore): Promise<boolean> => {
     state.loading = true
 
     const axios = Axios(page)
@@ -48,6 +48,8 @@ const deleteOptimization = async (page: Page, state: OptimizationWizardStore): v
     })
 
     state.loading = false
+
+    return new Promise(resolve => resolve(true))
 }
 
 const createOrUpdateOptimization = (page: Page, state: OptimizationWizardStore): AxiosPromise<{optimization: OptimizationType, created: boolean}> => {
