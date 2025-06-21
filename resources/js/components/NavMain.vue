@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar';
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 import { File, Plus, X } from 'lucide-vue-next';
 import { onMounted } from 'vue';
 import { Button } from '@/components/ui/button';
@@ -8,11 +8,10 @@ import { Input } from '@/components/ui/input';
 import { useNavigationItemsStore } from '@/stores/NavigationItemsStore';
 
 const nav = useNavigationItemsStore();
-const page = usePage();
 const { state: sidebarState } = useSidebar();
 
 onMounted(() => {
-    nav.loadItems(page)
+    nav.loadItems()
 });
 </script>
 

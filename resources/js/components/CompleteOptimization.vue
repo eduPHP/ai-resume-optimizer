@@ -36,7 +36,7 @@ onMounted(() => {
     setupOptimization()
 })
 const enableEdit = () => {
-    state.form.status = 'pending'
+    state.form.status = 'draft'
     state.step = 0
     state.latestStep = 3
 }

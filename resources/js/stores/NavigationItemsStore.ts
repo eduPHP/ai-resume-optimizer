@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { type NavGroup, type NavItem } from '@/types';
 import { Axios } from '@/lib/axios';
-import { Page } from '@inertiajs/core';
 
 type State = {
     items: NavGroup[];
@@ -62,8 +61,8 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
             }
         },
 
-        async loadItems(page: Page) {
-            const request = await Axios(page).get<{[key: string]: NavItem[]}>(route('optimizations.index', { grouped: true }));
+        async loadItems() {
+            const request = await Axios().get<{[key: string]: NavItem[]}>(route('optimizations.index', { grouped: true }));
 
             this.items = Object.keys(request.data).map(
                 (key: string): NavGroup => {
