@@ -7,22 +7,21 @@ use App\DTO\Contracts\AIAgentPrompter;
 use App\Models\Optimization;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class OptimizationController
 {
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
-        $optimizations = $request->user()->optimizations()->latest('created_at')->get()->map(fn(Optimization $optimization) => [
+        $optimizations = request()->user()->optimizations()->latest('created_at')->get()->map(fn(Optimization $optimization) => [
             'id' => $optimization->id,
             'href' => route('optimizations.show', $optimization),
             'title' => $optimization->role_company,
             'tooltip' => $optimization->role_name,
-            'created' => $optimization->created_at->format('Y-m-d g:i A'),
+            'created' => $optimization->created_at->utcOffset(request()->header('X-Timezone-Offset') ?? 0)->format('Y-m-d g:i A'),
         ]);
 
-        if ($request->has('grouped')) {
+        if (request()->has('grouped')) {
             $optimizations = $optimizations->map(function ($resume) {
                 return [
                     ...$resume,
@@ -39,11 +38,11 @@ class OptimizationController
 
     private function getDayGroup(string $date): string
     {
-        if (Carbon::parse($date)->isToday()) {
+        if (Carbon::parse($date)->utcOffset(request()->header('X-Timezone-Offset') ?? 0)->isToday()) {
             return 'Today';
         }
 
-        if (Carbon::parse($date)->isYesterday()) {
+        if (Carbon::parse($date)->utcOffset(request()->header('X-Timezone-Offset') ?? 0)->isYesterday()) {
             return 'Yesterday';
         }
 
@@ -57,10 +56,10 @@ class OptimizationController
         ]);
     }
 
-    public function update(Request $request, Optimization $optimization): \Illuminate\Http\JsonResponse
+    public function update(Optimization $optimization): \Illuminate\Http\JsonResponse
     {
         // current step
-        $step = (int) $request->header('X-CurrentStep');
+        $step = (int) request()->header('X-CurrentStep');
 
         // sleep(2);
         $handlers = [
@@ -70,7 +69,7 @@ class OptimizationController
             3 => 'handleCompletion',
         ];
 
-        $optimization = $this->{$handlers[$step]}($request, $optimization);
+        $optimization = $this->{$handlers[$step]}(request(), $optimization);
 
         return response()->json([
             'step' => $step,
@@ -78,10 +77,10 @@ class OptimizationController
         ]);
     }
 
-    public function store(Request $request): \Illuminate\Http\JsonResponse
+    public function store(): \Illuminate\Http\JsonResponse
     {
         // current step
-        $step = (int) $request->header('X-CurrentStep');
+        $step = (int) request()->header('X-CurrentStep');
 
         // sleep(2);
         $handlers = [
@@ -91,7 +90,7 @@ class OptimizationController
             3 => 'handleCompletion',
         ];
 
-        $optimization = $this->{$handlers[$step]}($request);
+        $optimization = $this->{$handlers[$step]}(request());
 
         return response()->json([
             'step' => $step,
@@ -100,46 +99,46 @@ class OptimizationController
         ]);
     }
 
-    public function handleRoleInformation(Request $request, Optimization $optimization = null): Optimization
+    public function handleRoleInformation(Optimization $optimization = null): Optimization
     {
-        $request->validate([
+        request()->validate([
             'name' => 'required',
             'company' => 'required',
             'description' => 'required'
         ]);
 
         $data = [
-            'role_name' => $request->input('name'),
-            'role_company' => $request->input('company'),
-            'role_description' => $request->input('description'),
+            'role_name' => request()->input('name'),
+            'role_company' => request()->input('company'),
+            'role_description' => request()->input('description'),
             'current_step' => 1,
         ];
         if ($optimization) {
             $optimization->update($data);
         } else {
-            $optimization = $request->user()->optimizations()->create($data);
+            $optimization = request()->user()->optimizations()->create($data);
         }
 
         return $optimization;
     }
 
-    private function handleResume(Request $request, Optimization $optimization): Optimization
+    private function handleResume(Optimization $optimization): Optimization
     {
-        $request->validate([
+        request()->validate([
             'id' => 'required',
         ], ['id.required' => 'Please select or upload a resume to optimize']);
 
         $optimization->update([
             'current_step' => 2,
-            'resume_id' => $request->input('id'),
+            'resume_id' => request()->input('id'),
         ]);
 
         return $optimization->fresh();
     }
 
-    private function handleAdditionalInformation(Request $request, Optimization $optimization): Optimization
+    private function handleAdditionalInformation(Optimization $optimization): Optimization
     {
-        $request->validate([
+        request()->validate([
             'makeGrammaticalCorrections' => 'boolean',
             'changeProfessionalSummary' => 'boolean',
             'generateCoverLetter' => 'boolean',
@@ -150,18 +149,18 @@ class OptimizationController
 
         $optimization->update([
             'current_step' => 3,
-            'make_grammatical_corrections' => $request->input('makeGrammaticalCorrections'),
-            'change_professional_summary' => $request->input('changeProfessionalSummary'),
-            'generate_cover_letter' => $request->input('generateCoverLetter'),
-            'change_target_role' => $request->input('changeTargetRole'),
-            'mention_relocation_availability' => $request->input('mentionRelocationAvailability'),
-            'role_location' => $request->input('targetCountry'),
+            'make_grammatical_corrections' => request()->input('makeGrammaticalCorrections'),
+            'change_professional_summary' => request()->input('changeProfessionalSummary'),
+            'generate_cover_letter' => request()->input('generateCoverLetter'),
+            'change_target_role' => request()->input('changeTargetRole'),
+            'mention_relocation_availability' => request()->input('mentionRelocationAvailability'),
+            'role_location' => request()->input('targetCountry'),
         ]);
 
         return $optimization->fresh();
     }
 
-    private function handleCompletion(Request $request, Optimization $optimization): Optimization
+    private function handleCompletion(Optimization $optimization): Optimization
     {
         $optimization->update([
             'status' => 'processing',
@@ -205,9 +204,9 @@ class OptimizationController
         ];
     }
 
-    public function destroy(Request $request, Optimization $optimization): \Illuminate\Http\JsonResponse
+    public function destroy(Optimization $optimization): \Illuminate\Http\JsonResponse
     {
-        abort_unless($optimization->user->is($request->user()), 403);
+        abort_unless($optimization->user->is(request()->user()), 403);
 
         $optimization->delete();
 

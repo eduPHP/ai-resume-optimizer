@@ -33,6 +33,7 @@ const Axios = (page: AppPage): AxiosInstance => {
 
     instance.defaults.headers.common['Authorization'] = token ? `Bearer ${token}` : ''
     instance.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
+    instance.defaults.headers.common['X-Timezone-Offset'] = new Date().getTimezoneOffset() * -1
 
     return instance;
 }
