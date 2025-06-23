@@ -18,6 +18,11 @@ import { useToastsStore } from '@/stores/ToastsStore';
 const state = useOptimizationWizardStore()
 const toast = useToastsStore();
 
+defineProps<{
+    size?: 'lg' | 'default' | 'sm' | 'icon';
+}>();
+
+
 const handleDeleteOptimization = () => {
     deleteOptimization()
     state.setOptimization({} as OptimizationType)
@@ -31,7 +36,7 @@ const handleDeleteOptimization = () => {
 <template>
     <Dialog>
         <DialogTrigger as-child>
-            <Button :disabled="state.loading" variant="destructive" type="button" size="lg">
+            <Button :disabled="state.loading" variant="destructive" type="button" :size="size ?? 'lg'">
                 <Trash /> Remove
             </Button>
         </DialogTrigger>

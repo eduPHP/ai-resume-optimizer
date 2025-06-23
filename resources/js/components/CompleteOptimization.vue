@@ -9,12 +9,15 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/compon
 import { SidebarMenuButton } from '@/components/ui/sidebar';
 import DeleteOptimization from '@/components/DeleteOptimization.vue';
 import { useToastsStore } from '@/stores/ToastsStore';
+import { useNavigationItemsStore } from '@/stores/NavigationItemsStore';
 import { usePage } from '@inertiajs/vue3';
+import { format } from 'date-fns';
 
 const state = useOptimizationWizardStore()
 const page = usePage();
 const compatibilityPercentageStyle = ref<string>('')
 const toast = useToastsStore();
+const nav = useNavigationItemsStore();
 
 const setupOptimization = () => {
     if (state.form.status === 'complete') {
@@ -36,7 +39,7 @@ onMounted(() => {
     setupOptimization()
 })
 const enableEdit = () => {
-    state.form.status = 'draft'
+    state.form.status = 'editing'
     state.step = 0
     state.latestStep = 3
 }
@@ -50,12 +53,18 @@ const regenerate = () => {
         setupOptimization()
     })
 }
+//
+// const handleTestNavItem = () => {
+//     nav.addItem('test role', 'asdasd123')
+// }
 
 </script>
 
 <template>
     <div class="mx-auto flex h-full w-full xl:w-[950px] flex-1 flex-col gap-4 rounded-xl p-4">
         <div class="relative bg-gray-300/10 dark:bg-[#202020] px-8 py-6">
+
+<!--            <Button @click.prevent="handleTestNavItem">Test Nav</Button>-->
 
             <h1 class="text-2xl">{{ state.form.role.company }} {{ state.form.role.name }} Application</h1>
 

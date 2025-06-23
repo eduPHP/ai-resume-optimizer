@@ -179,7 +179,9 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
             this.form.additional.generateCoverLetter = optimization.generate_cover_letter ?? true;
             this.form.additional.changeTargetRole = optimization.change_target_role ?? true;
             this.form.additional.mentionRelocationAvailability = optimization.mention_relocation_availability ?? false;
-            this.form.status = optimization.status ?? 'pending';
+            if (this.form.status !== 'editing') {
+                this.form.status = optimization.status ?? 'draft';
+            }
             this.form.response = optimization.ai_response ?? {} as AIResponse;
         },
         nextStep() {

@@ -24,6 +24,7 @@ const { breakpoint } = useBreakpoints()
                     </button>
 
                     <template v-if="state.step === stepIdx && stepIdx === state.steps.length - 1 && !['xl', '2xl'].includes(breakpoint)">
+                        <!-- /* include the step in this position on mobile */ -->
                         <component :is="{...state.currentStep.stepComponent}" />
                     </template>
                 </template>

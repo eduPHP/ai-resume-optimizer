@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
 import { Button } from '@/components/ui/button';
+import DeleteOptimization from '@/components/DeleteOptimization.vue';
 
 defineProps<{
     action: () => void
@@ -11,6 +12,10 @@ const state = useOptimizationWizardStore()
 </script>
 <template>
     <div class="mt-2 xl:mt-0 flex xl:justify-end xl:items-center gap-2 xl:gap-4">
+        <div class="flex-1" v-if="state.step > 0 || state.form.status === 'editing'">
+            <DeleteOptimization />
+        </div>
+
         <Button type="button"
                 size="lg"
                 class="flex-1 xl:flex-none"

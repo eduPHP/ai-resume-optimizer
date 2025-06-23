@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { type NavGroup, type NavItem } from '@/types';
 import { Axios } from '@/lib/axios';
+import { format } from 'date-fns';
 
 type State = {
     items: NavGroup[];
@@ -39,26 +40,26 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
             this.filter = '';
         },
 
-        addItem(title: string, id: string) {
+        addItem(title: string, id: string, draft: boolean = false) {
             const item: NavItem = {
                 href: route('optimizations.show', id),
                 id,
-                title,
-                created: 'Just Now'
+                title: draft ? `[draft] ${title}` : title,
+                created: format(new Date(), 'yyyy-LL-dd h:mm a'), // Y-m-d g:i A
             };
 
-            const groupIndex: number = this.items.findIndex((group: NavGroup) => group.title === 'Today')
+            let groupIndex: number = this.items.findIndex((group: NavGroup) => group.title === 'Today')
 
-            console.log(groupIndex)
-            // no 'Today' yet
+            // handle no 'Today' yet
             if (groupIndex < 0)  {
                 this.items.unshift({
                     title: 'Today',
-                    items: [item]
+                    items: [],
                 })
-            } else {
-                this.items[groupIndex].items.unshift(item)
+                groupIndex = 0
             }
+
+            this.items[groupIndex].items.unshift(item)
         },
 
         async loadItems() {
