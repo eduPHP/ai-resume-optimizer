@@ -15,7 +15,7 @@ const finish = () => {
         state.setOptimization(response.data.optimization)
         state.form.status = 'complete'
         toast.success('Complete', 'Resume optimization was successfully completed.')
-        nav.replace(state.form.optimizationId as string, state.form.role.company)
+        nav.replace(response.data.optimization)
     })
 }
 

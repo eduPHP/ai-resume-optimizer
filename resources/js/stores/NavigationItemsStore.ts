@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { type NavGroup, type NavItem } from '@/types';
 import { Axios } from '@/lib/axios';
 import { format } from 'date-fns';
+import { OptimizationType } from '@/stores/OptimizationWizardStore';
 
 type State = {
     items: NavGroup[];
@@ -40,11 +41,16 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
             this.filter = '';
         },
 
-        replace(id: string, title: string) {
+        replace(optimization: OptimizationType) {
             const groupIndex: number = this.items.findIndex((group: NavGroup) => group.title === 'Today')
-            const itemIndex: number = this.items[groupIndex].items.findIndex((item: NavItem) => item.id === id)
+            const itemIndex: number = this.items[groupIndex].items.findIndex((item: NavItem) => item.id === optimization.id)
 
-            this.items[groupIndex].items[itemIndex].title = title
+            this.items[groupIndex].items[itemIndex] = {
+                ...this.items[groupIndex].items[itemIndex],
+                title: optimization.role_company,
+                status: optimization.status,
+                score: optimization.ai_response?.compatibility_score,
+            }
         },
 
         addItem(title: string, id: string, draft: boolean = false) {
