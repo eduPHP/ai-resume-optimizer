@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Steps } from '../components/ui/steps';
+import { Steps } from './ui/steps';
 import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
 import { useBreakpoints } from '@/composables/useBreakpoints';
 

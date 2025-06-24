@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $role_name
  * @property string $role_location
  * @property string $role_company
+ * @property string $role_description
  * @property string $status
  * @property \Carbon\Carbon $created_at
  * @property \App\Models\User $user

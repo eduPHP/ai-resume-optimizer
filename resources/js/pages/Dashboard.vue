@@ -3,7 +3,6 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
-import { useToastsStore } from '@/stores/ToastsStore';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {

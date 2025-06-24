@@ -3,7 +3,6 @@
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::middleware('auth')->group(function () {
     Route::redirect('settings', '/settings/profile');
@@ -16,4 +15,7 @@ Route::middleware('auth')->group(function () {
     Route::put('settings/password', [PasswordController::class, 'update'])->name('password.update');
 
     Route::inertia('settings/appearance', 'settings/Appearance')->name('appearance');
+    Route::inertia('settings/instructions', 'settings/Instructions')->name('instructions');
+    Route::put('settings/instructions', [ProfileController::class, 'updateInstructions'])->name('users.update-instructions');
+
 });

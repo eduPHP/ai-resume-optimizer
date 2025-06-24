@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Settings;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\ProfileUpdateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,6 +39,17 @@ class ProfileController extends Controller
         $request->user()->save();
 
         return to_route('profile.edit');
+    }
+
+    public function updateInstructions(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        $user->update([
+            'ai_instructions' => $request->get('instructions'),
+        ]);
+
+        return response()->json(['success' => 'User Instructions were successfully updated.']);
     }
 
     /**

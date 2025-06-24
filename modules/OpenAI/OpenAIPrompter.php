@@ -69,9 +69,18 @@ class OpenAIPrompter implements AIAgentPrompter
                         Do NOT include any other text.',
                     ],
                     ...$options,
+                    ...(auth()->user()->ai_instructions ? [
+                        [
+                            'role' => 'system',
+                            'content' => auth()->user()->ai_instructions,
+                        ]
+                    ] : []),
                     [
                         'role' => 'user',
-                        'content' => "Please improve the resume, following {$options->roleLocation}'s pattern and best practices for a higher employee selection rate, reorganize the sections according with the country's requirements and keep the title.",
+                        'content' => "Please improve the resume, following {$options->roleLocation}'s pattern and best practices
+                                     for a higher employee selection rate, reorganize the sections according with the country's
+                                     requirements and keep the title.
+                                     Role description is: {$options->roleDescription}",
                     ],
                 ]
             ]);

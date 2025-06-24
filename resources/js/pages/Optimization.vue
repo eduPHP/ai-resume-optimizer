@@ -4,7 +4,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { onMounted, ref } from 'vue';
 import type { BreadcrumbItem } from '@/types';
-import ResumeWizard from '@/pages/ResumeWizard.vue';
+import ResumeWizard from '@/components/ResumeWizard.vue';
 import CompleteOptimization from '@/components/CompleteOptimization.vue';
 import { OptimizationType, useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
 

@@ -230,6 +230,15 @@ const downloadFile: (url: string) => Promise<void> = (url: string) => {
     });
 };
 
+const updateUserInstructions: (instructions: string) => void = async (instructions: string): Promise<void> => {
+    const axios = Axios()
+    const toast = useToastsStore()
+
+    const response = await axios.put<{message: string}>(route('users.update-instructions'), {instructions})
+
+    toast.success('Saved!', response.data.message)
+}
+
 
 export {
     Axios,
@@ -241,4 +250,5 @@ export {
     downloadOptimizedResume,
     downloadCoverLetter,
     deleteOptimization,
+    updateUserInstructions,
 }

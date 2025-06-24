@@ -194,8 +194,9 @@ class OptimizationController
             changeTargetRole: $optimization->change_target_role,
             mentionRelocationAvailability: $optimization->mention_relocation_availability,
             roleName: $optimization->role_name,
+            roleDescription: $optimization->role_description,
             roleLocation: $optimization->role_location,
-            roleCompany: $optimization->role_company
+            roleCompany: $optimization->role_company,
         ));
 
         return [
