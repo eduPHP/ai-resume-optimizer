@@ -20,14 +20,15 @@ class OptimizationController
             'score' => $this->getCompatibilityScore($optimization),
             'status' => $optimization->status,
             'tooltip' => $optimization->role_name,
-            'created' => $optimization->created_at->utcOffset(request()->header('X-Timezone-Offset') ?? 0)->format('Y-m-d g:i A'),
+            'created' => $optimization->created_at,
         ]);
 
         if (request()->has('grouped')) {
-            $optimizations = $optimizations->map(function ($resume) {
+            $optimizations = $optimizations->map(function ($optimization) {
                 return [
-                    ...$resume,
-                    'group' => $this->getDayGroup($resume['created']),
+                    ...$optimization,
+                    'group' => $this->getDayGroup($optimization['created']),
+                    'created' => $optimization['created']->utcOffset(request()->header('X-Timezone-Offset') ?? 0)->format('Y-m-d g:i A'),
                 ];
             })->groupBy('group');
         } else {
@@ -38,13 +39,13 @@ class OptimizationController
         return response()->json($optimizations);
     }
 
-    private function getDayGroup(string $date): string
+    private function getDayGroup(Carbon $date): string
     {
-        if (Carbon::parse($date)->utcOffset(request()->header('X-Timezone-Offset') ?? 0)->isToday()) {
+        if ($date->utcOffset(request()->header('X-Timezone-Offset') ?? 0)->isToday()) {
             return 'Today';
         }
 
-        if (Carbon::parse($date)->utcOffset(request()->header('X-Timezone-Offset') ?? 0)->isYesterday()) {
+        if ($date->utcOffset(request()->header('X-Timezone-Offset') ?? 0)->isYesterday()) {
             return 'Yesterday';
         }
 
