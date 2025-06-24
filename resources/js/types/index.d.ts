@@ -25,6 +25,8 @@ export interface NavItem {
     icon?: LucideIcon | DefineComponent;
     isActive?: boolean;
     group?: string;
+    score?: number;
+    status?: string;
 }
 
 export interface SharedData extends PageProps {

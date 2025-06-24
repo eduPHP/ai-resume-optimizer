@@ -6,9 +6,29 @@ import { onMounted } from 'vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useNavigationItemsStore } from '@/stores/NavigationItemsStore';
+import { NavItem } from '@/types';
 
 const nav = useNavigationItemsStore();
 const { state: sidebarState } = useSidebar();
+
+const compatibilityStyle = (item: NavItem) => {
+    const score = item.score;
+    const SCORE_STYLES = {
+        HIGH: 'text-green-400',
+        MEDIUM: 'text-yellow-400',
+        LOW: 'text-red-400'
+    } as const;
+
+    if (item.status !== 'complete' || ! score) {
+        return '';
+    }
+
+    if (score >= 90) return SCORE_STYLES.HIGH;
+    if (score >= 85) return SCORE_STYLES.MEDIUM;
+
+    return SCORE_STYLES.LOW;
+};
+
 
 onMounted(() => {
     nav.loadItems()
@@ -39,7 +59,7 @@ onMounted(() => {
                 <SidebarMenuItem v-for="item in group.items" :key="item.id">
                     <SidebarMenuButton as-child :is-active="route().routeParams?.optimization === item.id" :tooltip="item.tooltip">
                         <Link :href="item.href" class="mb-2 p-2">
-                            <File class="!h-7 !w-7" />
+                            <File class="!h-7 !w-7" :class="compatibilityStyle(item)" />
                             <span class="flex flex-col">
                                 <span>{{ item.title }}</span>
                                 <span class="text-xs text-gray-400 dark:text-white/40">Sent at {{ item.created }}</span>

@@ -17,6 +17,8 @@ class OptimizationController
             'id' => $optimization->id,
             'href' => route('optimizations.show', $optimization),
             'title' => ($optimization->status === 'draft' ? '[draft] ' : '').$optimization->role_company,
+            'score' => $this->getCompatibilityScore($optimization),
+            'status' => $optimization->status,
             'tooltip' => $optimization->role_name,
             'created' => $optimization->created_at->utcOffset(request()->header('X-Timezone-Offset') ?? 0)->format('Y-m-d g:i A'),
         ]);
@@ -213,5 +215,14 @@ class OptimizationController
         $optimization->delete();
 
         return response()->json([], 201);
+    }
+
+    private function getCompatibilityScore(Optimization $optimization): int
+    {
+        if ($optimization->status !== 'complete') {
+            return 0;
+        }
+
+        return $optimization->ai_response['compatibility_score'];
     }
 }

@@ -4,15 +4,18 @@ import { Buttons } from '@/components/ui/steps';
 import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
 import { completeWizard } from '@/lib/axios';
 import { useToastsStore } from '@/stores/ToastsStore';
+import { useNavigationItemsStore } from '@/stores/NavigationItemsStore';
 
 const state = useOptimizationWizardStore()
-const toast = useToastsStore();
+const toast = useToastsStore()
+const nav = useNavigationItemsStore()
 
 const finish = () => {
     completeWizard(state).then(response => {
         state.setOptimization(response.data.optimization)
         state.form.status = 'complete'
         toast.success('Complete', 'Resume optimization was successfully completed.')
+        nav.replace(state.form.optimizationId as string, state.form.role.company)
     })
 }
 

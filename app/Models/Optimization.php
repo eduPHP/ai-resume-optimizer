@@ -13,10 +13,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property bool $generate_cover_letter
  * @property bool $change_target_role
  * @property bool $mention_relocation_availability
+ * @property string $id
  * @property string $role_name
  * @property string $role_location
  * @property string $role_company
  * @property string $role_description
+ * @property array $ai_response;
  * @property string $status
  * @property \Carbon\Carbon $created_at
  * @property \App\Models\User $user

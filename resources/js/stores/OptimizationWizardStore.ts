@@ -144,7 +144,20 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
             }
 
             return 'New Optimization'
-        }
+        },
+        compatibilityStyle: (state: State): string => {
+            if (state.form.status === 'complete') {
+                const score = state.form.response.compatibility_score;
+                switch (true) {
+                    case score < 90 && score > 84:
+                        return 'text-yellow-400'
+                    case score < 85:
+                        return 'text-red-400'
+                }
+            }
+
+            return 'text-green-400 text-xl'
+        },
     },
 
     actions: {

@@ -40,6 +40,13 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
             this.filter = '';
         },
 
+        replace(id: string, title: string) {
+            const groupIndex: number = this.items.findIndex((group: NavGroup) => group.title === 'Today')
+            const itemIndex: number = this.items[groupIndex].items.findIndex((item: NavItem) => item.id === id)
+
+            this.items[groupIndex].items[itemIndex].title = title
+        },
+
         addItem(title: string, id: string, draft: boolean = false) {
             const item: NavItem = {
                 href: route('optimizations.show', id),

@@ -4,38 +4,16 @@ import { completeWizard, downloadCoverLetter, downloadOptimizedResume } from '@/
 import { Button } from '@/components/ui/button';
 import { EllipsisVerticalIcon, Edit, File, Recycle } from 'lucide-vue-next';
 import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
-import { onMounted, ref } from 'vue';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { SidebarMenuButton } from '@/components/ui/sidebar';
 import DeleteOptimization from '@/components/DeleteOptimization.vue';
 import { useToastsStore } from '@/stores/ToastsStore';
-import { useNavigationItemsStore } from '@/stores/NavigationItemsStore';
 import { usePage } from '@inertiajs/vue3';
 
 const state = useOptimizationWizardStore()
 const page = usePage();
-const compatibilityPercentageStyle = ref<string>('')
 const toast = useToastsStore();
 
-const setupOptimization = () => {
-    if (state.form.status === 'complete') {
-        const score = state.form.response.compatibility_score;
-        switch (true) {
-            case score < 90 && score > 84:
-                compatibilityPercentageStyle.value = 'text-yellow-400'
-                break;
-            case score < 85:
-                compatibilityPercentageStyle.value = 'text-red-400'
-                break;
-            default:
-                compatibilityPercentageStyle.value = 'text-green-400 text-xl'
-        }
-    }
-}
-
-onMounted(() => {
-    setupOptimization()
-})
 const enableEdit = () => {
     state.form.status = 'editing'
     state.step = 0
@@ -48,7 +26,6 @@ const regenerate = () => {
         state.setOptimization(response.data.optimization)
         state.form.status = 'complete'
         toast.success('Complete Optimization', 'The optimization was successfully re-generated.')
-        setupOptimization()
     })
 }
 
@@ -59,7 +36,7 @@ const regenerate = () => {
         <div class="relative bg-gray-300/10 dark:bg-[#202020] px-8 py-6">
             <h1 class="text-2xl">{{ state.form.role.company }} {{ state.form.role.name }} Application</h1>
 
-            <h4 class="mt-4">Compatibility score: <span class="font-bold" :class="compatibilityPercentageStyle">{{state.form.response.compatibility_score}}%</span> Match</h4>
+            <h4 class="mt-4">Compatibility score: <span class="font-bold" :class="state.compatibilityStyle">{{state.form.response.compatibility_score}}%</span> Match</h4>
             <p class="text-gray-600 dark:text-gray-400">{{ state.form.response.reasoning }}</p>
 
             <hr class="my-8 mx-auto max-w-xl border-t border-gray-300 dark:border-gray-500">
