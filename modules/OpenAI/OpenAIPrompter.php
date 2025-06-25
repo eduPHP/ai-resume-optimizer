@@ -39,7 +39,7 @@ class OpenAIPrompter implements AIAgentPrompter
                             "resume": "html formatted resume, body content only, with basic styling",
                             "compatibility_score": "a REALISTIC compatibility percentage score based on the requirements from 0 to 100, i.e. 90",
                             "professional_summary": "same professional summary returned on the resume",
-                            "cover_letter": "'.($options->generateCoverLetter ? 'a cover letter, with casual phrasing, 3 paragraphs as an array, no introduction (i.e. dear hiring manager or so), no signature, i.e. [\"paragraph 1\", \"paragraph 2\", \"paragraph 3\"]' : 'an empty array: []').'",
+                            "cover_letter": "'.($options->generateCoverLetter ? 'a cover letter, with casual phrasing, 3 paragraphs as an array, no introduction (i.e. dear hiring manager or so), no signature, i.e. [\"paragraph 1, why am I a good fit\", \"paragraph 2, emphasise accomplishments\", \"paragraph 3 emphasise strengths and the need to get in touch\"]' : 'an empty array: []').'",
                             "strong_alignments": [
                               {
                                   "title": "strong alignment title",
