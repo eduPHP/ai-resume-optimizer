@@ -248,7 +248,7 @@ type JobInformation = {
     description: string,
 }
 
-const getJobInformation: (url: string) => Promise<AxiosResponse<JobInformation>> = async (url: string): Promise<AxiosResponse<JobInformation>> => {
+const getJobInformation: (url: string) => Promise<AxiosResponse<JobInformation>> = async (url: string) => {
     const axios = Axios()
     const toast = useToastsStore()
 
