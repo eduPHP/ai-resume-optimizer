@@ -1,42 +1,32 @@
-#!/bin/bash
-INPUT_DIR="resources/js"
-OUTPUT_DIR="public/build"
-LOCKFILE="/tmp/pre-push.lock"
+#!/bin/sh
+set -e
 
-# Prevent overlapping builds
-exec 9>$LOCKFILE
-if ! flock -n 9; then
-  echo "❌ Another push is already being processed."
-  exit 1
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+# Try comparing to origin/branch, else fallback to previous commit
+if git rev-parse --verify --quiet origin/$BRANCH >/dev/null; then
+  DIFF_BASE="origin/$BRANCH"
+else
+  DIFF_BASE="HEAD~1"
 fi
 
-echo "🔍 Checking for changes in $INPUT_DIR..."
-CHANGED_JS=$(git diff --cached --name-only | grep -E "^$INPUT_DIR/.*\.(js|ts|vue)$")
+echo "🔍 Comparing changes from $DIFF_BASE to HEAD"
+
+CHANGED_JS=$(git diff --name-only "$DIFF_BASE" HEAD | grep '^resources/js/' || true)
+
 if [ -z "$CHANGED_JS" ]; then
   echo "✅ No JS changes detected. Skipping build."
   exit 0
 fi
 
 echo "📦 JS changes detected. Running build..."
-if ! command -v vite >/dev/null; then
-  echo "❌ Vite is not installed. Please install it before continuing."
-  exit 1
+npm run build
+
+echo "🧪 Checking for Vite output changes..."
+if git status --porcelain public/build | grep .; then
+  echo "📁 Detected changes in public/build — staging and committing..."
+  git add -A public/build
+  git commit -m "chore: update Vite build (auto-commit from pre-push)" --no-verify
+else
+  echo "✅ Build output unchanged. No commit needed."
 fi
-
-if ! npm run build; then
-  echo "❌ Build failed. Push blocked."
-  exit 1
-fi
-
-echo "🔍 Verifying changes in $OUTPUT_DIR..."
-if git diff --quiet HEAD $OUTPUT_DIR; then
-  echo "✅ Build succeeded but no changes detected in $OUTPUT_DIR."
-  exit 0
-fi
-
-echo "📁 Detected changes in $OUTPUT_DIR — staging them..."
-git add -A $OUTPUT_DIR
-echo "📝 Committing updated build..."
-git commit -m "chore: update Vite build (auto-commit from pre-push)"
-
-echo "✅ Build succeeded and changes committed. Proceeding with push."
