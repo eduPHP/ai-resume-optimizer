@@ -3,12 +3,12 @@
 import { completeWizard, downloadCoverLetter, downloadOptimizedResume } from '@/lib/axios';
 import { Button } from '@/components/ui/button';
 import { EllipsisVerticalIcon, Edit, File, Recycle } from 'lucide-vue-next';
+import { usePage } from '@inertiajs/vue3';
 import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { SidebarMenuButton } from '@/components/ui/sidebar';
 import DeleteOptimization from '@/components/DeleteOptimization.vue';
 import { useToastsStore } from '@/stores/ToastsStore';
-import { usePage } from '@inertiajs/vue3';
 
 const state = useOptimizationWizardStore()
 const page = usePage();
