@@ -1,0 +1,20 @@
+#!/bin/sh
+
+echo "🔍 Checking for changes in resources/js..."
+
+CHANGED_JS=$(git diff --cached --name-only | grep '^resources/js/')
+
+if [ -z "$CHANGED_JS" ]; then
+  echo "✅ No JS changes detected. Skipping build."
+  exit 0
+fi
+
+echo "📦 JS changes detected. Running build..."
+npm run build
+
+if [ $? -ne 0 ]; then
+  echo "❌ Build failed. Push blocked."
+  exit 1
+fi
+
+echo "✅ Build succeeded. Proceeding with push."
