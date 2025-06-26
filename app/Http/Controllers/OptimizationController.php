@@ -107,11 +107,13 @@ class OptimizationController
         request()->validate([
             'name' => 'required',
             'company' => 'required',
-            'description' => 'required'
+            'description' => 'required',
+            'url' => 'nullable|url',
         ]);
 
         $data = [
             'role_name' => request()->input('name'),
+            'role_url' => request()->input('url'),
             'role_company' => request()->input('company'),
             'role_description' => request()->input('description'),
             'current_step' => 1,
