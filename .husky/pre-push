@@ -1,32 +1,39 @@
 #!/bin/sh
-set -e
-
-BRANCH=$(git rev-parse --abbrev-ref HEAD)
-
-# Try comparing to origin/branch, else fallback to previous commit
-if git rev-parse --verify --quiet origin/$BRANCH >/dev/null; then
-  DIFF_BASE="origin/$BRANCH"
-else
-  DIFF_BASE="HEAD~1"
-fi
-
-echo "🔍 Comparing changes from $DIFF_BASE to HEAD"
-
-CHANGED_JS=$(git diff --name-only "$DIFF_BASE" HEAD | grep '^resources/js/' || true)
-
-if [ -z "$CHANGED_JS" ]; then
-  echo "✅ No JS changes detected. Skipping build."
-  exit 0
-fi
-
-echo "📦 JS changes detected. Running build..."
+echo "📦 Running build..."
 npm run build
 
-echo "🧪 Checking for Vite output changes..."
-if git status --porcelain public/build | grep .; then
-  echo "📁 Detected changes in public/build — staging and committing..."
-  git add -A public/build
-  git commit -m "chore: update Vite build (auto-commit from pre-push)" --no-verify
-else
-  echo "✅ Build output unchanged. No commit needed."
-fi
+echo "📁 Changed files:"
+git status public/build
+
+
+#set -e
+#
+#BRANCH=$(git rev-parse --abbrev-ref HEAD)
+#
+## Try comparing to origin/branch, else fallback to previous commit
+#if git rev-parse --verify --quiet origin/$BRANCH >/dev/null; then
+#  DIFF_BASE="origin/$BRANCH"
+#else
+#  DIFF_BASE="HEAD~1"
+#fi
+#
+#echo "🔍 Comparing changes from $DIFF_BASE to HEAD"
+#
+#CHANGED_JS=$(git diff --name-only "$DIFF_BASE" HEAD | grep '^resources/js/' || true)
+#
+#if [ -z "$CHANGED_JS" ]; then
+#  echo "✅ No JS changes detected. Skipping build."
+#  exit 0
+#fi
+#
+#echo "📦 JS changes detected. Running build..."
+#npm run build
+#
+#echo "🧪 Checking for Vite output changes..."
+#if git status --porcelain public/build | grep .; then
+#  echo "📁 Detected changes in public/build — staging and committing..."
+#  git add -A public/build
+#  git commit -m "chore: update Vite build (auto-commit from pre-push)" --no-verify
+#else
+#  echo "✅ Build output unchanged. No commit needed."
+#fi
