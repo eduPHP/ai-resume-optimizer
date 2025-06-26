@@ -46,4 +46,9 @@ class FakeAIResponse implements AIResponseDTO, Arrayable {
     {
         return [];
     }
+
+    public function getTopChoiceMessage(): string
+    {
+        return '';
+    }
 }

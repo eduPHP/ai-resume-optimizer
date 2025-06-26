@@ -12,4 +12,5 @@ interface AIResponseDTO
     public function getModerateGaps(): array;
     public function getMissingRequirements(): array;
     public function getReasoning(): string;
+    public function getTopChoiceMessage(): string;
 }

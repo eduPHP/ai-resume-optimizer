@@ -38,6 +38,10 @@ const regenerate = () => {
 
             <h4 class="mt-4">Compatibility score: <span class="font-bold" :class="state.compatibilityStyle">{{state.form.response.compatibility_score}}%</span> Match</h4>
             <p class="text-gray-600 dark:text-gray-400">{{ state.form.response.reasoning }}</p>
+            <div v-if="state.form.response.top_choice?.length">
+                <h2 class="mt-4 font-bold">Top Choice Message</h2>
+                <p>{{ state.form.response.top_choice }}</p>
+            </div>
 
             <hr class="my-8 mx-auto max-w-xl border-t border-gray-300 dark:border-gray-500">
 

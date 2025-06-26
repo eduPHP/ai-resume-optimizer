@@ -15,6 +15,7 @@ class OpenAiResponse implements AIResponseDTO, Arrayable
         public array $strong_alignments = [],
         public array $moderate_gaps = [],
         public array $missing_requirements = [],
+        public string $top_choice,
         public string $reasoning,
     ) {
     }
@@ -57,5 +58,10 @@ class OpenAiResponse implements AIResponseDTO, Arrayable
     public function toArray(): array
     {
         return get_object_vars($this);
+    }
+
+    public function getTopChoiceMessage(): string
+    {
+        return $this->top_choice;
     }
 }

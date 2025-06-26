@@ -71,6 +71,7 @@ class OpenAIPrompter implements AIAgentPrompter
                             ],
                             "reasoning": "any warm encouragement words, commentary or feelings you want to express",
                             "top_choice": "if compatibility_score is greater than 95,
+                                           In first person, as if you are talking to a potential employer,
                                            Briefly describe (up to 400 chars) why this job is your top choice and why you’re a good fit.
                                            Otherwise the value is an empty string",
                         }

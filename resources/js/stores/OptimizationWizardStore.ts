@@ -45,6 +45,7 @@ type AIResponse = {
     moderate_gaps: Alignment[];
     missing_requirements: Alignment[];
     reasoning: string;
+    top_choice?: string;
 }
 
 export type OptimizationType = {
