@@ -6,12 +6,17 @@ import { Label } from '@/components/ui/label';
 import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
 import { Buttons } from '@/components/ui/steps';
 import { updateAdditionalInformation } from '@/lib/axios';
+import { watch } from 'vue';
 
 const state = useOptimizationWizardStore()
 
 const submit = () => {
     updateAdditionalInformation(state)
 }
+
+watch(() => state.form.additional.targetCountry, (country: string) => {
+    state.form.role.location = country
+})
 
 </script>
 

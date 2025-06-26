@@ -21,6 +21,8 @@ export type RoleForm = {
     name: string;
     company: string;
     description: string;
+    url: string;
+    location: string;
 }
 
 export type Resume = {
@@ -50,6 +52,7 @@ export type OptimizationType = {
     role_name: string;
     role_description: string;
     role_company: string;
+    role_url: string;
     resume_id?: number;
     role_location?: string;
     make_grammatical_corrections: boolean;
@@ -118,6 +121,8 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
                 company: '',
                 description: '',
                 name: '',
+                url: '',
+                location: '',
             },
             resume: { id: undefined },
             additional: {
@@ -125,14 +130,13 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
                 changeTargetRole: true,
                 makeGrammaticalCorrections: true,
                 generateCoverLetter: true,
-                mentionRelocationAvailability: false,
+                mentionRelocationAvailability: true,
                 targetCountry: ''
             },
             errors: {},
             response: {} as AIResponse,
         },
     }),
-
 
     getters: {
         currentStep: (state: State): Step => {
@@ -182,16 +186,18 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
             this.step = optimization.current_step || 0;
             this.latestStep = optimization.current_step || 0;
             this.form.optimizationId = optimization.id;
+            this.form.role.url = optimization.role_url;
             this.form.role.name = optimization.role_name;
             this.form.role.description = optimization.role_description;
             this.form.role.company = optimization.role_company;
+            this.form.role.location = optimization.role_location ?? '';
             this.form.resume.id = optimization.resume_id;
-            this.form.additional.targetCountry = optimization.role_location ? optimization.role_location : '';
+            this.form.additional.targetCountry = optimization.role_location ?? '';
             this.form.additional.makeGrammaticalCorrections = optimization.make_grammatical_corrections ?? true;
             this.form.additional.changeProfessionalSummary = optimization.change_professional_summary ?? true;
             this.form.additional.generateCoverLetter = optimization.generate_cover_letter ?? true;
             this.form.additional.changeTargetRole = optimization.change_target_role ?? true;
-            this.form.additional.mentionRelocationAvailability = optimization.mention_relocation_availability ?? false;
+            this.form.additional.mentionRelocationAvailability = optimization.mention_relocation_availability ?? true;
             if (this.form.status !== 'editing') {
                 this.form.status = optimization.status ?? 'draft';
             }
