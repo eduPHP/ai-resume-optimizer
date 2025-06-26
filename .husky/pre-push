@@ -17,4 +17,15 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
+# Check if build output changed
+if git status --porcelain public/build | grep .; then
+  echo "📁 Detected changes in public/build — staging them..."
+  git add public/build
+
+  echo "📝 Committing updated build..."
+  git commit -m "chore: update Vite build (auto-commit from pre-push)" --no-verify
+else
+  echo "✅ Build output unchanged. No commit needed."
+fi
+
 echo "✅ Build succeeded. Proceeding with push."
