@@ -20,7 +20,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         <div class="max-w-3xl mx-auto p-8">
             <h1 class="text-3xl font-bold mb-4 text-center xl:text-left">Why You Should Tailor Your Resume for Each Role</h1>
             <p class="text-lg text-justify xl:text-left">
-                A resume should be tailored for each role to a significantly increase the chances of catching the attention of hiring managers and applicant tracking systems (ATS). Every job posting highlights a unique combination of skills, qualifications, and experiences that the employer is seeking. When you customize your resume to align closely with those specific requirements, you demonstrate that you’ve taken the time to understand the role and that you’re a strong, relevant candidate.
+                A resume should be tailored for each role to significantly increase the chances of catching the attention of hiring managers and applicant tracking systems (ATS). Every job posting highlights a unique combination of skills, qualifications, and experiences that the employer is seeking. When you customize your resume to align closely with those specific requirements, you demonstrate that you’ve taken the time to understand the role and that you’re a strong, relevant candidate.
             </p>
             <div class="py-4 w-full flex justify-center">
                 <Button as="a" variant="outline" size="lg" :href="route('optimizations.create')">Generate a New Optimized Resume</Button>
