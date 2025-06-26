@@ -130,7 +130,7 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
                 changeTargetRole: true,
                 makeGrammaticalCorrections: true,
                 generateCoverLetter: true,
-                mentionRelocationAvailability: false,
+                mentionRelocationAvailability: true,
                 targetCountry: ''
             },
             errors: {},
@@ -197,7 +197,7 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
             this.form.additional.changeProfessionalSummary = optimization.change_professional_summary ?? true;
             this.form.additional.generateCoverLetter = optimization.generate_cover_letter ?? true;
             this.form.additional.changeTargetRole = optimization.change_target_role ?? true;
-            this.form.additional.mentionRelocationAvailability = optimization.mention_relocation_availability ?? false;
+            this.form.additional.mentionRelocationAvailability = optimization.mention_relocation_availability ?? true;
             if (this.form.status !== 'editing') {
                 this.form.status = optimization.status ?? 'draft';
             }

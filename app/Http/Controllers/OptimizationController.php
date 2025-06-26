@@ -115,6 +115,7 @@ class OptimizationController
             'role_company' => request()->input('company'),
             'role_description' => request()->input('description'),
             'current_step' => 1,
+            'generate_cover_letter' => true,
             'status' => 'draft',
         ];
         if ($optimization) {
