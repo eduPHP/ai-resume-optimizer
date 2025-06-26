@@ -200,6 +200,22 @@ const downloadCoverLetter: (state: OptimizationWizardStore) => Promise<void> = (
     return downloadFile(url)
 }
 
+const cancelOptimizationEdit = (state: OptimizationWizardStore) => {
+    state.loading = true
+
+    const axios = Axios()
+
+    return axios.put(route('optimizations.cancel', state.form.optimizationId))
+        .then(response => {
+            state.clearErrors()
+            state.setOptimization(response.data.optimization)
+            state.form.status = 'complete'
+        })
+        .finally(() => {
+            state.loading = false
+        })
+}
+
 /*
  * Credits: https://stackoverflow.com/a/75039478/29766047,
  *          https://gist.github.com/javilobo8/097c30a233786be52070986d8cdb1743?permalink_comment_id=3788793#gistcomment-3788793
@@ -271,6 +287,7 @@ export {
     downloadOptimizedResume,
     downloadCoverLetter,
     deleteOptimization,
+    cancelOptimizationEdit,
     updateUserInstructions,
     getJobInformation,
 }
