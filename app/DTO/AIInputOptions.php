@@ -35,7 +35,10 @@ class AIInputOptions implements Arrayable, IteratorAggregate
             ] : false,
             $this->mentionRelocationAvailability ? [
                 'role' => 'system',
-                'content' => "at the bottom, using the class \"footer\" on the element, should add \"Available for remote work or relocation to [country] through visa sponsorship\" where the country is: {$this->roleLocation}"
+                'content' => "at the bottom, using the class \"footer\" on the element, should add
+                              \"Available for remote work or relocation to [country] through visa sponsorship\"
+                              where the country/city is: {$this->roleLocation}.
+                              If a city name is provided, use it's country name instead"
             ] : false,
             $this->makeGrammaticalCorrections ? [
                 'role' => 'system',

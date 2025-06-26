@@ -1,5 +1,5 @@
 import { Page, PageProps } from '@inertiajs/core';
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosPromise } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosPromise, AxiosResponse } from 'axios';
 import {
     OptimizationType,
     OptimizationWizardStore,
@@ -240,6 +240,27 @@ const updateUserInstructions: (instructions: string) => void = async (instructio
 }
 
 
+type JobInformation = {
+    company: string,
+    position: string,
+    location: string,
+    url: string,
+    description: string,
+}
+
+const getJobInformation: (url: string) => Promise<AxiosResponse<JobInformation>> = async (url: string): Promise<AxiosResponse<JobInformation>> => {
+    const axios = Axios()
+    const toast = useToastsStore()
+
+    return axios.post<JobInformation>(route('jobs.crawl'), {url}).then(response => {
+        toast.success('Saved!', 'Job information has been successfully retrieved.')
+
+        return response
+    })
+}
+
+
+
 export {
     Axios,
     createOrUpdateOptimization,
@@ -251,4 +272,5 @@ export {
     downloadCoverLetter,
     deleteOptimization,
     updateUserInstructions,
+    getJobInformation,
 }
