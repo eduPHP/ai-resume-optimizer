@@ -1,0 +1,49 @@
+name: Verify Vite Build Is Up-To-Date
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  vite-build-check:
+    name: Check Vite Build Sync
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # Ensures the previous commit is available for diff
+
+      - name: Fetch main for comparison
+        run: git fetch origin main
+
+      - name: Check for JS/CSS source changes
+        id: check_source_changes
+        run: |
+          if git diff --name-only origin/main...HEAD | grep -qE '^resources/(js|css|sass|ts|vue)'; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check for Vite build changes
+        id: check_build_changes
+        run: |
+          if git diff --name-only origin/main...HEAD | grep -qE '^public/build/'; then
+            echo "built=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "built=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Fail if source changed but build output not updated
+        if: steps.check_source_changes.outputs.changed == 'true' && steps.check_build_changes.outputs.built == 'false'
+        run: |
+          echo "❌ JS/CSS source files changed but Vite build output in public/build/ was not updated or committed."
+          exit 1
+
+      - name: Pass check
+        if: steps.check_source_changes.outputs.changed == 'false' || steps.check_build_changes.outputs.built == 'true'
+        run: echo "✅ Build is in sync or no relevant changes detected."

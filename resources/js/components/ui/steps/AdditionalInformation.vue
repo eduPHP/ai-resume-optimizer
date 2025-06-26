@@ -42,8 +42,8 @@ watch(() => state.form.additional.targetCountry, (country: string) => {
             </Toggle>
         </div>
         <div class="mt-4 grid gap-2 xl:w-1/2">
-            <Label for="country">Target Country</Label>
-            <Input id="country" type="text" required autofocus :tabindex="1" v-model="state.form.additional.targetCountry" />
+            <Label for="country">Target Country/City</Label>
+            <Input id="country" type="text" required :tabindex="1" v-model="state.form.additional.targetCountry" />
             <InputError :message="state.form.errors.targetCountry" />
         </div>
 

@@ -39,7 +39,12 @@ class OpenAIPrompter implements AIAgentPrompter
                             "resume": "html formatted resume, body content only, with basic styling",
                             "compatibility_score": "a REALISTIC compatibility percentage score based on the requirements from 0 to 100, i.e. 90",
                             "professional_summary": "same professional summary returned on the resume",
-                            "cover_letter": "'.($options->generateCoverLetter ? 'a cover letter, with casual phrasing, 3 paragraphs as an array, no introduction (i.e. dear hiring manager or so), no signature, i.e. [\"paragraph 1, why am I a good fit\", \"paragraph 2, emphasise accomplishments\", \"paragraph 3 emphasise strengths and the need to get in touch\"]' : 'an empty array: []').'",
+                            "cover_letter": "'.($options->generateCoverLetter ? 'a cover letter, with casual phrasing,
+                                            3 paragraphs as an array, no introduction (i.e. dear hiring manager or so), no signature,
+                                            i.e. [
+                                                \"paragraph 1, why am I a good fit\",
+                                                \"paragraph 2, emphasise accomplishments\",
+                                                \"paragraph 3 emphasise strengths and the need to get in touch\"]' : 'an empty array: []').'",
                             "strong_alignments": [
                               {
                                   "title": "strong alignment title",
@@ -64,7 +69,11 @@ class OpenAIPrompter implements AIAgentPrompter
                               },
                               ...remaining missing requirements
                             ],
-                            "reasoning": "any warm encouragement words, commentary or feelings you want to express"
+                            "reasoning": "any warm encouragement words, commentary or feelings you want to express",
+                            "top_choice": "if compatibility_score is greater than 95,
+                                           In first person, as if you are talking to a potential employer,
+                                           Briefly describe (up to 400 chars) why this job is your top choice and why you’re a good fit.
+                                           Otherwise the value is an empty string",
                         }
                         Do NOT include any other text.',
                     ],

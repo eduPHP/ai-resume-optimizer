@@ -45,6 +45,7 @@ type AIResponse = {
     moderate_gaps: Alignment[];
     missing_requirements: Alignment[];
     reasoning: string;
+    top_choice?: string;
 }
 
 export type OptimizationType = {
@@ -160,7 +161,7 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
                 }
             }
 
-            return 'text-green-400 text-xl'
+            return 'text-green-400 text-2xl'
         },
     },
 
