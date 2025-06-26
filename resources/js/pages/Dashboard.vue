@@ -23,7 +23,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                 A resume should be tailored for each role to significantly increase the chances of catching the attention of hiring managers and applicant tracking systems (ATS). Every job posting highlights a unique combination of skills, qualifications, and experiences that the employer is seeking. When you customize your resume to align closely with those specific requirements, you demonstrate that you’ve taken the time to understand the role and that you’re a strong, relevant candidate.
             </p>
             <div class="py-4 w-full flex justify-center">
-                <Button as="a" variant="outline" size="lg" :href="route('optimizations.create')">Generate a New Optimized Resume</Button>
+                <Button as="a" size="lg" :href="route('optimizations.create')">Generate a New Optimized Resume</Button>
             </div>
             <h2 class="text-2xl font-semibold my-3 text-center xl:text-left">Benefits of Tailoring Your Resume</h2>
             <ul class="list-disc pl-5 space-y-2 mb-6">
@@ -37,7 +37,7 @@ const breadcrumbs: BreadcrumbItem[] = [
             </p>
 
             <div class="py-4 w-full flex justify-center">
-                <Button as="a" size="lg" variant="outline" :href="route('optimizations.create')">Generate a New Optimized Resume</Button>
+                <Button as="a" size="lg" :href="route('optimizations.create')">Generate a New Optimized Resume</Button>
             </div>
         </div>
     </AppLayout>
