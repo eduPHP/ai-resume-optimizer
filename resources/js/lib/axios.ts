@@ -16,6 +16,16 @@ interface User {
     api_token: string;
 }
 
+
+interface JobInformation {
+    supported: boolean;
+    company: string;
+    position: string;
+    location: string;
+    url: string;
+    description: string;
+}
+
 interface AuthProps {
     user?: User | undefined;
 }
@@ -255,21 +265,14 @@ const updateUserInstructions: (instructions: string) => void = async (instructio
     toast.success('Saved!', response.data.message)
 }
 
-
-type JobInformation = {
-    company: string,
-    position: string,
-    location: string,
-    url: string,
-    description: string,
-}
-
 const getJobInformation: (url: string) => Promise<AxiosResponse<JobInformation>> = async (url: string) => {
     const axios = Axios()
     const toast = useToastsStore()
 
     return axios.post<JobInformation>(route('jobs.crawl'), {url}).then(response => {
-        toast.success('Saved!', 'Job information has been successfully retrieved.')
+        if (response.data.supported) {
+            toast.success('Saved!', 'Job information has been successfully retrieved.')
+        }
 
         return response
     })

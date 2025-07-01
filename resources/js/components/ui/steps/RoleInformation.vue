@@ -8,6 +8,7 @@ import { Buttons } from '@/components/ui/steps';
 import { createOrUpdateOptimization, getJobInformation } from '@/lib/axios';
 import { router } from '@inertiajs/vue3';
 import { useNavigationItemsStore } from '@/stores/NavigationItemsStore';
+import debounce from '@/lib/debounce';
 
 const state = useOptimizationWizardStore()
 const nav = useNavigationItemsStore()
@@ -22,9 +23,7 @@ const submit = () => {
     })
 }
 
-const getJobInformationHandler = (event: Event) => {
-    const url = (event.target as HTMLInputElement).value
-
+const getJobInformationHandler = (url: string) => {
     if (url.trim().length === 0) {
         return;
     }
@@ -34,15 +33,20 @@ const getJobInformationHandler = (event: Event) => {
     }
 
     getJobInformation(url).then(response => {
-        state.form.role.company = response.data.company
-        state.form.role.name = response.data.position
-        state.form.role.description = response.data.description
-        state.form.role.location = response.data.location
-        state.form.additional.targetCountry = response.data.location
+        if (response.data.supported) {
+            state.form.role.company = response.data.company
+            state.form.role.name = response.data.position
+            state.form.role.description = response.data.description
+            state.form.role.location = response.data.location
+            state.form.additional.targetCountry = response.data.location
 
-        submit()
+            submit()
+        } else {
+            console.info('Unsupported crawl link: '+url)
+        }
     })
 }
+const debouncedGetJobInformation = debounce(() => getJobInformationHandler(state.form.role.url as string));
 
 
 </script>
@@ -53,8 +57,8 @@ const getJobInformationHandler = (event: Event) => {
         <p class="text-gray-400  mb-8">A resume should be role specific, <br>Please provide the role information to optimize the resume for the role you are applying for.</p>
 
         <div class="mb-8 grid gap-2">
-            <Label class="flex justify-between" for="name">Job Link <span class="text-yellow-300 text-xs">Experimental</span></Label>
-            <Input id="name" type="text" :tabindex="1" v-model="state.form.role.url" @input="getJobInformationHandler" />
+            <Label class="flex justify-between" for="url">Job Link <span class="text-yellow-300 text-xs">Experimental</span></Label>
+            <Input id="url" type="text" :tabindex="1" v-model="state.form.role.url" @input="debouncedGetJobInformation" />
             <span v-show="! state.form.errors.url" class="text-xs text-white/50">Automatically fill the role information from a job link, currently works for Linkedin.</span>
             <InputError :message="state.form.errors.url" />
         </div>

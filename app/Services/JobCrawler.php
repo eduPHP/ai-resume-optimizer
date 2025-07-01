@@ -8,11 +8,15 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class JobCrawler implements Arrayable
 {
+    public ?string $title = null;
+    public ?string $company = null;
+    public ?string $location = null;
+    public ?string $description = null;
 
-    public string $title;
-    public string $company;
-    public string $location;
-    public string $description;
+    public function isSupported(string $url): bool
+    {
+        return str($url)->contains('linkedin.com/jobs/view/');
+    }
 
     public function loadJobInformation(string $url): static
     {

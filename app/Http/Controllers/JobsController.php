@@ -9,7 +9,20 @@ class JobsController
 {
     public function crawl(JobCrawler $crawler): JsonResponse
     {
-        $crawler->loadJobInformation($url = request()->input('url'));
+        $url = request()->input('url');
+
+        if (! $crawler->isSupported($url)) {
+            return response()->json([
+                'supported' => false,
+                'company' => null,
+                'position' => null,
+                'location' => null,
+                'url' => $url,
+                'description' => null,
+            ]);
+        }
+
+        $crawler->loadJobInformation($url);
 
         return response()->json([
             'company' => $crawler->company,
