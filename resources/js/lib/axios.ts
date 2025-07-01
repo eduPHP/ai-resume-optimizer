@@ -16,6 +16,16 @@ interface User {
     api_token: string;
 }
 
+
+interface JobInformation {
+    supported: boolean;
+    company: string;
+    position: string;
+    location: string;
+    url: string;
+    description: string;
+}
+
 interface AuthProps {
     user?: User | undefined;
 }
@@ -253,15 +263,6 @@ const updateUserInstructions: (instructions: string) => void = async (instructio
     const response = await axios.put<{message: string}>(route('users.update-instructions'), {instructions})
 
     toast.success('Saved!', response.data.message)
-}
-
-
-type JobInformation = {
-    company: string,
-    position: string,
-    location: string,
-    url: string,
-    description: string,
 }
 
 const getJobInformation: (url: string) => Promise<AxiosResponse<JobInformation>> = async (url: string) => {

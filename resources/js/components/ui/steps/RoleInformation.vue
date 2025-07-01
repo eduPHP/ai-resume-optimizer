@@ -34,13 +34,15 @@ const getJobInformationHandler = (event: Event) => {
     }
 
     getJobInformation(url).then(response => {
-        state.form.role.company = response.data.company
-        state.form.role.name = response.data.position
-        state.form.role.description = response.data.description
-        state.form.role.location = response.data.location
-        state.form.additional.targetCountry = response.data.location
+        if (response.data.supported) {
+            state.form.role.company = response.data.company
+            state.form.role.name = response.data.position
+            state.form.role.description = response.data.description
+            state.form.role.location = response.data.location
+            state.form.additional.targetCountry = response.data.location
 
-        submit()
+            submit()
+        }
     })
 }
 
