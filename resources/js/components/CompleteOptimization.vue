@@ -2,7 +2,7 @@
 
 import { completeWizard, downloadCoverLetter, downloadOptimizedResume } from '@/lib/axios';
 import { Button } from '@/components/ui/button';
-import { EllipsisVerticalIcon, Edit, File, Recycle } from 'lucide-vue-next';
+import { EllipsisVerticalIcon, Edit, File, Recycle, Link } from 'lucide-vue-next';
 import { usePage } from '@inertiajs/vue3';
 import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -101,14 +101,17 @@ const regenerate = () => {
                         align="start"
                         :side-offset="4"
                     >
-                        <div class="flex flex-col gap-2">
-                            <Button :disabled="state.loading" :variant="state.loading ? 'ghost' : 'outline'" type="button" size="lg" @click="regenerate">
+                        <div class="flex items-stretch flex-col gap-2">
+                            <Button text-position="left" v-if="state.form.role.url" target="_blank" as="a" :href="state.form.role.url">
+                                <Link /> Apply
+                            </Button>
+                            <Button text-position="left" :disabled="state.loading" :variant="state.loading ? 'ghost' : 'outline'" type="button" size="lg" @click="regenerate">
                                 <Recycle /> Regenerate
                             </Button>
-                            <Button :disabled="state.loading" :variant="state.loading ? 'ghost' : 'outline'" type="button" size="lg" @click="enableEdit">
+                            <Button text-position="left" :disabled="state.loading" :variant="state.loading ? 'ghost' : 'outline'" type="button" size="lg" @click="enableEdit">
                                 <Edit /> Edit
                             </Button>
-                            <DeleteOptimization />
+                            <DeleteOptimization text-position="left" />
 
                         </div>
                     </DropdownMenuContent>

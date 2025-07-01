@@ -28,7 +28,7 @@ if git status --porcelain public/build | grep .; then
   git add -A public/build
   git commit -m "chore: update Vite build (auto-commit from pre-push)" --no-verify
 
-  echo "🚫 Build was committed. Please re-run 'git push' to include the new commit."
+  echo "🚫 Build was committed. Please re-run 'git push' to include the new commit!"
   exit 1
 else
   echo "✅ Build output unchanged. Proceeding with push."

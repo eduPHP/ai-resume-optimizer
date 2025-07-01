@@ -21,6 +21,7 @@ const toast = useToastsStore();
 
 defineProps<{
     size?: 'lg' | 'default' | 'sm' | 'icon';
+    textPosition?: 'left' | 'center' | 'right';
 }>();
 
 const handleDeleteOptimization = () => {
@@ -35,7 +36,7 @@ const handleDeleteOptimization = () => {
 <template>
     <Dialog>
         <DialogTrigger as-child>
-            <Button :disabled="state.loading" variant="link" class="text-red-400" type="button" :size="size ?? 'default'">
+            <Button :disabled="state.loading" variant="link" class="text-red-400" type="button" :text-position="textPosition ?? 'center'" :size="size ?? 'default'">
                 <Trash />
                 Remove{{ state.form.status === 'draft' ? ' Draft' : '' }}
             </Button>
@@ -43,7 +44,7 @@ const handleDeleteOptimization = () => {
         <DialogContent>
             <DialogHeader class="space-y-3">
                 <DialogTitle>Are you sure you want to delete this optimization?</DialogTitle>
-                <DialogDescription> Once it is deleted, all of its resources and data will also be permanently deleted. </DialogDescription>
+                <DialogDescription> Once it is deleted, all of its resources and data will also be permanently deleted! </DialogDescription>
             </DialogHeader>
             <DialogFooter class="gap-2">
                 <DialogClose as-child>

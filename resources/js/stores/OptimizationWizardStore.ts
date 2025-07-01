@@ -21,7 +21,7 @@ export type RoleForm = {
     name: string;
     company: string;
     description: string;
-    url: string;
+    url?: string;
     location: string;
 }
 
@@ -53,7 +53,7 @@ export type OptimizationType = {
     role_name: string;
     role_description: string;
     role_company: string;
-    role_url: string;
+    role_url?: string;
     resume_id?: number;
     role_location?: string;
     make_grammatical_corrections: boolean;

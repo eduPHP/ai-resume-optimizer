@@ -37,6 +37,7 @@ const getJobInformationHandler = (event: Event) => {
         state.form.role.company = response.data.company
         state.form.role.name = response.data.position
         state.form.role.description = response.data.description
+        state.form.role.location = response.data.location
         state.form.additional.targetCountry = response.data.location
 
         submit()
