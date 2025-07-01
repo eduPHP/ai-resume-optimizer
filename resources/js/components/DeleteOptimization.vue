@@ -35,7 +35,7 @@ const handleDeleteOptimization = () => {
 <template>
     <Dialog>
         <DialogTrigger as-child>
-            <Button :disabled="state.loading" variant="destructive" type="button" :size="size ?? 'default'">
+            <Button :disabled="state.loading" variant="link" class="text-red-400" type="button" :size="size ?? 'default'">
                 <Trash />
                 Remove{{ state.form.status === 'draft' ? ' Draft' : '' }}
             </Button>

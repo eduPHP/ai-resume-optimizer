@@ -18,14 +18,14 @@ const cancelEdit = () => {
 </script>
 <template>
     <div class="mt-2 xl:mt-0 flex flex-col-reverse xl:flex-row xl:justify-end xl:items-center gap-2 xl:gap-4">
-        <div class="flex-1 flex gap-4 justify-start" v-if="state.step > 0 || state.form.status === 'editing'">
+        <div class="flex justify-center xl:justify-start items-center xl:flex-1 space-x-2" v-if="state.step > 0 || state.form.status === 'editing'">
             <DeleteOptimization />
 
             <Button v-if="state.form.response.compatibility_score"
                     :disabled="state.loading"
                     type="button"
-                    class="flex-1 xl:flex-none"
-                    variant="outline"
+                    class="xl:flex-none !h-10 text-gray-400 dark:text-gray-300"
+                    variant="link"
                     @click.prevent="cancelEdit"
             ><X /> Cancel Edit</Button>
         </div>
