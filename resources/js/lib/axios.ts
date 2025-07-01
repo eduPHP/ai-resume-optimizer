@@ -270,7 +270,9 @@ const getJobInformation: (url: string) => Promise<AxiosResponse<JobInformation>>
     const toast = useToastsStore()
 
     return axios.post<JobInformation>(route('jobs.crawl'), {url}).then(response => {
-        toast.success('Saved!', 'Job information has been successfully retrieved.')
+        if (response.data.supported) {
+            toast.success('Saved!', 'Job information has been successfully retrieved.')
+        }
 
         return response
     })
