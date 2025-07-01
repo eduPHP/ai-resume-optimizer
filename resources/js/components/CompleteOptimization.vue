@@ -1,34 +1,14 @@
 <script setup lang="ts">
 
-import { completeWizard, downloadCoverLetter, downloadOptimizedResume } from '@/lib/axios';
+import { downloadCoverLetter, downloadOptimizedResume } from '@/lib/axios';
 import { Button } from '@/components/ui/button';
-import { EllipsisVerticalIcon, Edit, File, Recycle, Link } from 'lucide-vue-next';
+import { File } from 'lucide-vue-next';
 import { usePage } from '@inertiajs/vue3';
 import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { SidebarMenuButton } from '@/components/ui/sidebar';
-import DeleteOptimization from '@/components/DeleteOptimization.vue';
-import { useToastsStore } from '@/stores/ToastsStore';
+import OptimizationPopover from '@/components/OptimizationPopover.vue';
 
 const state = useOptimizationWizardStore()
 const page = usePage();
-const toast = useToastsStore();
-
-const enableEdit = () => {
-    state.form.status = 'editing'
-    state.step = 0
-    state.latestStep = 3
-}
-const regenerate = () => {
-    state.loading = true;
-
-    completeWizard(state).then((response) => {
-        state.setOptimization(response.data.optimization)
-        state.form.status = 'complete'
-        toast.success('Complete Optimization', 'The optimization was successfully re-generated.')
-    })
-}
-
 
 </script>
 
@@ -88,35 +68,8 @@ const regenerate = () => {
                 <p v-for="(paragraph, index) in state.form.response.cover_letter ?? []" :key="`${paragraph}-${index}`" class="py-2 text-gray-600 dark:text-gray-400">{{ paragraph }}</p>
                 <p>Regards,<br>{{page.props.auth?.user.name}}</p>
             </div>
-            <div class="absolute right-2 top-3" v-show="!state.loading">
-                <DropdownMenu v-if="state.form.optimizationId">
-                    <DropdownMenuTrigger as-child>
-                        <SidebarMenuButton size="lg" class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground px-4">
-                            <EllipsisVerticalIcon class="ml-auto size-4" />
-                        </SidebarMenuButton>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                        class="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                        side="right"
-                        align="start"
-                        :side-offset="4"
-                    >
-                        <div class="flex items-stretch flex-col gap-2">
-                            <Button text-position="left" v-if="state.form.role.url" target="_blank" as="a" :href="state.form.role.url">
-                                <Link /> Apply
-                            </Button>
-                            <Button text-position="left" :disabled="state.loading" :variant="state.loading ? 'ghost' : 'outline'" type="button" size="lg" @click="regenerate">
-                                <Recycle /> Regenerate
-                            </Button>
-                            <Button text-position="left" :disabled="state.loading" :variant="state.loading ? 'ghost' : 'outline'" type="button" size="lg" @click="enableEdit">
-                                <Edit /> Edit
-                            </Button>
-                            <DeleteOptimization text-position="left" />
 
-                        </div>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </div>
+            <OptimizationPopover class="absolute right-2 top-3" />
         </div>
 
         <div class="flex flex-col-reverse xl:flex-row justify-end gap-2 pb-8 xl:pb-0">
