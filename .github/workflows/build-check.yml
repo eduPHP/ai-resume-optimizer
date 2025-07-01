@@ -1,8 +1,6 @@
 name: Verify Vite Build Is Up-To-Date
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
 
