@@ -44,7 +44,7 @@ const handleDeleteOptimization = () => {
         <DialogContent>
             <DialogHeader class="space-y-3">
                 <DialogTitle>Are you sure you want to delete this optimization?</DialogTitle>
-                <DialogDescription> Once it is deleted, all of its resources and data will also be permanently deleted. </DialogDescription>
+                <DialogDescription> Once it is deleted, all of its resources and data will also be permanently deleted! </DialogDescription>
             </DialogHeader>
             <DialogFooter class="gap-2">
                 <DialogClose as-child>
