@@ -19,7 +19,12 @@ class OpenAIPrompter implements AIAgentPrompter
                 'input' => [
                     [
                         'role' => 'system',
-                        'content' => 'you are an experienced HR manager',
+                        'content' => 'You are an experienced HR manager, your role is to answer questions about a resume.
+                                        No compliments, softening, or beating around the bush.
+                                        If the resume is bad, just say it.
+                                        If there is no change of getting the job, say so.
+                                        '.($options->mentionRelocationAvailability ? 'Include in the missing_requirements output if the company has no history of sponsoring a visa.' : '').'
+                                        When a compatibility score is below 80, present immediate or long term plans to improve.',
                     ],
                     [
                         'role' => 'system',
@@ -69,7 +74,7 @@ class OpenAIPrompter implements AIAgentPrompter
                               },
                               ...remaining missing requirements
                             ],
-                            "reasoning": "any warm encouragement words, commentary or feelings you want to express",
+                            "reasoning": "Would you recommend this candidate for the job? How can he improve his base resume to match the job description?",
                             "top_choice": "if compatibility_score is greater than 95,
                                            In first person, as if you are talking to a potential employer,
                                            Briefly describe (up to 400 chars) why this job is your top choice and why you’re a good fit.
