@@ -7,16 +7,18 @@ import { buttonVariants, type ButtonVariants } from '.';
 interface Props extends PrimitiveProps {
     variant?: ButtonVariants['variant'];
     size?: ButtonVariants['size'];
+    textPosition?: ButtonVariants['textPosition'];
     class?: HTMLAttributes['class'];
 }
 
 const props = withDefaults(defineProps<Props>(), {
     as: 'button',
+    textPosition: 'center',
 });
 </script>
 
 <template>
-    <Primitive :as="as" :as-child="asChild" :class="cn(buttonVariants({ variant, size }), props.class)">
+    <Primitive :as="as" :as-child="asChild" :class="cn(buttonVariants({ variant, size, textPosition }), props.class)">
         <slot />
     </Primitive>
 </template>
