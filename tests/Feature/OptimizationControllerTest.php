@@ -97,4 +97,24 @@ class OptimizationControllerTest extends TestCase
         $this->assertSame('application/pdf', $response->headers->get('content-type'));
         $this->assertSame('attachment; filename="'.$optimization->coverLetterFileName().'"', $response->headers->get('content-disposition'));
     }
+
+    #[Test]
+    function it_can_cancel_an_edit_and_restore_the_optimization()
+    {
+        $optimization = \App\Models\Optimization::factory()->create([
+            'status' => 'draft',
+            'current_step' => 1,
+            'ai_response' => ['compatibility_score' => 99],
+        ]);
+
+        $response = $this->actingAs($optimization->user)
+            ->put(route('optimizations.cancel', $optimization));
+
+        $response->assertSuccessful();
+
+        $optimization->refresh();
+
+        $this->assertSame('complete', $optimization->status);
+        $this->assertSame(3, $optimization->current_step);
+    }
 }

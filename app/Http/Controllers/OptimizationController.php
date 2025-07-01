@@ -221,6 +221,20 @@ class OptimizationController
         return response()->json([], 201);
     }
 
+    public function cancel(Optimization $optimization): \Illuminate\Http\JsonResponse
+    {
+        abort_unless($optimization->user->is(request()->user()), 403);
+
+        $optimization->update([
+            'status' => 'complete',
+            'current_step' => 3,
+        ]);
+
+        return response()->json([
+            'optimization' => $optimization->fresh(),
+        ]);
+    }
+
     private function getCompatibilityScore(Optimization $optimization): int
     {
         if ($optimization->status !== 'complete') {

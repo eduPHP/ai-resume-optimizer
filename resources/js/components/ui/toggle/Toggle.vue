@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineModel } from 'vue'
 import { Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue'
 
 const model = defineModel<boolean | undefined>()
