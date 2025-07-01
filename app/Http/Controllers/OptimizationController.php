@@ -108,7 +108,7 @@ class OptimizationController
             'name' => 'required',
             'company' => 'required',
             'description' => 'required',
-            'url' => 'nullable|url',
+            'url' => 'required|url',
         ]);
 
         $data = [
