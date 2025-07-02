@@ -25,6 +25,7 @@ class JobsController
         $crawler->loadJobInformation($url);
 
         return response()->json([
+            'supported' => true,
             'company' => $crawler->company,
             'position' => $crawler->title,
             'location' => $crawler->location,
