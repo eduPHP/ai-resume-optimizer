@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\DTO\AIInputOptions;
 use App\DTO\Contracts\AIAgentPrompter;
 use App\Models\Optimization;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;
 
@@ -23,33 +22,7 @@ class OptimizationController
             'created' => $optimization->created_at,
         ]);
 
-        if (request()->has('grouped')) {
-            $optimizations = $optimizations->map(function ($optimization) {
-                return [
-                    ...$optimization,
-                    'group' => $this->getDayGroup($optimization['created']),
-                    'created' => $optimization['created']->utcOffset(request()->header('X-Timezone-Offset') ?? 0)->format('Y-m-d g:i A'),
-                ];
-            })->groupBy('group');
-        } else {
-            $optimizations = $optimizations->values();
-        }
-
-
-        return response()->json($optimizations);
-    }
-
-    private function getDayGroup(Carbon $date): string
-    {
-        if ($date->utcOffset(request()->header('X-Timezone-Offset') ?? 0)->isToday()) {
-            return 'Today';
-        }
-
-        if ($date->utcOffset(request()->header('X-Timezone-Offset') ?? 0)->isYesterday()) {
-            return 'Yesterday';
-        }
-
-        return 'Previous Days';
+        return response()->json($optimizations->values());
     }
 
     public function show(Optimization $optimization): \Inertia\Response
