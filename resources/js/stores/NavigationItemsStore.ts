@@ -1,38 +1,56 @@
 import { defineStore } from 'pinia'
 import { type NavGroup, type NavItem } from '@/types';
 import { Axios } from '@/lib/axios';
-import { format } from 'date-fns';
+import { format, isToday, isYesterday } from 'date-fns';
 import { OptimizationType } from '@/stores/OptimizationWizardStore';
 
 type State = {
-    items: NavGroup[];
+    items: NavItem[];
     filter: string;
+}
+
+const dateGroup = (date: Date): string => {
+    if (isToday(date)) {
+        return 'Today';
+    }
+    if (isYesterday(date)) {
+        return 'Yesterday'
+    }
+
+    return 'Previous Days';
+}
+
+const maybeApplyFilter = (items: NavItem[], filter: string) => {
+    if (filter.trim().length === 0) {
+        return [...items]
+    }
+
+    return items.filter((item: NavItem) => item.title.toLowerCase().includes(filter.toLowerCase()))
 }
 
 export const useNavigationItemsStore = defineStore('navigation-items', {
     state: (): State => ({
-        items: [] as NavGroup[],
+        items: [] as NavItem[],
         filter: '',
     }),
 
     getters: {
         navigationItems(state: State): NavGroup[] {
-            if (state.filter.trim().length === 0) {
-                return state.items
-            }
+            const items: NavItem[] = maybeApplyFilter(state.items, state.filter)
 
-            return state.items.filter((group: NavGroup): boolean => {
-                return group.items.some((item: NavItem): boolean => {
-                    return item.title.toLowerCase().includes(state.filter.toLowerCase());
-                });
-            }).map((group: NavGroup): NavGroup => {
-                return {
-                    ...group,
-                    items: group.items.filter((item: NavItem): boolean => {
-                        return item.title.toLowerCase().includes(state.filter.toLowerCase());
-                    }),
-                }
+            // initialize groups
+            const groupedItems: NavGroup[] = ['Today', 'Yesterday', 'Previous Days'].map((title: string) => ({
+                title,
+                items: [],
+            }));
+
+            items.map((item: NavItem): void => {
+                const groupIndex = groupedItems.findIndex((group: NavGroup) => group.title === item.group)
+
+                groupedItems[groupIndex].items.push(item)
             });
+
+            return groupedItems.filter((group: NavGroup) => group.items.length > 0)
         }
     },
 
@@ -42,11 +60,10 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
         },
 
         replace(optimization: OptimizationType) {
-            const groupIndex: number = this.items.findIndex((group: NavGroup) => group.title === 'Today')
-            const itemIndex: number = this.items[groupIndex].items.findIndex((item: NavItem) => item.id === optimization.id)
+            const itemIndex: number = this.items.findIndex((item: NavItem) => item.id === optimization.id)
 
-            this.items[groupIndex].items[itemIndex] = {
-                ...this.items[groupIndex].items[itemIndex],
+            this.items[itemIndex] = {
+                ...this.items[itemIndex],
                 title: optimization.role_company,
                 status: optimization.status,
                 score: optimization.ai_response?.compatibility_score,
@@ -58,35 +75,24 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
                 href: route('optimizations.show', id),
                 id,
                 title: draft ? `[draft] ${title}` : title,
+                group: 'Today',
                 created: format(new Date(), 'yyyy-LL-dd h:mm a'), // Y-m-d g:i A
             };
 
-            let groupIndex: number = this.items.findIndex((group: NavGroup) => group.title === 'Today')
-
-            // handle no 'Today' yet
-            if (groupIndex < 0)  {
-                this.items.unshift({
-                    title: 'Today',
-                    items: [],
-                })
-                groupIndex = 0
-            }
-
-            this.items[groupIndex].items.unshift(item)
+            this.items.unshift(item)
         },
 
         async loadItems() {
-            const request = await Axios().get<{[key: string]: NavItem[]}>(route('optimizations.index', { grouped: true }));
+            const request = await Axios().get<NavItem[]>(route('optimizations.index'));
 
-            this.items = Object.keys(request.data).map(
-                (key: string): NavGroup => {
-                    const groupItems: NavItem[] = request.data[key];
-                    return {
-                        title: key,
-                        items: groupItems,
-                    };
-                },
-            );
+            this.items = request.data.map((item: NavItem): NavItem => {
+                const created = new Date(item.created as string)
+                return {
+                    ...item,
+                    group: dateGroup(created),
+                    created: format(created, 'yyyy-LL-dd h:mm a'),
+                }
+            });
         }
 
     },

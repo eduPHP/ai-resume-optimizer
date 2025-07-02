@@ -19,7 +19,9 @@ class OptimizationController
             'score' => $this->getCompatibilityScore($optimization),
             'status' => $optimization->status,
             'tooltip' => $optimization->role_name,
-            'created' => $optimization->created_at,
+            'created' => $optimization->created_at
+                ->utcOffset(request()->header('X-Timezone-Offset') ?? 0)
+                ->toDateTimeString(),
         ]);
 
         return response()->json($optimizations->values());
