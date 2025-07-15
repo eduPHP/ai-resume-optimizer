@@ -3,6 +3,7 @@ import AppLayout from '@/layouts/app/AppSidebarLayout.vue';
 import type { BreadcrumbItemType } from '@/types';
 import { Loader } from 'lucide-vue-next';
 import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
+import Footer from '@/components/Footer'
 
 const state = useOptimizationWizardStore();
 
