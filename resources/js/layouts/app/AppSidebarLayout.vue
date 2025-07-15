@@ -4,6 +4,7 @@ import AppShell from '@/components/AppShell.vue';
 import AppSidebar from '@/components/AppSidebar.vue';
 import AppSidebarHeader from '@/components/AppSidebarHeader.vue';
 import type { BreadcrumbItemType } from '@/types';
+import Footer from '@/components/Footer';
 
 interface Props {
     breadcrumbs?: BreadcrumbItemType[];
@@ -20,6 +21,7 @@ withDefaults(defineProps<Props>(), {
         <AppContent variant="sidebar">
             <AppSidebarHeader :breadcrumbs="breadcrumbs" />
             <slot />
+            <Footer />
         </AppContent>
     </AppShell>
 </template>
