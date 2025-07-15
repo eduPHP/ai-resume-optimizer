@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:public/build/assets/AuthLayout.vue_vue_type_script_setup_true_lang-CZBrBnDw.js
 import{c as d}from"./Button.vue_vue_type_script_setup_true_lang-iD1aDt0f.js";import{_ as p}from"./AppLogoIcon.vue_vue_type_script_setup_true_lang-BIc4-Jgx.js";import{d as a,c as _,o as c,b as t,z as i,a as o,w as r,t as s,u as f,P as m,j as u}from"./app-BYB0jTfG.js";/**
-========
-import{c as d}from"./Button.vue_vue_type_script_setup_true_lang-Vg2HdSE9.js";import{_ as p}from"./AppLogoIcon.vue_vue_type_script_setup_true_lang-DDeiWpN1.js";import{d as a,c as _,o as c,b as t,z as i,a as o,w as r,t as s,u as f,P as m,j as u}from"./app-e_6inn-S.js";/**
->>>>>>>> main:public/build/assets/AuthLayout.vue_vue_type_script_setup_true_lang-oquRLXaZ.js
  * @license lucide-vue-next v0.468.0 - ISC
  *
  * This source code is licensed under the ISC license.
