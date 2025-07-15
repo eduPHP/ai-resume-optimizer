@@ -33,12 +33,14 @@ const getJobInformationHandler = (url: string) => {
     }
 
     getJobInformation(url).then(response => {
+        state.form.role.url = response.data.url
+
         if (response.data.supported) {
             state.form.role.company = response.data.company
             state.form.role.name = response.data.position
             state.form.role.description = response.data.description
-            state.form.role.location = response.data.location
             state.form.additional.targetCountry = response.data.location
+            state.form.role.location = response.data.location
 
             submit()
         } else {

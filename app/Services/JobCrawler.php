@@ -12,21 +12,36 @@ class JobCrawler implements Arrayable
     public ?string $company = null;
     public ?string $location = null;
     public ?string $description = null;
+    public string $url;
 
-    public function isSupported(string $url): bool
+    public function crawl(string $url): static
     {
-        return str($url)->contains('linkedin.com/jobs/view/');
+        $this->url = $url;
+
+        $this->loadJobInformation();
+
+        return $this;
     }
 
-    public function loadJobInformation(string $url): static
+    public function isSupported(): bool
     {
-        $request = Http::get($url);
+        return str($this->url)->contains('linkedin.com/jobs/view/');
+    }
+
+    public function loadJobInformation(): static
+    {
+        if ( ! $this->isSupported()) {
+            return $this;
+        }
+
+        $request = Http::get($this->url);
 
         $body = $request->body();
 
         $crawler = new Crawler($body);
 
-        if (str($url)->contains('linkedin.com/jobs/view/')) {
+        if (str($this->url)->contains('linkedin.com/jobs/view/')) {
+            $this->url = str($this->url)->before('?'); // cleanup url
             $this->linkedin($crawler);
         }
 
