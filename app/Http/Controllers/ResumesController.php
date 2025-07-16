@@ -23,7 +23,6 @@ class ResumesController
             'created' => $resume->created_at->format('Y-m-d g:i A'),
         ])->values();
 
-        // dd($resumes);
         return response()->json($resumes);
     }
 
@@ -77,18 +76,5 @@ class ResumesController
     public function show(Request $request, Resume $resume)
     {
         //
-    }
-
-    private function getDayGroup(string $date): string
-    {
-        if (Carbon::parse($date)->isToday()) {
-            return 'Today';
-        }
-
-        if (Carbon::parse($date)->isYesterday()) {
-            return 'Yesterday';
-        }
-
-        return 'Previous Days';
     }
 }
