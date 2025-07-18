@@ -188,7 +188,8 @@ const completeWizard = (state: OptimizationWizardStore): AxiosPromise<{optimizat
     const options: AxiosRequestConfig = {
         headers: {
             'X-CurrentStep': 3
-        }
+        },
+        timeout: 360000, // 6min
     }
 
     return axios.put<{optimization: OptimizationType, errors: {[key: string]: string}}>(route('optimizations.update', state.form.optimizationId), {}, options)
