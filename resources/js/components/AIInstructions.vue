@@ -5,8 +5,9 @@ import { Button } from '@/components/ui/button';
 import { ref } from 'vue';
 import { updateUserInstructions } from '@/lib/axios';
 import { usePage } from '@inertiajs/vue3'
+import { SharedData } from '@/types';
 
-const page = usePage();
+const page = usePage<SharedData>();
 
 const instructions = ref<string>(page.props.auth.user.ai_instructions)
 
