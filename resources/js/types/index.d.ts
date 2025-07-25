@@ -36,13 +36,23 @@ export interface SharedData extends PageProps {
     ziggy: Config & { location: string };
 }
 
+export interface AISettings {
+    instructions: string;
+    compatibilityScoreLevels: {
+        top: number;
+        high: number;
+        medium: number;
+        low: number;
+    }
+}
+
 export interface User {
     id: number;
     name: string;
     email: string;
     avatar?: string;
     email_verified_at: string | null;
-    ai_instructions: string;
+    ai_settings: AiSettings;
     created_at: string;
     updated_at: string;
 }
