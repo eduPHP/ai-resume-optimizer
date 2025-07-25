@@ -18,7 +18,7 @@ const handleSaveInstructions = () => {
 
 <template>
     <div>
-        <Textarea v-model="instructions" placeholder="i.e. Lower the compatibility score by 20 points if the company does not offer free hugs!" />
+        <Textarea v-model="instructions" auto-grow placeholder="i.e. Lower the compatibility score by 20 points if the company does not offer free hugs!" />
 
         <div class="mt-4 flex justify-end">
             <Button type="button" @click="handleSaveInstructions">Save</Button>
