@@ -6,9 +6,14 @@ import { File } from 'lucide-vue-next';
 import { usePage } from '@inertiajs/vue3';
 import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
 import OptimizationPopover from '@/components/OptimizationPopover.vue';
+import { onMounted } from 'vue';
+import { SharedData } from '@/types';
 
 const state = useOptimizationWizardStore()
-const page = usePage();
+const page = usePage<SharedData>();
+onMounted(() => {
+    state.setAISettings(page.props.auth?.user.ai_settings)
+})
 
 </script>
 

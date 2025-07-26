@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { AdditionalInformation, Completed, RoleInformation, YourResume } from '@/components/ui/steps';
 import { Component } from 'vue';
+import { AISettings } from '@/types';
 
 type Step = {
     name: string;
@@ -15,6 +16,7 @@ export type State = {
     windowWidth: number;
     steps: Step[];
     form: Form;
+    ai_settings: AISettings;
 }
 
 export type RoleForm = {
@@ -96,6 +98,14 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
         loading: false,
         optimizing: false,
         windowWidth: 4000,
+        ai_settings: {
+            compatibilityScoreLevels: {
+                top: 95,
+                high: 90,
+                medium: 80,
+                low: 70,
+            }
+        } as AISettings,
         steps: [
             {
                 name: 'Role Information',
@@ -151,12 +161,13 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
             return 'New Optimization'
         },
         compatibilityStyle: (state: State): string => {
+            const {high, medium, low} = state.ai_settings.compatibilityScoreLevels
             if (state.form.status === 'complete') {
                 const score = state.form.response.compatibility_score;
                 switch (true) {
-                    case score < 90 && score > 84:
+                    case score < high && score > medium:
                         return 'text-yellow-400'
-                    case score < 85:
+                    case score <= low:
                         return 'text-red-400'
                 }
             }
@@ -179,6 +190,9 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
             for (const error in errors) {
                 delete this.form.errors[error];
             }
+        },
+        setAISettings(settings: AISettings) {
+            this.ai_settings = settings;
         },
         setError(key: string, message: string) {
             this.form.errors[key] = message;
@@ -215,9 +229,6 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
             if (step <= this.latestStep) {
                 this.step = step
             }
-        },
-        finish() {
-            alert('done')
         },
     },
 })
