@@ -41,7 +41,7 @@ class ProfileController extends Controller
         return to_route('profile.edit');
     }
 
-    public function updateInstructions(Request $request): JsonResponse
+    public function updateInstructions(Request $request): RedirectResponse
     {
         $user = $request->user();
 
@@ -57,7 +57,7 @@ class ProfileController extends Controller
             ],
         ]);
 
-        return response()->json(['success' => 'User Instructions were successfully updated.']);
+        return back();
     }
 
     /**
