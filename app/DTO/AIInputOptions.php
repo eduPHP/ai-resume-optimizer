@@ -3,10 +3,11 @@
 namespace App\DTO;
 
 use App\DTO\Contracts\AIInputOptions as AIInputOptionsInterface;
+use Illuminate\Support\Collection;
 
 class AIInputOptions implements AIInputOptionsInterface
 {
-    public array $settings = [];
+    public Collection $settings;
 
     public function __construct(
         public string  $resume = "",
