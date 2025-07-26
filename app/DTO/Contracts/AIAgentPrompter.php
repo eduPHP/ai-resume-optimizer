@@ -7,6 +7,6 @@ use App\DTO\AIInputOptions;
 
 interface AIAgentPrompter
 {
-    public function handle(string $resume, AIInputOptions $options): AIResponseDTO;
+    public function handle(AIInputOptions $options): AIResponseDTO;
 
 }

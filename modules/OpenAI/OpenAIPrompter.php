@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 
 class OpenAIPrompter implements AIAgentPrompter
 {
-    public function handle(string $resume, AIInputOptions $options): AIResponseDTO
+    public function handle(AIInputOptions $options): AIResponseDTO
     {
         $response = Http::withToken(config('openai.openai_api_key'))
             ->timeout(300)
