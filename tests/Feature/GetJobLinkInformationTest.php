@@ -22,14 +22,16 @@ class GetJobLinkInformationTest extends TestCase
 
         $service = new \App\Services\JobCrawler();
 
-        $service->loadJobInformation('https://www.linkedin.com/jobs/view/4253350439/?alternateChannel=search&refId=wNitVig4Rl27bNGUPyfT2A%3D%3D&trackingId=fWHtBUEA4EN3G1KTMm7Bvw%3D%3D');
+        $service->crawl('https://www.linkedin.com/jobs/view/4253350439/?alternateChannel=search&refId=wNitVig4Rl27bNGUPyfT2A%3D%3D&trackingId=fWHtBUEA4EN3G1KTMm7Bvw%3D%3D');
+        $service->loadJobInformation();
 
 
-        $this->assertCount(4, $service->toArray());
+        $this->assertCount(5, $service->toArray());
         $this->assertEquals('Full Stack Developer', $service->title);
         $this->assertEquals('The Patrick J. McGovern Foundation', $service->company);
         $this->assertEquals('United States', $service->location);
         $this->assertStringContainsString('Proficiency in JavaScript', $service->description);
+        $this->assertStringContainsString('https://www.linkedin.com/jobs/view/4253350439/', $service->url);
     }
 
 //    #[Test]

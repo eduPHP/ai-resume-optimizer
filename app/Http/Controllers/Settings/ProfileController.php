@@ -46,7 +46,15 @@ class ProfileController extends Controller
         $user = $request->user();
 
         $user->update([
-            'ai_instructions' => $request->get('instructions'),
+            'ai_settings' => [
+                'instructions' => $request->input('instructions'),
+                'compatibilityScoreLevels' => [
+                    'top' => $request->input('compatibilityScoreLevels.top'),
+                    'high' => $request->input('compatibilityScoreLevels.high'),
+                    'medium' => $request->input('compatibilityScoreLevels.medium'),
+                    'low' => $request->input('compatibilityScoreLevels.low'),
+                ],
+            ],
         ]);
 
         return response()->json(['success' => 'User Instructions were successfully updated.']);

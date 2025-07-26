@@ -22,7 +22,6 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
         <SettingsLayout>
             <div class="space-y-6">
-                <HeadingSmall title="AI Instructions" description="Add custom instructions for optimizations." />
                 <AIInstructions />
             </div>
         </SettingsLayout>

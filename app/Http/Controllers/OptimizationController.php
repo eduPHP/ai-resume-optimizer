@@ -168,7 +168,8 @@ class OptimizationController
         /** @var AIAgentPrompter $prompter */
         $prompter = app()->make(AIAgentPrompter::class);
 
-        $agentResponse = $prompter->handle($content, new AIInputOptions(
+        $agentResponse = $prompter->handle(new AIInputOptions(
+            resume: $content,
             makeGrammaticalCorrections: $optimization->make_grammatical_corrections,
             changeProfessionalSummary: $optimization->change_professional_summary,
             generateCoverLetter: $optimization->generate_cover_letter,

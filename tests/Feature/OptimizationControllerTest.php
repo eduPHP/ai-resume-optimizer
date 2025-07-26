@@ -19,6 +19,7 @@ class OptimizationControllerTest extends TestCase
                 'name' => 'Backend Engineer',
                 'company' => 'Laravel',
                 'description' => 'Lore Ipsum!',
+                'url' => 'https://www.linkedin.com/jobs/view/4253350439/'
             ]);
 
         $response->assertSuccessful();
