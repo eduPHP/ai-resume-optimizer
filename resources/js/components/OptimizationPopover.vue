@@ -8,17 +8,21 @@ import { SidebarMenuButton } from '@/components/ui/sidebar';
 import { completeWizard } from '@/lib/axios';
 import { useToastsStore } from '@/stores/ToastsStore';
 import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
+import { ref } from 'vue';
 
 const state = useOptimizationWizardStore()
 const toast = useToastsStore();
+const popoverOpen = ref<boolean>(false)
 
 const enableEdit = () => {
     state.form.status = 'editing'
     state.step = 0
     state.latestStep = 3
+    popoverOpen.value = false;
 }
 const regenerate = () => {
     state.loading = true;
+    popoverOpen.value = false;
 
     completeWizard(state).then((response) => {
         state.setOptimization(response.data.optimization)
@@ -30,8 +34,8 @@ const regenerate = () => {
 
 <template>
     <div class="absolute right-2 top-3" v-show="!state.loading">
-        <DropdownMenu v-if="state.form.optimizationId">
-            <DropdownMenuTrigger as-child>
+        <DropdownMenu v-if="state.form.optimizationId" v-model:open="popoverOpen">
+            <DropdownMenuTrigger as-child @click="popoverOpen = false">
                 <SidebarMenuButton size="lg" class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground px-4">
                     <EllipsisVerticalIcon class="ml-auto size-4" />
                 </SidebarMenuButton>
@@ -41,9 +45,10 @@ const regenerate = () => {
                 side="right"
                 align="start"
                 :side-offset="4"
+                update-position-strategy="always"
             >
                 <div class="flex items-stretch flex-col gap-2">
-                    <Button text-position="left" v-if="state.form.role.url" target="_blank" as="a" :href="state.form.role.url">
+                    <Button text-position="left" v-if="state.form.role.url" target="_blank" as="a" :href="state.form.role.url" @click="popoverOpen = false">
                         <Link /> Apply
                     </Button>
                     <Button text-position="left" :disabled="state.loading" :variant="state.loading ? 'ghost' : 'outline'" type="button" size="lg" @click="regenerate">
