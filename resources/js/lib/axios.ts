@@ -8,6 +8,7 @@ import {
 } from '@/stores/OptimizationWizardStore';
 import { useToastsStore } from '@/stores/ToastsStore';
 import { usePage } from '@inertiajs/vue3';
+import { AISettings } from '@/types';
 
 interface User {
     id: number;
@@ -257,11 +258,11 @@ const downloadFile: (url: string) => Promise<void> = (url: string) => {
     });
 };
 
-const updateUserInstructions: (instructions: string) => void = async (instructions: string): Promise<void> => {
+const updateUserAISettings: (settings: AISettings) => void = async (settings: AISettings): Promise<void> => {
     const axios = Axios()
     const toast = useToastsStore()
 
-    const response = await axios.put<{message: string}>(route('users.update-instructions'), {instructions})
+    const response = await axios.put<{message: string}>(route('users.update-instructions'), settings)
 
     toast.success('Saved!', response.data.message)
 }
@@ -292,6 +293,6 @@ export {
     downloadCoverLetter,
     deleteOptimization,
     cancelOptimizationEdit,
-    updateUserInstructions,
+    updateUserAISettings,
     getJobInformation,
 }
