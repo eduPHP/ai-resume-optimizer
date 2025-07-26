@@ -9,6 +9,7 @@ import { createOrUpdateOptimization, getJobInformation } from '@/lib/axios';
 import { router } from '@inertiajs/vue3';
 import { useNavigationItemsStore } from '@/stores/NavigationItemsStore';
 import debounce from '@/lib/debounce';
+import Heading from '@/components/Heading.vue';
 
 const state = useOptimizationWizardStore()
 const nav = useNavigationItemsStore()
@@ -55,8 +56,7 @@ const debouncedGetJobInformation = debounce(() => getJobInformationHandler(state
 
 <template>
     <div class="bg-gray-300/10 dark:bg-[#202020] rounded-md px-8 py-6 min-w-80">
-        <h3 class="hidden xl:block text-xl mb-8">Role Information</h3>
-        <p class="text-gray-400  mb-8">A resume should be role specific, <br>Please provide the role information to optimize the resume for the role you are applying for.</p>
+        <Heading title="Role Information" description="A resume should be role specific, <br>Please provide the role information to optimize the resume for the role you are applying for." />
 
         <div class="mb-8 grid gap-2">
             <Label class="flex justify-between" for="url">Job Link <span class="text-yellow-300 text-xs">Experimental</span></Label>

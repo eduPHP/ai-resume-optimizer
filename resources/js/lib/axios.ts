@@ -258,15 +258,6 @@ const downloadFile: (url: string) => Promise<void> = (url: string) => {
     });
 };
 
-const updateUserAISettings: (settings: AISettings) => void = async (settings: AISettings): Promise<void> => {
-    const axios = Axios()
-    const toast = useToastsStore()
-
-    const response = await axios.put<{message: string}>(route('users.update-instructions'), settings)
-
-    toast.success('Saved!', response.data.message)
-}
-
 const getJobInformation: (url: string) => Promise<AxiosResponse<JobInformation>> = async (url: string) => {
     const axios = Axios()
     const toast = useToastsStore()
@@ -293,6 +284,5 @@ export {
     downloadCoverLetter,
     deleteOptimization,
     cancelOptimizationEdit,
-    updateUserAISettings,
     getJobInformation,
 }

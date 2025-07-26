@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { AdditionalInformation, Completed, RoleInformation, YourResume } from '@/components/ui/steps';
 import { Component } from 'vue';
 import { AISettings } from '@/types';
+import { compatibilityStyle } from '@/stores/NavigationItemsStore';
 
 type Step = {
     name: string;
@@ -161,18 +162,17 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
             return 'New Optimization'
         },
         compatibilityStyle: (state: State): string => {
-            const {high, medium, low} = state.ai_settings.compatibilityScoreLevels
-            if (state.form.status === 'complete') {
-                const score = state.form.response.compatibility_score;
-                switch (true) {
-                    case score < high && score > medium:
-                        return 'text-yellow-400'
-                    case score <= low:
-                        return 'text-red-400'
-                }
+
+            const {high} = state.ai_settings.compatibilityScoreLevels
+            const score = state.form.response.compatibility_score;
+
+            let style = compatibilityStyle(score)
+
+            if (score >= high) {
+                style += ' text-2xl'
             }
 
-            return 'text-green-400 text-2xl'
+            return style
         },
     },
 

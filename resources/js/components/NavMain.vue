@@ -1,36 +1,14 @@
 <script setup lang="ts">
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar';
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 import { File, Plus, X } from 'lucide-vue-next';
 import { onMounted } from 'vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useNavigationItemsStore } from '@/stores/NavigationItemsStore';
-import { SharedData } from '@/types';
+import { useNavigationItemsStore, compatibilityStyle } from '@/stores/NavigationItemsStore';
 
 const nav = useNavigationItemsStore();
 const { state: sidebarState } = useSidebar();
-
-const compatibilityStyle = (score: number | undefined) => {
-    const page = usePage<SharedData>();
-
-    const { high, medium } = page.props.auth?.user.ai_settings.compatibilityScoreLevels;
-    const SCORE_STYLES = {
-        HIGH: 'text-green-400',
-        MEDIUM: 'text-yellow-400',
-        LOW: 'text-red-400',
-    } as const;
-
-    if (!score) {
-        return '';
-    }
-
-    if (score >= high) return SCORE_STYLES.HIGH;
-    if (score >= medium) return SCORE_STYLES.MEDIUM;
-    if (score < medium) return SCORE_STYLES.LOW;
-
-    return '';
-};
 
 onMounted(() => {
     nav.loadItems();

@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia'
-import { type NavGroup, type NavItem } from '@/types';
+import { type NavGroup, type NavItem, SharedData } from '@/types';
 import { Axios } from '@/lib/axios';
 import { format, isToday, isYesterday } from 'date-fns';
 import { OptimizationType } from '@/stores/OptimizationWizardStore';
+import { usePage } from '@inertiajs/vue3';
 
 type State = {
     items: NavItem[];
@@ -27,6 +28,28 @@ const maybeApplyFilter = (items: NavItem[], filter: string) => {
 
     return items.filter((item: NavItem) => item.title.toLowerCase().includes(filter.toLowerCase()))
 }
+
+export const SCORE_STYLES = {
+    HIGH: 'text-green-400',
+    MEDIUM: 'text-yellow-400',
+    LOW: 'text-red-400',
+} as const;
+
+export const compatibilityStyle = (score: number | undefined) => {
+    const page = usePage<SharedData>();
+
+    const { high, medium } = page.props.auth?.user.ai_settings.compatibilityScoreLevels;
+
+    if (!score) {
+        return '';
+    }
+
+    if (score >= high) return SCORE_STYLES.HIGH;
+    if (score >= medium) return SCORE_STYLES.MEDIUM;
+    if (score < medium) return SCORE_STYLES.LOW;
+
+    return '';
+};
 
 export const useNavigationItemsStore = defineStore('navigation-items', {
     state: (): State => ({

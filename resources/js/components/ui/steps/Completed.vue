@@ -5,6 +5,7 @@ import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
 import { completeWizard } from '@/lib/axios';
 import { useToastsStore } from '@/stores/ToastsStore';
 import { useNavigationItemsStore } from '@/stores/NavigationItemsStore';
+import Heading from '@/components/Heading.vue';
 
 const state = useOptimizationWizardStore()
 const toast = useToastsStore()
@@ -24,7 +25,8 @@ const finish = () => {
 <template>
     <div class="bg-gray-300/10 dark:bg-[#202020] px-8 py-6 min-w-80">
         <div class="flex flex-col items-center gap-8">
-            <h3 class="hidden xl:block text-xl">Complete</h3>
+            <Heading title="Complete" />
+
             <CheckCircle class="text-green-500 h-16 w-16" />
             <p>That’s all the information we need!</p>
             <div class="text-center">
