@@ -7,6 +7,7 @@ import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
 import { Buttons } from '@/components/ui/steps';
 import { updateAdditionalInformation } from '@/lib/axios';
 import { watch } from 'vue';
+import Heading from '@/components/Heading.vue';
 
 const state = useOptimizationWizardStore()
 
@@ -22,8 +23,7 @@ watch(() => state.form.additional.targetCountry, (country: string) => {
 
 <template>
     <div class="bg-gray-300/10 dark:bg-[#202020] px-8 py-6 w-full min-w-80">
-        <h3 class="hidden xl:block text-xl mb-6">Additional Information</h3>
-        <p class="text-gray-400">Select the options that match your goal</p>
+        <Heading title="Additional Information" description="Select the options that match your goal" />
         <div class="py-6 grid xl:grid-cols-2 gap-6">
             <Toggle v-model="state.form.additional.makeGrammaticalCorrections">
                 Make grammatical corrections

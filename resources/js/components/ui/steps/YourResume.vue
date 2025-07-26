@@ -5,6 +5,7 @@
     import { onBeforeMount, ref } from 'vue';
     import { Axios, uploadResume, updateResume } from '@/lib/axios';
     import InputError from '@/components/InputError.vue';
+    import Heading from '@/components/Heading.vue';
 
     const state = useOptimizationWizardStore()
 
@@ -52,8 +53,7 @@
 
 <template>
     <div class="bg-gray-300/10 dark:bg-[#202020] px-8 py-6 min-w-80">
-        <h3 class="hidden xl:block text-xl mb-6">Your Resume</h3>
-        <p class="text-gray-400">Select a previously uploaded resume or upload a new one</p>
+        <Heading title="Your Resume" description="Select a previously uploaded resume or upload a new one" />
         <div class="py-6">
 
             <ul>
