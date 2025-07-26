@@ -2,7 +2,6 @@
 
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { updateUserAISettings } from '@/lib/axios';
 import { router, useForm, usePage } from '@inertiajs/vue3';
 import { SharedData } from '@/types';
 import { Input } from '@/components/ui/input';
