@@ -23,6 +23,18 @@ class User extends Authenticatable
         'password',
     ];
 
+    protected $attributes = [
+        'ai_settings' => [
+            'instructions' => '',
+            'compatibilityScoreLevels' => [
+                'top' => 95,
+                'high' => 90,
+                'medium' => 80,
+                'low' => 70,
+            ],
+        ]
+    ];
+
     /**
      * The attributes that should be hidden for serialization.
      *
