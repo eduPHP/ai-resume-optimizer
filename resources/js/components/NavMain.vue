@@ -1,32 +1,35 @@
 <script setup lang="ts">
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import { File, Plus, X } from 'lucide-vue-next';
 import { onMounted } from 'vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useNavigationItemsStore } from '@/stores/NavigationItemsStore';
-import { NavItem } from '@/types';
+import { SharedData } from '@/types';
 
 const nav = useNavigationItemsStore();
 const { state: sidebarState } = useSidebar();
 
-const compatibilityStyle = (item: NavItem) => {
-    const score = item.score;
+const compatibilityStyle = (score: number | undefined) => {
+    const page = usePage<SharedData>();
+
+    const {high, medium, low} = page.props.auth?.user.ai_settings.compatibilityScoreLevels
     const SCORE_STYLES = {
         HIGH: 'text-green-400',
         MEDIUM: 'text-yellow-400',
         LOW: 'text-red-400'
     } as const;
 
-    if (item.status !== 'complete' || ! score) {
+    if (! score) {
         return '';
     }
 
-    if (score >= 90) return SCORE_STYLES.HIGH;
-    if (score >= 85) return SCORE_STYLES.MEDIUM;
+    if (score >= high) return SCORE_STYLES.HIGH;
+    if (score >= medium) return SCORE_STYLES.MEDIUM;
+    if (score <= low) return SCORE_STYLES.LOW;
 
-    return SCORE_STYLES.LOW;
+    return '';
 };
 
 
@@ -59,7 +62,7 @@ onMounted(() => {
                 <SidebarMenuItem v-for="item in group.items" :key="item.id">
                     <SidebarMenuButton as-child :is-active="route().routeParams?.optimization === item.id" :tooltip="item.tooltip">
                         <Link :href="item.href" class="mb-2 p-2">
-                            <File class="!h-7 !w-7" :class="compatibilityStyle(item)" />
+                            <File class="!h-7 !w-7" :class="compatibilityStyle(item.score)" />
                             <span class="flex flex-col">
                                 <span>{{ item.title }}</span>
                                 <span class="text-xs text-gray-400 dark:text-white/40">Sent at {{ item.created }}</span>
