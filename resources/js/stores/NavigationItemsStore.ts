@@ -8,6 +8,9 @@ import { usePage } from '@inertiajs/vue3';
 type State = {
     items: NavItem[];
     filter: string;
+    page: number;
+    hasMore: boolean;
+    loading: boolean;
 }
 
 const dateGroup = (date: Date): string => {
@@ -55,6 +58,9 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
     state: (): State => ({
         items: [] as NavItem[],
         filter: '',
+        page: 1,
+        hasMore: true,
+        loading: false,
     }),
 
     getters: {
@@ -105,10 +111,23 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
             this.items.unshift(item)
         },
 
-        async loadItems() {
-            const request = await Axios().get<NavItem[]>(route('optimizations.index'));
+        async loadItems(reset: boolean = false) {
+            if (this.loading || (!this.hasMore && !reset)) return;
 
-            this.items = request.data.map((item: NavItem): NavItem => {
+            if (reset) {
+                this.items = [];
+                this.page = 1;
+                this.hasMore = true;
+            }
+
+            this.loading = true;
+
+            const request = await Axios().get(route('optimizations.index', { page: this.page }));
+
+            const data = request.data.data as NavItem[];
+            const next = request.data.next_page_url;
+
+            const mapped = data.map((item: NavItem): NavItem => {
                 const created = new Date(item.created as string)
                 return {
                     ...item,
@@ -116,6 +135,11 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
                     created: format(created, 'yyyy-LL-dd h:mm a'),
                 }
             });
+
+            this.items.push(...mapped);
+            this.page += 1;
+            this.hasMore = Boolean(next);
+            this.loading = false;
         }
 
     },

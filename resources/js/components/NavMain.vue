@@ -2,13 +2,21 @@
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar';
 import { Link } from '@inertiajs/vue3';
 import { File, Plus, X } from 'lucide-vue-next';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
+import { useIntersectionObserver } from '@vueuse/core';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useNavigationItemsStore, compatibilityStyle } from '@/stores/NavigationItemsStore';
 
 const nav = useNavigationItemsStore();
 const { state: sidebarState } = useSidebar();
+const loadMoreTrigger = ref(null);
+
+useIntersectionObserver(loadMoreTrigger, ([{ isIntersecting }]) => {
+    if (isIntersecting) {
+        nav.loadItems();
+    }
+});
 
 onMounted(() => {
     nav.loadItems();
@@ -64,5 +72,6 @@ onMounted(() => {
                 </SidebarMenuItem>
             </SidebarMenu>
         </SidebarGroup>
+        <div ref="loadMoreTrigger" class="h-4"></div>
     </div>
 </template>

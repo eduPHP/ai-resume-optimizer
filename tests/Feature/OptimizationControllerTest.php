@@ -118,4 +118,22 @@ class OptimizationControllerTest extends TestCase
         $this->assertSame('complete', $optimization->status);
         $this->assertSame(3, $optimization->current_step);
     }
+
+    #[Test]
+    function it_paginates_the_optimizations_index()
+    {
+        $user = User::factory()->create();
+        \App\Models\Optimization::factory()->count(15)->for($user)->create();
+
+        $response = $this->withToken($user->api_token)->getJson(route('optimizations.index', ['page' => 1]));
+
+        $response->assertSuccessful();
+        $response->assertJsonCount(10, 'data');
+        $this->assertNotNull($response->json('next_page_url'));
+
+        $next = $response->json('next_page_url');
+        $response = $this->withToken($user->api_token)->getJson($next);
+        $response->assertSuccessful();
+        $response->assertJsonCount(5, 'data');
+    }
 }
