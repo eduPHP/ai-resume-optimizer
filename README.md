@@ -39,3 +39,11 @@ If you're on RedHat, CentOS, Rocky Linux or Fedora:
 
 
 access: http://localhost:8000
+
+## Running Tests
+
+Execute the test suite using:
+
+```sh
+composer test
+```
