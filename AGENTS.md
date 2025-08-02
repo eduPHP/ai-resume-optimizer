@@ -16,6 +16,8 @@ Ensure the tools below are installed on your system:
 
 1. Install Laravel dependencies using Composer:
    ```sh
+   composer config --global prefer-dist true
+   composer config --global github-protocols https
    composer install
    ```
 2. Copy and configure the `.env` file:
