@@ -1,8 +1,6 @@
 name: Run Test Suite ✅
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
 
