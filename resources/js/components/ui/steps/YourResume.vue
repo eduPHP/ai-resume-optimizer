@@ -3,7 +3,7 @@
     import { useOptimizationWizardStore, Resume } from '@/stores/OptimizationWizardStore';
     import { Buttons } from '@/components/ui/steps';
     import { onBeforeMount, ref } from 'vue';
-    import { Axios, uploadResume, updateResume } from '@/lib/axios';
+    import { Axios, uploadResume, updateResume, deleteResume } from '@/lib/axios';
     import InputError from '@/components/InputError.vue';
     import Heading from '@/components/Heading.vue';
 
@@ -49,6 +49,19 @@
         });
 
     }
+
+    const handleResumeDelete = (id: number) => {
+        if (!confirm('Are you sure you want to delete this resume?')) {
+            return
+        }
+
+        deleteResume(state, id).then(() => {
+            resumes.value = resumes.value.filter(r => r.id !== id)
+            if (state.form.resume.id === id) {
+                state.form.resume.id = resumes.value[0]?.id
+            }
+        })
+    }
 </script>
 
 <template>
@@ -57,7 +70,7 @@
         <div class="py-6">
 
             <ul>
-                <li v-for="resume in resumes" :key="resume.id" class="mb-4">
+                <li v-for="resume in resumes" :key="resume.id" class="mb-4 flex items-center justify-between">
                     <label class="flex items-center gap-4 text-lg cursor-pointer">
                         <input @input="state.clearErrors('id')" accept="application/msword, application/pdf" type="radio" name="resume" :value="resume.id" v-model="state.form.resume.id" class="w-6 h-6">
                         <span class="flex flex-col leading-none">
@@ -65,6 +78,7 @@
                             <span class="text-xs text-gray-400">Sent on {{ resume.created }}</span>
                         </span>
                     </label>
+                    <button type="button" class="text-sm text-red-500" @click="handleResumeDelete(resume.id)">Delete</button>
                 </li>
             </ul>
             <InputError :message="state.form.errors.id" />

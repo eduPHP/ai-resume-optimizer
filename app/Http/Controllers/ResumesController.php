@@ -70,7 +70,12 @@ class ResumesController
 
     public function destroy(Request $request, Resume $resume)
     {
-        //
+        abort_if($resume->user_id !== $request->user()->id, 403);
+
+        Storage::disk('local')->delete($resume->path);
+        $resume->delete();
+
+        return response()->noContent();
     }
 
     public function show(Request $request, Resume $resume)
