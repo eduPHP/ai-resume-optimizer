@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Send deploy info to rdo.blog.br
         run: |
-          curl -X POST https://deploy.rdo.blog.br \
+          curl -X POST https://deployer.rdo.blog.br \
             -H "Content-Type: application/json" \
             -d '{
               "repository": "${{ github.repository }}",
