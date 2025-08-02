@@ -10,9 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send deploy info to rdo.blog.br
+        env:
+          SECRET: ${{ secrets.DEPLOY_HOOK_SECRET }}
         run: |
           curl -X POST https://deployer.rdo.blog.br \
             -H "Content-Type: application/json" \
+            -H "X-Deploy-Secret: $SECRET" \
             -d '{
               "repository": "${{ github.repository }}",
               "commit": "${{ github.sha }}",
