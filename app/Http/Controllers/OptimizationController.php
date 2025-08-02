@@ -12,19 +12,35 @@ class OptimizationController
 {
     public function index(): JsonResponse
     {
-        $optimizations = request()->user()->optimizations()->latest('created_at')->get()->map(fn(Optimization $optimization) => [
-            'id' => $optimization->id,
-            'href' => route('optimizations.show', $optimization),
-            'title' => ($optimization->status === 'draft' ? '[draft] ' : '').$optimization->role_company,
-            'score' => $this->getCompatibilityScore($optimization),
-            'status' => $optimization->status,
-            'tooltip' => $optimization->role_name,
-            'created' => $optimization->created_at
-                ->utcOffset(request()->header('X-Timezone-Offset') ?? 0)
-                ->toDateTimeString(),
-        ]);
+        $perPage = request()->integer('per_page', 10);
 
-        return response()->json($optimizations->values());
+        $query = request()->input('q');
+        $user = request()->user();
+
+        $optimizations = $user->optimizations()
+            ->searchByRoleCompany($query) // Use the newly introduced scope
+            ->latest('created_at');        // Keep the ordering logic clean
+
+//        $optimizations->dd();
+
+        $optimizations = $optimizations->paginate($perPage)
+            ->through(fn (Optimization $optimization) => [
+                'id' => $optimization->id,
+                'href' => route('optimizations.show', $optimization),
+                'title' => ($optimization->status === 'draft' ? '[draft] ' : '') . $optimization->role_company,
+                'score' => $this->getCompatibilityScore($optimization),
+                'status' => $optimization->status,
+                'tooltip' => $optimization->role_name,
+                'created' => $optimization->created_at
+                    ->utcOffset(request()->header('X-Timezone-Offset') ?? 0)
+                    ->toDateTimeString(),
+            ]);
+
+        return response()->json([
+            'data' => $optimizations->items(),
+            'next_page_url' => $optimizations->nextPageUrl(),
+            'q' => request()->input('q'),
+        ]);
     }
 
     public function show(Optimization $optimization): \Inertia\Response
