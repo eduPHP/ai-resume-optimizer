@@ -25,8 +25,8 @@ test('it creates a new optimization when the role information is sent', function
         'user_id' => $user->id,
     ]);
 
-    expect($response->json('step'))->toBe(0);
-    expect($response->json('optimization.role_name'))->toBe('Backend Engineer');
+    expect($response->json('step'))->toBe(0)
+        ->and($response->json('optimization.role_name'))->toBe('Backend Engineer');
 });
 
 test('it sets an existing resume in the optimization', function () {
@@ -62,8 +62,8 @@ test('an optimized resume can be downloaded', function () {
 
     $response->assertSuccessful();
 
-    expect($response->headers->get('content-type'))->toBe('application/pdf');
-    expect($response->headers->get('content-disposition'))->toBe('attachment; filename="' . $optimization->optimizedResumeFileName() . '"');
+    expect($response->headers->get('content-type'))->toBe('application/pdf')
+        ->and($response->headers->get('content-disposition'))->toBe('attachment; filename="' . $optimization->optimizedResumeFileName() . '"');
 });
 
 test('a cover letter can be downloaded', function () {
@@ -79,8 +79,8 @@ test('a cover letter can be downloaded', function () {
 
     $response->assertSuccessful();
 
-    expect($response->headers->get('content-type'))->toBe('application/pdf');
-    expect($response->headers->get('content-disposition'))->toBe('attachment; filename="' . $optimization->coverLetterFileName() . '"');
+    expect($response->headers->get('content-type'))->toBe('application/pdf')
+        ->and($response->headers->get('content-disposition'))->toBe('attachment; filename="' . $optimization->coverLetterFileName() . '"');
 });
 
 test('it can cancel an edit and restore the optimization', function () {
@@ -97,7 +97,22 @@ test('it can cancel an edit and restore the optimization', function () {
 
     $optimization->refresh();
 
-    expect($optimization->status)->toBe('complete');
-    expect($optimization->current_step)->toBe(3);
+    expect($optimization->status)->toBe('complete')
+        ->and($optimization->current_step)->toBe(3);
 });
 
+test('it paginates the optimizations index', function () {
+    $user = User::factory()->create();
+    \App\Models\Optimization::factory()->count(15)->for($user)->create();
+
+    $response = $this->withToken($user->api_token)->getJson(route('optimizations.index', ['page' => 1]));
+
+    $response->assertSuccessful();
+    $response->assertJsonCount(10, 'data');
+    expect($response->json('next_page_url'))->not->toBeNull();
+
+    $next = $response->json('next_page_url');
+    $response = $this->withToken($user->api_token)->getJson($next);
+    $response->assertSuccessful();
+    $response->assertJsonCount(5, 'data');
+});
