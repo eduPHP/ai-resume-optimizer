@@ -18,5 +18,6 @@ jobs:
               "commit": "${{ github.sha }}",
               "ref": "${{ github.ref }}",
               "pusher": "${{ github.actor }}",
-              "timestamp": "${{ github.event.head_commit.timestamp }}"
+              "timestamp": "${{ github.event.head_commit.timestamp }}",
+              "testing": true
             }'
