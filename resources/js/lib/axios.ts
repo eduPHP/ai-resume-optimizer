@@ -181,6 +181,22 @@ const updateResume = (state: OptimizationWizardStore) => {
         })
 }
 
+const deleteResume = (state: OptimizationWizardStore, id: number): AxiosPromise<void> => {
+    state.loading = true
+
+    const axios = Axios()
+    const options: AxiosRequestConfig = {
+        headers: {
+            'X-CurrentStep': 1
+        }
+    }
+
+    return axios.delete(route('resumes.destroy', id), options)
+        .finally(() => {
+            state.loading = false
+        })
+}
+
 const completeWizard = (state: OptimizationWizardStore): AxiosPromise<{optimization: OptimizationType, errors: {[key: string]: string}}> => {
     state.loading = true
     state.optimizing = true
@@ -278,6 +294,7 @@ export {
     createOrUpdateOptimization,
     updateResume,
     uploadResume,
+    deleteResume,
     updateAdditionalInformation,
     completeWizard,
     downloadOptimizedResume,

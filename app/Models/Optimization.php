@@ -46,7 +46,7 @@ class Optimization extends Model
 
     public function resume(): BelongsTo
     {
-        return $this->belongsTo(Resume::class);
+        return $this->belongsTo(Resume::class)->withTrashed();
     }
 
     public function optimizedResumeFileName(): string

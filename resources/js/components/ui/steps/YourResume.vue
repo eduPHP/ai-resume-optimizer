@@ -6,17 +6,22 @@
     import { Axios, uploadResume, updateResume } from '@/lib/axios';
     import InputError from '@/components/InputError.vue';
     import Heading from '@/components/Heading.vue';
+    import DeleteResume from '@/components/DeleteResume.vue';
 
     const state = useOptimizationWizardStore()
 
     const resumes = ref<Resume[]>([])
     const flashSuccess = ref(false)
 
-    onBeforeMount(() => {
+    const fetchResumes = () => {
         Axios().get(route('resumes.index')).then(response => {
             resumes.value = response.data as Resume[]
             state.form.resume.id = response.data[0]?.id
         })
+    }
+
+    onBeforeMount(() => {
+        fetchResumes()
     })
 
     const submit = () => {
@@ -55,9 +60,8 @@
     <div class="bg-gray-300/10 dark:bg-[#202020] px-8 py-6 min-w-80">
         <Heading title="Your Resume" description="Select a previously uploaded resume or upload a new one" />
         <div class="py-6">
-
             <ul>
-                <li v-for="resume in resumes" :key="resume.id" class="mb-4">
+                <li v-for="resume in resumes" :key="resume.id" class="mb-4 flex items-center justify-between">
                     <label class="flex items-center gap-4 text-lg cursor-pointer">
                         <input @input="state.clearErrors('id')" accept="application/msword, application/pdf" type="radio" name="resume" :value="resume.id" v-model="state.form.resume.id" class="w-6 h-6">
                         <span class="flex flex-col leading-none">
@@ -65,6 +69,7 @@
                             <span class="text-xs text-gray-400">Sent on {{ resume.created }}</span>
                         </span>
                     </label>
+                    <DeleteResume v-if="state.form.resume.id !== resume.id" :id="resume.id" :on-delete="fetchResumes" />
                 </li>
             </ul>
             <InputError :message="state.form.errors.id" />
