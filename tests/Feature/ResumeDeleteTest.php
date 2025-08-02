@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Optimization;
 use App\Models\Resume;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
@@ -27,7 +28,28 @@ it('allows a user to delete a resume', function () {
         ->assertNoContent();
 
     Storage::assertMissing($path);
-    $this->assertDatabaseMissing(Resume::class, [
+    $this->assertDatabaseHas(Resume::class, [
         'id' => $resume->id,
+        'deleted_at' => now(),
     ]);
+});
+
+it('does not allow a user to delete a resume that does not belong to them', function () {
+    $resume = Resume::factory()->create();
+    $anotherUser = User::factory()->create();
+
+    $this->withToken($anotherUser->api_token)
+        ->deleteJson("/api/resumes/{$resume->id}")
+        ->assertForbidden();
+});
+
+it('handles deleted resumes when parsing optimization', function () {
+    $resume = Resume::factory()->create();
+    $optimization = Optimization::factory()->create(['resume_id' => $resume->id, 'user_id' => $resume->user_id]);
+
+    $resume->delete();
+
+    tap($optimization->fresh(), function (Optimization $optimization) {
+        expect($optimization->resume)->not->toBeNull();
+    });
 });
