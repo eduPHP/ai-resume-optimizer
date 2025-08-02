@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @property bool $make_grammatical_corrections
@@ -23,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Carbon\Carbon $created_at
  * @property \App\Models\User $user
  * @property \App\Models\Resume $resume
+ * @method \Illuminate\Database\Eloquent\Builder searchByRoleCompany(string $search)
  */
 class Optimization extends Model
 {
@@ -30,6 +32,12 @@ class Optimization extends Model
     use HasFactory;
     use HasUlids;
 
+    public function scopeSearchByRoleCompany($query, $search): \Illuminate\Database\Eloquent\Builder
+    {
+        return $query->when($search, fn($query) =>
+            $query->where('role_company', 'like', "%$search%")
+        );
+    }
 
     public function user(): BelongsTo
     {

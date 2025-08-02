@@ -14,9 +14,16 @@ class OptimizationController
     {
         $perPage = request()->integer('per_page', 10);
 
-        $optimizations = request()->user()->optimizations()
-            ->latest('created_at')
-            ->paginate($perPage)
+        $query = request()->input('q');
+        $user = request()->user();
+
+        $optimizations = $user->optimizations()
+            ->searchByRoleCompany($query) // Use the newly introduced scope
+            ->latest('created_at');        // Keep the ordering logic clean
+
+//        $optimizations->dd();
+
+        $optimizations = $optimizations->paginate($perPage)
             ->through(fn (Optimization $optimization) => [
                 'id' => $optimization->id,
                 'href' => route('optimizations.show', $optimization),
@@ -32,6 +39,7 @@ class OptimizationController
         return response()->json([
             'data' => $optimizations->items(),
             'next_page_url' => $optimizations->nextPageUrl(),
+            'q' => request()->input('q'),
         ]);
     }
 
