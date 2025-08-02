@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\JobCrawler;
+use App\Services\Crawler\JobCrawler;
 use Illuminate\Http\JsonResponse;
 
 class JobsController
