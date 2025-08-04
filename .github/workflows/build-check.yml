@@ -30,12 +30,6 @@ jobs:
             echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Exit early if no source changes
-        if: steps.source-check.outputs.changed == 'false'
-        run: |
-          echo "✅ No changes in resources/, skipping build."
-          exit 0
-
       - name: Setup PHP
         if: steps.source-check.outputs.changed == 'true'
         uses: shivammathur/setup-php@v2
@@ -60,7 +54,7 @@ jobs:
         if: steps.source-check.outputs.changed == 'true'
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Install Node.js dependencies
         if: steps.source-check.outputs.changed == 'true'
