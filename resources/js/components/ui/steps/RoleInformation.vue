@@ -40,6 +40,7 @@ const getJobInformationHandler = (url: string) => {
             state.form.role.company = response.data.company
             state.form.role.name = response.data.position
             state.form.role.description = response.data.description
+            // set location for both role and additional info state
             state.form.additional.targetCountry = response.data.location
             state.form.role.location = response.data.location
 
