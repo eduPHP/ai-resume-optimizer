@@ -8,21 +8,37 @@ jobs:
   build-and-commit:
     runs-on: ubuntu-latest
     permissions:
-      # Give the default GITHUB_TOKEN write permission to commit and push the
-      # added or changed files to the repository.
       contents: write
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install PHP dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22' # Specify your desired Node.js version
+          node-version: '22'
 
-      - name: Install dependencies
+      - name: Install Node.js dependencies
         run: npm install
 
       - name: Run build
@@ -32,5 +48,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Build: Automated build update"
-          # Optional: specify paths to include or exclude from the commit
           file_pattern: 'public/build/manifest.json public/build/assets/*'
