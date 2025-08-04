@@ -1,47 +1,36 @@
-name: Verify Vite Build Is Up-To-Date
+name: Build and Commit
 
 on:
   pull_request:
     branches: [main]
 
 jobs:
-  vite-build-check:
-    name: Check Vite Build Sync
+  build-and-commit:
     runs-on: ubuntu-latest
-
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the
+      # added or changed files to the repository.
+      contents: write
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2  # Ensures the previous commit is available for diff
+          ref: ${{ github.head_ref }}
 
-      - name: Fetch main for comparison
-        run: git fetch origin main
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22' # Specify your desired Node.js version
 
-      - name: Check for JS/CSS source changes
-        id: check_source_changes
-        run: |
-          if git diff --name-only origin/main...HEAD | grep -qE '^resources/(js|css|sass|ts|vue)'; then
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          fi
+      - name: Install dependencies
+        run: npm install
 
-      - name: Check for Vite build changes
-        id: check_build_changes
-        run: |
-          if git diff --name-only origin/main...HEAD | grep -qE '^public/build/'; then
-            echo "built=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "built=false" >> "$GITHUB_OUTPUT"
-          fi
+      - name: Run build
+        run: npm run build
 
-      - name: Fail if source changed but build output not updated
-        if: steps.check_source_changes.outputs.changed == 'true' && steps.check_build_changes.outputs.built == 'false'
-        run: |
-          echo "❌ JS/CSS source files changed but Vite build output in public/build/ was not updated or committed."
-          exit 1
-
-      - name: Pass check
-        if: steps.check_source_changes.outputs.changed == 'false' || steps.check_build_changes.outputs.built == 'true'
-        run: echo "✅ Build is in sync or no relevant changes detected."
+      - name: Commit build changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Build: Automated build update"
+          # Optional: specify paths to include or exclude from the commit
+          file_pattern: 'public/build/manifest.json public/build/assets/*'
