@@ -37,12 +37,14 @@ jobs:
           exit 0
 
       - name: Setup PHP
+        if: steps.source-check.outputs.changed == 'true'
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
           tools: composer
 
       - name: Cache Composer dependencies
+        if: steps.source-check.outputs.changed == 'true'
         uses: actions/cache@v3
         with:
           path: vendor
@@ -51,23 +53,29 @@ jobs:
             ${{ runner.os }}-composer-
 
       - name: Install PHP dependencies
+        if: steps.source-check.outputs.changed == 'true'
         run: composer install --no-progress --prefer-dist --optimize-autoloader
 
       - name: Setup Node.js
+        if: steps.source-check.outputs.changed == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
       - name: Install Node.js dependencies
+        if: steps.source-check.outputs.changed == 'true'
         run: npm install
 
       - name: Format Code
+        if: steps.source-check.outputs.changed == 'true'
         run: npm run format
 
       - name: Run build
+        if: steps.source-check.outputs.changed == 'true'
         run: npm run build
 
       - name: Commit build changes
+        if: steps.source-check.outputs.changed == 'true'
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Build: Automated build update"
