@@ -197,25 +197,25 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
             this.form.errors[key] = message
         },
         setOptimization(optimization: OptimizationType) {
-            this.step = optimization.current_step || 0
-            this.latestStep = optimization.current_step || 0
-            this.form.optimizationId = optimization.id
-            this.form.role.url = optimization.role_url
-            this.form.role.name = optimization.role_name
-            this.form.role.description = optimization.role_description
-            this.form.role.company = optimization.role_company
-            this.form.role.location = optimization.role_location ?? this.form.role.location
-            this.form.resume.id = optimization.resume_id
-            this.form.additional.targetCountry = optimization.role_location ?? this.form.additional.targetCountry
-            this.form.additional.makeGrammaticalCorrections = optimization.make_grammatical_corrections ?? true
-            this.form.additional.changeProfessionalSummary = optimization.change_professional_summary ?? true
-            this.form.additional.generateCoverLetter = optimization.generate_cover_letter ?? true
-            this.form.additional.changeTargetRole = optimization.change_target_role ?? true
-            this.form.additional.mentionRelocationAvailability = optimization.mention_relocation_availability ?? true
             if (this.form.status !== 'editing') {
                 this.form.status = optimization.status ?? 'draft'
             }
+            this.step = optimization.current_step || 0
+            this.form.optimizationId = optimization.id
+            this.form.role.url = optimization.role_url
+            this.form.role.name = optimization.role_name
+            this.form.resume.id = optimization.resume_id
+            this.latestStep = optimization.current_step || 0
+            this.form.role.company = optimization.role_company
+            this.form.role.description = optimization.role_description
             this.form.response = optimization.ai_response ?? ({} as AIResponse)
+            this.form.additional.changeTargetRole = optimization.change_target_role ?? true
+            this.form.role.location = optimization.role_location ?? this.form.role.location
+            this.form.additional.generateCoverLetter = optimization.generate_cover_letter ?? true
+            this.form.additional.changeProfessionalSummary = optimization.change_professional_summary ?? true
+            this.form.additional.makeGrammaticalCorrections = optimization.make_grammatical_corrections ?? true
+            this.form.additional.targetCountry = optimization.role_location ?? this.form.additional.targetCountry
+            this.form.additional.mentionRelocationAvailability = optimization.mention_relocation_availability ?? true
         },
         nextStep() {
             this.step++
