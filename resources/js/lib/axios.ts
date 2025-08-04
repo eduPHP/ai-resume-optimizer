@@ -1,84 +1,79 @@
-import { Page, PageProps } from '@inertiajs/core';
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosPromise, AxiosResponse } from 'axios';
-import {
-    OptimizationType,
-    OptimizationWizardStore,
-    Resume,
-    useOptimizationWizardStore
-} from '@/stores/OptimizationWizardStore';
-import { useToastsStore } from '@/stores/ToastsStore';
-import { usePage } from '@inertiajs/vue3';
-import { AISettings } from '@/types';
+import { OptimizationType, OptimizationWizardStore, Resume, useOptimizationWizardStore } from '@/stores/OptimizationWizardStore'
+import { useToastsStore } from '@/stores/ToastsStore'
+import { Page, PageProps } from '@inertiajs/core'
+import { usePage } from '@inertiajs/vue3'
+import axios, { AxiosInstance, AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios'
 
 interface User {
-    id: number;
-    name: string;
-    email: string;
-    api_token: string;
+    id: number
+    name: string
+    email: string
+    api_token: string
 }
 
-
 interface JobInformation {
-    supported: boolean;
-    company: string;
-    position: string;
-    location: string;
-    url: string;
-    description: string;
+    supported: boolean
+    company: string
+    position: string
+    location: string
+    url: string
+    description: string
 }
 
 interface AuthProps {
-    user?: User | undefined;
+    user?: User | undefined
 }
 interface AppPageProps extends PageProps {
-    auth?: AuthProps | undefined;
+    auth?: AuthProps | undefined
 }
 
-export type AppPage = Page<AppPageProps>;
+export type AppPage = Page<AppPageProps>
 
 const getAuthToken = (page: AppPage): string => {
     if (!page.props.auth?.user) {
-        return '';
+        return ''
     }
 
-    const token = page.props.auth.user.api_token;
-    return token ? `Bearer ${token}` : '';
-};
+    const token = page.props.auth.user.api_token
+    return token ? `Bearer ${token}` : ''
+}
 
 const handleError = async (error: any): Promise<any> => {
-
     if (error.response.data?.errors) {
-        const state = useOptimizationWizardStore();
+        const state = useOptimizationWizardStore()
 
-        Object.keys(error.response.data?.errors).forEach(key => {
+        Object.keys(error.response.data?.errors).forEach((key) => {
             state.form.errors[key] = error.response.data.errors[key][0]
         })
     } else {
-        const toast = useToastsStore();
+        const toast = useToastsStore()
         toast.error(error.response.data.message ?? 'An error has occurred!', 'Please try again later.')
     }
 
-    return Promise.reject(error);
+    return Promise.reject(error)
 }
 
 const Axios = (): AxiosInstance => {
-    const page = usePage() as AppPage;
-    const token = getAuthToken(page);
+    const page = usePage() as AppPage
+    const token = getAuthToken(page)
 
     const instance: AxiosInstance = axios.create()
 
     instance.defaults.headers.common['Authorization'] = token ? `Bearer ${token}` : ''
     instance.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
     instance.defaults.headers.common['X-Timezone-Offset'] = new Date().getTimezoneOffset() * -1
-    instance.interceptors.response.use((response) => response, (error: any) => {
-        return handleError(error)
-    });
+    instance.interceptors.response.use(
+        (response) => response,
+        (error: any) => {
+            return handleError(error)
+        },
+    )
 
-    return instance;
+    return instance
 }
 
 const deleteOptimization = async (): Promise<boolean> => {
-    const state = useOptimizationWizardStore();
+    const state = useOptimizationWizardStore()
 
     state.loading = true
 
@@ -90,24 +85,24 @@ const deleteOptimization = async (): Promise<boolean> => {
 
     state.loading = false
 
-    return new Promise(resolve => resolve(true))
+    return new Promise((resolve) => resolve(true))
 }
 
-const createOrUpdateOptimization = (): AxiosPromise<{optimization: OptimizationType, created: boolean}> => {
-    const state = useOptimizationWizardStore();
+const createOrUpdateOptimization = (): AxiosPromise<{ optimization: OptimizationType; created: boolean }> => {
+    const state = useOptimizationWizardStore()
 
     state.loading = true
 
     const axios = Axios()
     const options: AxiosRequestConfig = {
         headers: {
-            'X-CurrentStep': state.step
-        }
+            'X-CurrentStep': state.step,
+        },
     }
 
-    const request = state.form.optimizationId ?
-        axios.put(route('optimizations.update', state.form.optimizationId), state.form.role, options) :
-        axios.post(route('optimizations.store'), state.form.role, options)
+    const request = state.form.optimizationId
+        ? axios.put(route('optimizations.update', state.form.optimizationId), state.form.role, options)
+        : axios.post(route('optimizations.store'), state.form.role, options)
 
     request
         .then(() => {
@@ -133,16 +128,15 @@ const uploadResume = (state: OptimizationWizardStore, uploadedResume: File): Axi
         headers: {
             'X-CurrentStep': 1,
             'Content-Type': `multipart/form-data`,
-        }
+        },
     }
 
     const formData = new FormData()
     formData.set('upload', uploadedResume)
 
-    return axios.post<Resume>(route('resumes.store'), formData, options)
-        .finally(() => {
-            state.loading = false;
-        })
+    return axios.post<Resume>(route('resumes.store'), formData, options).finally(() => {
+        state.loading = false
+    })
 }
 
 const updateAdditionalInformation = (state: OptimizationWizardStore) => {
@@ -151,16 +145,19 @@ const updateAdditionalInformation = (state: OptimizationWizardStore) => {
     const axios = Axios()
     const options: AxiosRequestConfig = {
         headers: {
-            'X-CurrentStep': 2
-        }
+            'X-CurrentStep': 2,
+        },
     }
 
-    axios.put(route('optimizations.update', state.form.optimizationId), state.form.additional, options).then(() => {
-        state.clearErrors()
-        state.nextStep()
-    }).finally(() => {
-        state.loading = false
-    })
+    axios
+        .put(route('optimizations.update', state.form.optimizationId), state.form.additional, options)
+        .then(() => {
+            state.clearErrors()
+            state.nextStep()
+        })
+        .finally(() => {
+            state.loading = false
+        })
 }
 
 const updateResume = (state: OptimizationWizardStore) => {
@@ -169,14 +166,17 @@ const updateResume = (state: OptimizationWizardStore) => {
     const axios = Axios()
     const options: AxiosRequestConfig = {
         headers: {
-            'X-CurrentStep': 1
-        }
+            'X-CurrentStep': 1,
+        },
     }
 
-    axios.put(route('optimizations.update', state.form.optimizationId), state.form.resume, options).then(() => {
+    axios
+        .put(route('optimizations.update', state.form.optimizationId), state.form.resume, options)
+        .then(() => {
             state.clearErrors()
             state.nextStep()
-        }).finally(() => {
+        })
+        .finally(() => {
             state.loading = false
         })
 }
@@ -187,29 +187,32 @@ const deleteResume = (state: OptimizationWizardStore, id: number): AxiosPromise<
     const axios = Axios()
     const options: AxiosRequestConfig = {
         headers: {
-            'X-CurrentStep': 1
-        }
+            'X-CurrentStep': 1,
+        },
     }
 
-    return axios.delete(route('resumes.destroy', id), options)
-        .finally(() => {
-            state.loading = false
-        })
+    return axios.delete(route('resumes.destroy', id), options).finally(() => {
+        state.loading = false
+    })
 }
 
-const completeWizard = (state: OptimizationWizardStore): AxiosPromise<{optimization: OptimizationType, errors: {[key: string]: string}}> => {
+const completeWizard = (state: OptimizationWizardStore): AxiosPromise<{ optimization: OptimizationType; errors: { [key: string]: string } }> => {
     state.loading = true
     state.optimizing = true
 
     const axios = Axios()
     const options: AxiosRequestConfig = {
         headers: {
-            'X-CurrentStep': 3
+            'X-CurrentStep': 3,
         },
         timeout: 360000, // 6min
     }
 
-    return axios.put<{optimization: OptimizationType, errors: {[key: string]: string}}>(route('optimizations.update', state.form.optimizationId), {}, options)
+    return axios
+        .put<{
+            optimization: OptimizationType
+            errors: { [key: string]: string }
+        }>(route('optimizations.update', state.form.optimizationId), {}, options)
         .finally(() => {
             state.loading = false
             state.optimizing = false
@@ -233,8 +236,9 @@ const cancelOptimizationEdit = (state: OptimizationWizardStore) => {
 
     const axios = Axios()
 
-    return axios.put(route('optimizations.cancel', state.form.optimizationId))
-        .then(response => {
+    return axios
+        .put(route('optimizations.cancel', state.form.optimizationId))
+        .then((response) => {
             state.clearErrors()
             state.setOptimization(response.data.optimization)
             state.form.status = 'complete'
@@ -258,27 +262,26 @@ const downloadFile: (url: string) => Promise<void> = (url: string) => {
         responseType: 'blob',
     }
     return axios.post(url, {}, options).then(function (response) {
-        const a = document.createElement('a');
-        const contentDisposition = response.headers['content-disposition'];
-        let fileName = 'file.pdf';
+        const a = document.createElement('a')
+        const contentDisposition = response.headers['content-disposition']
+        let fileName = 'file.pdf'
         if (contentDisposition) {
-            const fileNameMatch = contentDisposition.match(/filename="(.+)"/);
-            if (fileNameMatch.length === 2)
-                fileName = fileNameMatch[1];
+            const fileNameMatch = contentDisposition.match(/filename="(.+)"/)
+            if (fileNameMatch.length === 2) fileName = fileNameMatch[1]
         }
-        a.href = window.URL.createObjectURL(response.data);
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-    });
-};
+        a.href = window.URL.createObjectURL(response.data)
+        a.download = fileName
+        document.body.appendChild(a)
+        a.click()
+        a.remove()
+    })
+}
 
 const getJobInformation: (url: string) => Promise<AxiosResponse<JobInformation>> = async (url: string) => {
     const axios = Axios()
     const toast = useToastsStore()
 
-    return axios.post<JobInformation>(route('jobs.crawl'), {url}).then(response => {
+    return axios.post<JobInformation>(route('jobs.crawl'), { url }).then((response) => {
         if (response.data.supported) {
             toast.success('Saved!', 'Job information has been successfully retrieved.')
         }
@@ -287,19 +290,17 @@ const getJobInformation: (url: string) => Promise<AxiosResponse<JobInformation>>
     })
 }
 
-
-
 export {
     Axios,
+    cancelOptimizationEdit,
+    completeWizard,
     createOrUpdateOptimization,
+    deleteOptimization,
+    deleteResume,
+    downloadCoverLetter,
+    downloadOptimizedResume,
+    getJobInformation,
+    updateAdditionalInformation,
     updateResume,
     uploadResume,
-    deleteResume,
-    updateAdditionalInformation,
-    completeWizard,
-    downloadOptimizedResume,
-    downloadCoverLetter,
-    deleteOptimization,
-    cancelOptimizationEdit,
-    getJobInformation,
 }

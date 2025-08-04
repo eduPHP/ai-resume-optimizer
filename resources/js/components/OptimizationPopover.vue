@@ -1,28 +1,27 @@
 <script setup lang="ts">
-
-import { Edit, EllipsisVerticalIcon, Link, Recycle } from 'lucide-vue-next';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import DeleteOptimization from '@/components/DeleteOptimization.vue';
-import { SidebarMenuButton } from '@/components/ui/sidebar';
-import { completeWizard } from '@/lib/axios';
-import { useToastsStore } from '@/stores/ToastsStore';
-import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
-import { ref } from 'vue';
+import DeleteOptimization from '@/components/DeleteOptimization.vue'
+import { Button } from '@/components/ui/button'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { SidebarMenuButton } from '@/components/ui/sidebar'
+import { completeWizard } from '@/lib/axios'
+import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore'
+import { useToastsStore } from '@/stores/ToastsStore'
+import { Edit, EllipsisVerticalIcon, Link, Recycle } from 'lucide-vue-next'
+import { ref } from 'vue'
 
 const state = useOptimizationWizardStore()
-const toast = useToastsStore();
+const toast = useToastsStore()
 const popoverOpen = ref<boolean>(false)
 
 const enableEdit = () => {
     state.form.status = 'editing'
     state.step = 0
     state.latestStep = 3
-    popoverOpen.value = false;
+    popoverOpen.value = false
 }
 const regenerate = () => {
-    state.loading = true;
-    popoverOpen.value = false;
+    state.loading = true
+    popoverOpen.value = false
 
     completeWizard(state).then((response) => {
         state.setOptimization(response.data.optimization)
@@ -36,7 +35,7 @@ const regenerate = () => {
     <div class="absolute right-2 top-3" v-show="!state.loading">
         <DropdownMenu v-if="state.form.optimizationId" v-model:open="popoverOpen">
             <DropdownMenuTrigger as-child @click="popoverOpen = false">
-                <SidebarMenuButton size="lg" class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground px-4">
+                <SidebarMenuButton size="lg" class="px-4 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
                     <EllipsisVerticalIcon class="ml-auto size-4" />
                 </SidebarMenuButton>
             </DropdownMenuTrigger>
@@ -47,18 +46,38 @@ const regenerate = () => {
                 :side-offset="4"
                 update-position-strategy="always"
             >
-                <div class="flex items-stretch flex-col gap-2">
-                    <Button text-position="left" v-if="state.form.role.url" target="_blank" as="a" :href="state.form.role.url" @click="popoverOpen = false">
+                <div class="flex flex-col items-stretch gap-2">
+                    <Button
+                        text-position="left"
+                        v-if="state.form.role.url"
+                        target="_blank"
+                        as="a"
+                        :href="state.form.role.url"
+                        @click="popoverOpen = false"
+                    >
                         <Link /> Apply
                     </Button>
-                    <Button text-position="left" :disabled="state.loading" :variant="state.loading ? 'ghost' : 'outline'" type="button" size="lg" @click="regenerate">
+                    <Button
+                        text-position="left"
+                        :disabled="state.loading"
+                        :variant="state.loading ? 'ghost' : 'outline'"
+                        type="button"
+                        size="lg"
+                        @click="regenerate"
+                    >
                         <Recycle /> Regenerate
                     </Button>
-                    <Button text-position="left" :disabled="state.loading" :variant="state.loading ? 'ghost' : 'outline'" type="button" size="lg" @click="enableEdit">
+                    <Button
+                        text-position="left"
+                        :disabled="state.loading"
+                        :variant="state.loading ? 'ghost' : 'outline'"
+                        type="button"
+                        size="lg"
+                        @click="enableEdit"
+                    >
                         <Edit /> Edit
                     </Button>
                     <DeleteOptimization text-position="left" />
-
                 </div>
             </DropdownMenuContent>
         </DropdownMenu>

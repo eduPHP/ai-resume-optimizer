@@ -1,25 +1,28 @@
-name: Verify Vite Build Is Up-To-Date
+name: Build and Commit
 
 on:
   pull_request:
     branches: [main]
 
 jobs:
-  vite-build-check:
-    name: Check Vite Build Sync
+  build-and-commit:
+    name: Build and Commit Changed Resources
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2  # Ensures the previous commit is available for diff
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
 
-      - name: Fetch main for comparison
+      - name: Fetch main branch
         run: git fetch origin main
 
-      - name: Check for JS/CSS source changes
-        id: check_source_changes
+      - name: Check if source files changed
+        id: source-check
         run: |
           if git diff --name-only origin/main...HEAD | grep -qE '^resources/(js|css|sass|ts|vue)'; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
@@ -27,21 +30,47 @@ jobs:
             echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Check for Vite build changes
-        id: check_build_changes
-        run: |
-          if git diff --name-only origin/main...HEAD | grep -qE '^public/build/'; then
-            echo "built=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "built=false" >> "$GITHUB_OUTPUT"
-          fi
+      - name: Setup PHP
+        if: steps.source-check.outputs.changed == 'true'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer
 
-      - name: Fail if source changed but build output not updated
-        if: steps.check_source_changes.outputs.changed == 'true' && steps.check_build_changes.outputs.built == 'false'
-        run: |
-          echo "❌ JS/CSS source files changed but Vite build output in public/build/ was not updated or committed."
-          exit 1
+      - name: Cache Composer dependencies
+        if: steps.source-check.outputs.changed == 'true'
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
 
-      - name: Pass check
-        if: steps.check_source_changes.outputs.changed == 'false' || steps.check_build_changes.outputs.built == 'true'
-        run: echo "✅ Build is in sync or no relevant changes detected."
+      - name: Install PHP dependencies
+        if: steps.source-check.outputs.changed == 'true'
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+      - name: Setup Node.js
+        if: steps.source-check.outputs.changed == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Node.js dependencies
+        if: steps.source-check.outputs.changed == 'true'
+        run: npm install
+
+      - name: Format Code
+        if: steps.source-check.outputs.changed == 'true'
+        run: npm run format
+
+      - name: Run build
+        if: steps.source-check.outputs.changed == 'true'
+        run: npm run build
+
+      - name: Commit build changes
+        if: steps.source-check.outputs.changed == 'true'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Build: Automated build update"
+          file_pattern: 'public/build/manifest.json public/build/assets/*'

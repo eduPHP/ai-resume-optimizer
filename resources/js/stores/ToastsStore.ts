@@ -1,16 +1,16 @@
 import { defineStore } from 'pinia'
 
 export type Toast = {
-    title: string;
-    description: string;
-    type: 'success' | 'error';
-    id?: string;
-    duration?: number;
-    state: 'active' | 'closed';
-    timeout?: number;
-    progress: number;
-    progressInterval?: number;
-};
+    title: string
+    description: string
+    type: 'success' | 'error'
+    id?: string
+    duration?: number
+    state: 'active' | 'closed'
+    timeout?: number
+    progress: number
+    progressInterval?: number
+}
 
 export const useToastsStore = defineStore('toasts', {
     state: () => ({
@@ -50,7 +50,7 @@ export const useToastsStore = defineStore('toasts', {
             const step = 100 / (duration / 10)
 
             toast.progressInterval = setInterval(() => {
-                const index = this.toasts.findIndex(t => t.id === toast.id)
+                const index = this.toasts.findIndex((t) => t.id === toast.id)
                 if (index !== -1) {
                     this.toasts[index].progress = Math.max(0, this.toasts[index].progress - step)
                 }
@@ -62,7 +62,7 @@ export const useToastsStore = defineStore('toasts', {
         },
 
         removeToast(toast: Toast) {
-            const toastItemIndex = this.toasts.findIndex(t => t.id === toast.id)
+            const toastItemIndex = this.toasts.findIndex((t) => t.id === toast.id)
             if (toastItemIndex === -1) return
 
             clearTimeout(this.toasts[toastItemIndex].timeout)
@@ -70,8 +70,8 @@ export const useToastsStore = defineStore('toasts', {
             this.toasts[toastItemIndex].state = 'closed'
 
             setTimeout(() => {
-                this.toasts = this.toasts.filter(t => t.id !== toast.id)
+                this.toasts = this.toasts.filter((t) => t.id !== toast.id)
             }, 400)
-        }
+        },
     },
 })

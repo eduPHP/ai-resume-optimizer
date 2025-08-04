@@ -1,29 +1,20 @@
 <script lang="ts" setup>
-import { Trash } from 'lucide-vue-next';
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
-import { deleteResume } from '@/lib/axios';
-import { useToastsStore } from '@/stores/ToastsStore';
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { deleteResume } from '@/lib/axios'
+import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore'
+import { useToastsStore } from '@/stores/ToastsStore'
+import { Trash } from 'lucide-vue-next'
 
-const state = useOptimizationWizardStore();
-const toast = useToastsStore();
+const state = useOptimizationWizardStore()
+const toast = useToastsStore()
 
 const props = defineProps<{
-    id: number;
-    size?: 'lg' | 'default' | 'sm' | 'icon';
-    textPosition?: 'left' | 'center' | 'right';
-    onDelete?: () => void;
-}>();
+    id: number
+    size?: 'lg' | 'default' | 'sm' | 'icon'
+    textPosition?: 'left' | 'center' | 'right'
+    onDelete?: () => void
+}>()
 
 const handleDeleteResume = () => {
     deleteResume(state, props.id).then(() => {
@@ -31,14 +22,21 @@ const handleDeleteResume = () => {
             props.onDelete()
         }
     })
-    toast.success('Removed!', 'The resume was successfully removed.');
-};
+    toast.success('Removed!', 'The resume was successfully removed.')
+}
 </script>
 
 <template>
     <Dialog>
         <DialogTrigger as-child>
-            <Button :disabled="state.loading" variant="link" class="text-red-400" type="button" :text-position="textPosition ?? 'center'" :size="size ?? 'default'">
+            <Button
+                :disabled="state.loading"
+                variant="link"
+                class="text-red-400"
+                type="button"
+                :text-position="textPosition ?? 'center'"
+                :size="size ?? 'default'"
+            >
                 <Trash />
             </Button>
         </DialogTrigger>

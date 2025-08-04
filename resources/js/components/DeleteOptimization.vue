@@ -1,42 +1,40 @@
 <script lang="ts" setup>
-import { Trash } from 'lucide-vue-next';
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { OptimizationType, useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
-import { router } from '@inertiajs/vue3';
-import { deleteOptimization } from '@/lib/axios';
-import { useToastsStore } from '@/stores/ToastsStore';
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { deleteOptimization } from '@/lib/axios'
+import { OptimizationType, useOptimizationWizardStore } from '@/stores/OptimizationWizardStore'
+import { useToastsStore } from '@/stores/ToastsStore'
+import { router } from '@inertiajs/vue3'
+import { Trash } from 'lucide-vue-next'
 
-const state = useOptimizationWizardStore();
-const toast = useToastsStore();
+const state = useOptimizationWizardStore()
+const toast = useToastsStore()
 
 defineProps<{
-    size?: 'lg' | 'default' | 'sm' | 'icon';
-    textPosition?: 'left' | 'center' | 'right';
-}>();
+    size?: 'lg' | 'default' | 'sm' | 'icon'
+    textPosition?: 'left' | 'center' | 'right'
+}>()
 
 const handleDeleteOptimization = () => {
-    deleteOptimization();
-    state.setOptimization({} as OptimizationType);
-    toast.success('Removed!', 'The optimization was successfully removed.');
+    deleteOptimization()
+    state.setOptimization({} as OptimizationType)
+    toast.success('Removed!', 'The optimization was successfully removed.')
 
-    router.visit('/dashboard', { method: 'get', preserveState: true });
-};
+    router.visit('/dashboard', { method: 'get', preserveState: true })
+}
 </script>
 
 <template>
     <Dialog>
         <DialogTrigger as-child>
-            <Button :disabled="state.loading" variant="link" class="text-red-400" type="button" :text-position="textPosition ?? 'center'" :size="size ?? 'default'">
+            <Button
+                :disabled="state.loading"
+                variant="link"
+                class="text-red-400"
+                type="button"
+                :text-position="textPosition ?? 'center'"
+                :size="size ?? 'default'"
+            >
                 <Trash />
                 Remove{{ state.form.status === 'draft' ? ' Draft' : '' }}
             </Button>

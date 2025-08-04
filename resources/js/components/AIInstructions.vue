@@ -1,15 +1,14 @@
 <script lang="ts" setup>
+import HeadingSmall from '@/components/HeadingSmall.vue'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { SCORE_STYLES } from '@/stores/NavigationItemsStore'
+import { SharedData } from '@/types'
+import { router, useForm, usePage } from '@inertiajs/vue3'
 
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { router, useForm, usePage } from '@inertiajs/vue3';
-import { SharedData } from '@/types';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import HeadingSmall from '@/components/HeadingSmall.vue';
-import { SCORE_STYLES } from '@/stores/NavigationItemsStore';
-
-const page = usePage<SharedData>();
+const page = usePage<SharedData>()
 
 const settings = useForm(page.props.auth.user.ai_settings)
 
@@ -17,14 +16,16 @@ const handleSaveAISettings = () => {
     settings.put(route('users.update-instructions'))
     router.reload({ only: ['user'] })
 }
-
 </script>
 
 <template>
     <div>
-        <HeadingSmall title="Compatibility thresholds" description="These values define the compatibility score threshold, this is mostly a visual feedback but the 'Top Choice' option will define wether it generates a top choice text or not." />
+        <HeadingSmall
+            title="Compatibility thresholds"
+            description="These values define the compatibility score threshold, this is mostly a visual feedback but the 'Top Choice' option will define wether it generates a top choice text or not."
+        />
 
-        <div class="my-2 grid grid-cols-1 xl:grid-cols-3 space-x-2">
+        <div class="my-2 grid grid-cols-1 space-x-2 xl:grid-cols-3">
             <div class="gap-2">
                 <Label :class="SCORE_STYLES.HIGH">High</Label>
                 <Input type="number" class="" :class="SCORE_STYLES.HIGH" v-model="settings.compatibilityScoreLevels.high" name="High" />
@@ -47,7 +48,11 @@ const handleSaveAISettings = () => {
         </div>
         <HeadingSmall title="AI Instructions" description="Add custom instructions for optimizations." />
 
-        <Textarea v-model="settings.instructions" auto-grow placeholder="i.e. Lower the compatibility score by 20 points if the company does not offer free hugs!" />
+        <Textarea
+            v-model="settings.instructions"
+            auto-grow
+            placeholder="i.e. Lower the compatibility score by 20 points if the company does not offer free hugs!"
+        />
 
         <div class="mt-4 flex items-center gap-4">
             <Button type="button" @click="handleSaveAISettings">Save</Button>

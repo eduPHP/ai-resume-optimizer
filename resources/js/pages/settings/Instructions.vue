@@ -1,19 +1,18 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3'
 
-import HeadingSmall from '@/components/HeadingSmall.vue';
-import { type BreadcrumbItem } from '@/types';
+import { type BreadcrumbItem } from '@/types'
 
-import AppLayout from '@/layouts/AppLayout.vue';
-import SettingsLayout from '@/layouts/settings/Layout.vue';
-import AIInstructions from '@/components/AIInstructions.vue';
+import AIInstructions from '@/components/AIInstructions.vue'
+import AppLayout from '@/layouts/AppLayout.vue'
+import SettingsLayout from '@/layouts/settings/Layout.vue'
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
         title: 'AI Instructions',
         href: '/settings/instructions',
     },
-];
+]
 </script>
 
 <template>
