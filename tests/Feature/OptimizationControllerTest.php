@@ -11,7 +11,8 @@ test('it creates a new optimization when the role information is sent', function
             'name' => 'Backend Engineer',
             'company' => 'Laravel',
             'description' => 'Lore Ipsum!',
-            'url' => 'https://www.linkedin.com/jobs/view/4253350439/'
+            'url' => 'https://www.linkedin.com/jobs/view/4253350439/',
+            'location' => 'Nairobi'
         ]);
 
     $response->assertSuccessful();
@@ -21,12 +22,14 @@ test('it creates a new optimization when the role information is sent', function
         'role_name' => 'Backend Engineer',
         'role_company' => 'Laravel',
         'role_description' => 'Lore Ipsum!',
+        'role_location' => 'Nairobi',
         'current_step' => '1',
         'user_id' => $user->id,
     ]);
 
     expect($response->json('step'))->toBe(0)
-        ->and($response->json('optimization.role_name'))->toBe('Backend Engineer');
+        ->and($response->json('optimization.role_name'))->toBe('Backend Engineer')
+        ->and($response->json('optimization.role_location'))->toBe('Nairobi');
 });
 
 test('it sets an existing resume in the optimization', function () {
