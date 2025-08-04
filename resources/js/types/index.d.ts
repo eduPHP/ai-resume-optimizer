@@ -1,60 +1,60 @@
-import type { PageProps } from '@inertiajs/core';
-import type { LucideIcon } from 'lucide-vue-next';
-import type { Config } from 'ziggy-js';
+import type { PageProps } from '@inertiajs/core'
+import type { LucideIcon } from 'lucide-vue-next'
+import type { Config } from 'ziggy-js'
 
 export interface Auth {
-    user: User;
+    user: User
 }
 
 export interface BreadcrumbItem {
-    title: string;
-    href: string;
+    title: string
+    href: string
 }
 
 export interface NavGroup {
-    title: string;
-    items: NavItem[];
+    title: string
+    items: NavItem[]
 }
 
 export interface NavItem {
-    id?: number|string
-    title: string;
-    tooltip?: string;
-    href: string;
-    created?: string;
-    icon?: LucideIcon | DefineComponent;
-    isActive?: boolean;
-    group?: string;
-    score?: number;
-    status?: string;
+    id?: number | string
+    title: string
+    tooltip?: string
+    href: string
+    created?: string
+    icon?: LucideIcon | DefineComponent
+    isActive?: boolean
+    group?: string
+    score?: number
+    status?: string
 }
 
 export interface SharedData extends PageProps {
-    name: string;
-    quote: { message: string; author: string };
-    auth: Auth;
-    ziggy: Config & { location: string };
+    name: string
+    quote: { message: string; author: string }
+    auth: Auth
+    ziggy: Config & { location: string }
 }
 
 export interface AISettings {
-    instructions: string;
+    instructions: string
     compatibilityScoreLevels: {
-        top: number;
-        high: number;
-        medium: number;
-        low: number;
+        top: number
+        high: number
+        medium: number
+        low: number
     }
 }
 
 export interface User {
-    id: number;
-    name: string;
-    email: string;
-    avatar?: string;
-    email_verified_at: string | null;
-    ai_settings: AiSettings;
-    created_at: string;
-    updated_at: string;
+    id: number
+    name: string
+    email: string
+    avatar?: string
+    email_verified_at: string | null
+    ai_settings: AiSettings
+    created_at: string
+    updated_at: string
 }
 
-export type BreadcrumbItemType = BreadcrumbItem;
+export type BreadcrumbItemType = BreadcrumbItem

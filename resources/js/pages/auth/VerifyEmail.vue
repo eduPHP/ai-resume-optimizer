@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import TextLink from '@/components/TextLink.vue';
-import { Button } from '@/components/ui/button';
-import AuthLayout from '@/layouts/AuthLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
-import { LoaderCircle } from 'lucide-vue-next';
+import TextLink from '@/components/TextLink.vue'
+import { Button } from '@/components/ui/button'
+import AuthLayout from '@/layouts/AuthLayout.vue'
+import { Head, useForm } from '@inertiajs/vue3'
+import { LoaderCircle } from 'lucide-vue-next'
 
 defineProps<{
-    status?: string;
-}>();
+    status?: string
+}>()
 
-const form = useForm({});
+const form = useForm({})
 
 const submit = () => {
-    form.post(route('verification.send'));
-};
+    form.post(route('verification.send'))
+}
 </script>
 
 <template>

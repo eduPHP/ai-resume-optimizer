@@ -1,29 +1,22 @@
 <script lang="ts" setup>
-import { useToastsStore } from '@/stores/ToastsStore';
-import { X } from 'lucide-vue-next';
+import { useToastsStore } from '@/stores/ToastsStore'
+import { X } from 'lucide-vue-next'
 
-const toasts = useToastsStore();
-
+const toasts = useToastsStore()
 </script>
 
 <template>
     <!-- ... other template code ... -->
-    <ul class="fixed bottom-0 right-0 p-3 mr-3 mb-5">
-        <TransitionGroup
-            name="slide-fade"
-            tag="div"
-            class="space-y-4"
-        >
-            <li
-                v-for="toast in toasts.toasts"
-                :key="toast.id"
-
-            >
-                <div class="w-full md:min-w-96 block p-4 rounded"
-                     :class="{
-                    'bg-green-600': toast.type === 'success',
-                    'bg-red-600': toast.type === 'error',
-                }">
+    <ul class="fixed bottom-0 right-0 mb-5 mr-3 p-3">
+        <TransitionGroup name="slide-fade" tag="div" class="space-y-4">
+            <li v-for="toast in toasts.toasts" :key="toast.id">
+                <div
+                    class="block w-full rounded p-4 md:min-w-96"
+                    :class="{
+                        'bg-green-600': toast.type === 'success',
+                        'bg-red-600': toast.type === 'error',
+                    }"
+                >
                     <button type="button" class="absolute right-0 top-0 mr-5 mt-6" @click="toasts.removeToast(toast)">
                         <X :size="16" />
                     </button>
@@ -32,10 +25,7 @@ const toasts = useToastsStore();
                         {{ toast.description }}
                     </p>
                 </div>
-                <div
-                    class="-mt-1 h-1 bg-white/30 transition-all duration-linear"
-                    :style="{ width: `${toast.progress.toFixed()}%` }"
-                />
+                <div class="duration-linear -mt-1 h-1 bg-white/30 transition-all" :style="{ width: `${toast.progress.toFixed()}%` }" />
             </li>
         </TransitionGroup>
     </ul>

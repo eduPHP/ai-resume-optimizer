@@ -1,31 +1,31 @@
 <script setup lang="ts">
-import InputError from '@/components/InputError.vue';
-import AppLayout from '@/layouts/AppLayout.vue';
-import SettingsLayout from '@/layouts/settings/Layout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import InputError from '@/components/InputError.vue'
+import AppLayout from '@/layouts/AppLayout.vue'
+import SettingsLayout from '@/layouts/settings/Layout.vue'
+import { Head, useForm } from '@inertiajs/vue3'
+import { ref } from 'vue'
 
-import HeadingSmall from '@/components/HeadingSmall.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { type BreadcrumbItem } from '@/types';
+import HeadingSmall from '@/components/HeadingSmall.vue'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { type BreadcrumbItem } from '@/types'
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
         title: 'Password settings',
         href: '/settings/password',
     },
-];
+]
 
-const passwordInput = ref<HTMLInputElement | null>(null);
-const currentPasswordInput = ref<HTMLInputElement | null>(null);
+const passwordInput = ref<HTMLInputElement | null>(null)
+const currentPasswordInput = ref<HTMLInputElement | null>(null)
 
 const form = useForm({
     current_password: '',
     password: '',
     password_confirmation: '',
-});
+})
 
 const updatePassword = () => {
     form.put(route('password.update'), {
@@ -33,21 +33,21 @@ const updatePassword = () => {
         onSuccess: () => form.reset(),
         onError: (errors: any) => {
             if (errors.password) {
-                form.reset('password', 'password_confirmation');
+                form.reset('password', 'password_confirmation')
                 if (passwordInput.value instanceof HTMLInputElement) {
-                    passwordInput.value.focus();
+                    passwordInput.value.focus()
                 }
             }
 
             if (errors.current_password) {
-                form.reset('current_password');
+                form.reset('current_password')
                 if (currentPasswordInput.value instanceof HTMLInputElement) {
-                    currentPasswordInput.value.focus();
+                    currentPasswordInput.value.focus()
                 }
             }
         },
-    });
-};
+    })
+}
 </script>
 
 <template>

@@ -1,33 +1,33 @@
 <script setup lang="ts">
-import InputError from '@/components/InputError.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import AuthLayout from '@/layouts/AuthLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
-import { LoaderCircle } from 'lucide-vue-next';
+import InputError from '@/components/InputError.vue'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import AuthLayout from '@/layouts/AuthLayout.vue'
+import { Head, useForm } from '@inertiajs/vue3'
+import { LoaderCircle } from 'lucide-vue-next'
 
 interface Props {
-    token: string;
-    email: string;
+    token: string
+    email: string
 }
 
-const props = defineProps<Props>();
+const props = defineProps<Props>()
 
 const form = useForm({
     token: props.token,
     email: props.email,
     password: '',
     password_confirmation: '',
-});
+})
 
 const submit = () => {
     form.post(route('password.store'), {
         onFinish: () => {
-            form.reset('password', 'password_confirmation');
+            form.reset('password', 'password_confirmation')
         },
-    });
-};
+    })
+}
 </script>
 
 <template>

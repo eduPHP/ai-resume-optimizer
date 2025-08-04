@@ -1,35 +1,36 @@
 <script setup lang="ts">
-import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar';
-import { Link } from '@inertiajs/vue3';
-import { File } from 'lucide-vue-next';
-import { onMounted, ref, watch } from 'vue';
-import { useIntersectionObserver } from '@vueuse/core';
-import { useNavigationItemsStore, compatibilityStyle } from '@/stores/NavigationItemsStore';
-import debounce from '@/lib/debounce';
+import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar'
+import debounce from '@/lib/debounce'
+import { compatibilityStyle, useNavigationItemsStore } from '@/stores/NavigationItemsStore'
+import { Link } from '@inertiajs/vue3'
+import { useIntersectionObserver } from '@vueuse/core'
+import { File } from 'lucide-vue-next'
+import { onMounted, ref, watch } from 'vue'
 
-const nav = useNavigationItemsStore();
-const { state: sidebarState } = useSidebar();
-const loadMoreTrigger = ref(null);
+const nav = useNavigationItemsStore()
+const { state: sidebarState } = useSidebar()
+const loadMoreTrigger = ref(null)
 
 useIntersectionObserver(loadMoreTrigger, ([{ isIntersecting }]) => {
     if (isIntersecting) {
-        nav.loadItems();
+        nav.loadItems()
     }
-});
-
-onMounted(() => {
-    nav.loadItems();
-});
-
-// watch for filter changes and fetch content
-watch(() => nav.filter, () => {
-    debounce(() => nav.loadItems(true));
 })
 
+onMounted(() => {
+    nav.loadItems()
+})
+
+// watch for filter changes and fetch content
+watch(
+    () => nav.filter,
+    () => {
+        debounce(() => nav.loadItems(true))
+    },
+)
 </script>
 
 <template>
-
     <div :class="{ 'mx-2': sidebarState !== 'collapsed' }">
         <div class="pt-32 text-sm text-gray-700 dark:text-gray-400" v-if="nav.filter.length && !nav.navigationItems.length">
             No entries fround with the keyword <span class="">'{{ nav.filter }}'</span>
@@ -42,12 +43,12 @@ watch(() => nav.filter, () => {
                         <Link :href="item.href" class="mb-2 p-2">
                             <div class="relative" :class="compatibilityStyle(item.score)">
                                 <File class="!h-8 !w-8" />
-                                <span v-if="item.score" class="absolute top-2 left-2 text-[0.6rem]">{{ item.score }}%</span>
+                                <span v-if="item.score" class="absolute left-2 top-2 text-[0.6rem]">{{ item.score }}%</span>
                             </div>
                             <span class="flex flex-col">
-                            <span>{{ item.title }}</span>
-                            <span class="text-xs text-gray-400 dark:text-white/40">Sent at {{ item.created }}</span>
-                        </span>
+                                <span>{{ item.title }}</span>
+                                <span class="text-xs text-gray-400 dark:text-white/40">Sent at {{ item.created }}</span>
+                            </span>
                         </Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>

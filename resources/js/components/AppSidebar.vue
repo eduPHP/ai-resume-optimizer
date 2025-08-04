@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import NavFooter from '@/components/NavFooter.vue';
-import NavMain from '@/components/NavMain.vue';
-import NavUser from '@/components/NavUser.vue';
+import GithubIcon from '@/components/icons/Github.vue'
+import NavFooter from '@/components/NavFooter.vue'
+import NavMain from '@/components/NavMain.vue'
+import NavUser from '@/components/NavUser.vue'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
     Sidebar,
     SidebarContent,
@@ -10,26 +13,23 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-    useSidebar
-} from '@/components/ui/sidebar';
-import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/vue3';
-import GithubIcon from '@/components/icons/Github.vue';
-import AppLogo from './AppLogo.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Plus, X } from 'lucide-vue-next';
-import { useNavigationItemsStore } from '@/stores/NavigationItemsStore';
+    useSidebar,
+} from '@/components/ui/sidebar'
+import { useNavigationItemsStore } from '@/stores/NavigationItemsStore'
+import { type NavItem } from '@/types'
+import { Link } from '@inertiajs/vue3'
+import { Plus, X } from 'lucide-vue-next'
+import AppLogo from './AppLogo.vue'
 
-const nav = useNavigationItemsStore();
-const { state: sidebarState } = useSidebar();
+const nav = useNavigationItemsStore()
+const { state: sidebarState } = useSidebar()
 const footerNavItems: NavItem[] = [
     {
         title: 'Github Repo',
         href: 'https://github.com/eduPHP/ai-resume-optimizer',
         icon: GithubIcon,
     },
-];
+]
 </script>
 
 <template>
@@ -43,9 +43,7 @@ const footerNavItems: NavItem[] = [
                         </Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
-
             </SidebarMenu>
-
         </SidebarHeader>
         <div class="bg-sidebar pb-2">
             <Button

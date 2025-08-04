@@ -1,11 +1,11 @@
-import { computed, onMounted, onUnmounted, ref } from "vue"
-import tailwindConfig from 'tailwindcss/defaultConfig';
+import tailwindConfig from 'tailwindcss/defaultConfig'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 export const useBreakpoints = () => {
     const windowWidth = ref(window?.innerWidth)
-    const screens = tailwindConfig.theme?.screens as {[size: string]: string};
+    const screens = tailwindConfig.theme?.screens as { [size: string]: string }
 
-    const onWidthChange = () => windowWidth.value = window?.innerWidth
+    const onWidthChange = () => (windowWidth.value = window?.innerWidth)
     onMounted(() => window?.addEventListener('resize', onWidthChange))
     onUnmounted(() => window?.removeEventListener('resize', onWidthChange))
 
