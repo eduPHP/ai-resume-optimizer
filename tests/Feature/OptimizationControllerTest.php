@@ -119,3 +119,54 @@ test('it paginates the optimizations index', function () {
     $response->assertSuccessful();
     $response->assertJsonCount(5, 'data');
 });
+
+test('it filters optimizations by compatibility level', function (string $level, int $expectedScore) {
+    $user = User::factory()->create();
+
+    $scores = [
+        'top' => 97,
+        'high' => 92,
+        'medium' => 85,
+        'low' => 75,
+    ];
+
+    foreach ($scores as $name => $score) {
+        Optimization::factory()->for($user)->create([
+            'status' => 'complete',
+            'ai_response' => ['compatibility_score' => $score],
+        ]);
+    }
+
+    $response = $this->withToken($user->api_token)
+        ->getJson(route('optimizations.index', ['compatibility' => $level]));
+
+    $response->assertSuccessful();
+    $response->assertJsonCount(1, 'data');
+    expect($response->json('data.0.score'))->toBe($expectedScore);
+})->with([
+    ['top', 97],
+    ['high', 92],
+    ['medium', 85],
+    ['low', 75],
+]);
+
+test('optimizations without ai response are ignored when filtering by compatibility', function () {
+    $user = User::factory()->create();
+
+    Optimization::factory()->for($user)->create([
+        'status' => 'complete',
+        'ai_response' => null,
+    ]);
+
+    Optimization::factory()->for($user)->create([
+        'status' => 'complete',
+        'ai_response' => ['compatibility_score' => 92],
+    ]);
+
+    $response = $this->withToken($user->api_token)
+        ->getJson(route('optimizations.index', ['compatibility' => 'high']));
+
+    $response->assertSuccessful();
+    $response->assertJsonCount(1, 'data');
+    expect($response->json('data.0.score'))->toBe(92);
+});

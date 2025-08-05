@@ -15,11 +15,13 @@ class OptimizationController
         $perPage = request()->integer('per_page', 10);
 
         $query = request()->input('q');
+        $compatibility = request()->input('compatibility');
         $user = request()->user();
 
         $optimizations = $user->optimizations()
-            ->searchByRoleCompany($query) // Use the newly introduced scope
-            ->latest('created_at');        // Keep the ordering logic clean
+            ->searchByRoleCompany($query)
+            ->filterByCompatibility($compatibility, $user->ai_settings['compatibilityScoreLevels'])
+            ->latest('created_at');
 
 //        $optimizations->dd();
 
