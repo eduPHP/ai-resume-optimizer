@@ -20,6 +20,8 @@ import { type NavItem } from '@/types'
 import { Link } from '@inertiajs/vue3'
 import { Plus, X } from 'lucide-vue-next'
 import AppLogo from './AppLogo.vue'
+import debounce from '@/lib/debounce'
+import { watch } from 'vue'
 
 const nav = useNavigationItemsStore()
 const { state: sidebarState } = useSidebar()
@@ -30,6 +32,14 @@ const footerNavItems: NavItem[] = [
         icon: GithubIcon,
     },
 ]
+
+// watch for filter changes and fetch content
+watch(
+    () => nav.filter,
+    () => {
+        debounce(() => nav.loadItems(true))
+    },
+)
 </script>
 
 <template>

@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar'
-import debounce from '@/lib/debounce'
 import { compatibilityStyle, useNavigationItemsStore } from '@/stores/NavigationItemsStore'
 import { Link } from '@inertiajs/vue3'
 import { useIntersectionObserver } from '@vueuse/core'
 import { File } from 'lucide-vue-next'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const nav = useNavigationItemsStore()
 const { state: sidebarState } = useSidebar()
@@ -20,14 +19,6 @@ useIntersectionObserver(loadMoreTrigger, ([{ isIntersecting }]) => {
 onMounted(() => {
     nav.loadItems()
 })
-
-// watch for filter changes and fetch content
-watch(
-    () => nav.filter,
-    () => {
-        debounce(() => nav.loadItems(true))
-    },
-)
 </script>
 
 <template>
