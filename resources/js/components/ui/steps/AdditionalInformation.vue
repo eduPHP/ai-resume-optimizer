@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
 import { Buttons } from '@/components/ui/steps';
 import { updateAdditionalInformation } from '@/lib/axios';
-import { watch } from 'vue';
+import { onMounted, watch } from 'vue';
 import Heading from '@/components/Heading.vue';
 
 const state = useOptimizationWizardStore()
@@ -17,6 +17,12 @@ const submit = () => {
 
 watch(() => state.form.additional.targetCountry, (country: string) => {
     state.form.role.location = country
+})
+
+onMounted(() => {
+    if (state.form.additional.targetCountry.toLowerCase().trim() === 'remote') {
+        state.form.additional.mentionRelocationAvailability = false
+    }
 })
 
 </script>
