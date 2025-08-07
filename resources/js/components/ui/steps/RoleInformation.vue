@@ -29,9 +29,25 @@ const getJobInformationHandler = (url: string) => {
         return;
     }
 
+    try {
+        const parsed = JSON.parse(url);
+        if ( typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed)) {
+            state.form.role.url = parsed.url;
+            state.form.role.company = parsed.company
+            state.form.role.name = parsed.role
+            state.form.role.description = parsed.description
+            state.form.role.location = parsed.location
+
+            return
+        }
+    } catch (e) {
+        // do nothing
+    }
+
     if (!url.startsWith('http')) {
         return;
     }
+
 
     getJobInformation(url).then(response => {
         state.form.role.url = response.data.url
