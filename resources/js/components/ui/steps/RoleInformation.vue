@@ -23,10 +23,15 @@ const submit = () => {
         }
     })
 }
-
+const toTitleCase = (str: string) => {
+    return str.replace(
+        /\w\S*/g,
+        text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
+    )
+}
 const getJobInformationHandler = (url: string) => {
     if (url.trim().length === 0) {
-        return;
+        return
     }
 
     try {
@@ -34,7 +39,7 @@ const getJobInformationHandler = (url: string) => {
         if ( typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed)) {
             state.form.role.url = parsed.url;
             state.form.role.company = parsed.company
-            state.form.role.name = parsed.role
+            state.form.role.name = toTitleCase(parsed.role)
             state.form.role.description = parsed.description
             state.form.role.location = parsed.location
 
@@ -54,7 +59,7 @@ const getJobInformationHandler = (url: string) => {
 
         if (response.data.supported) {
             state.form.role.company = response.data.company
-            state.form.role.name = response.data.position
+            state.form.role.name = toTitleCase(response.data.position)
             state.form.role.description = response.data.description
             // set location for both role and additional info state
             state.form.additional.targetCountry = response.data.location
