@@ -41,6 +41,7 @@ const getJobInformationHandler = (url: string) => {
             state.form.role.company = parsed.company
             state.form.role.name = toTitleCase(parsed.role)
             state.form.role.description = parsed.description
+            state.form.additional.targetCountry = parsed.location
             state.form.role.location = parsed.location
 
             return
