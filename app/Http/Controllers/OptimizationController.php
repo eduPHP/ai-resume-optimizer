@@ -100,7 +100,6 @@ class OptimizationController
             'company' => 'required',
             'description' => 'required',
             'url' => 'required|url',
-            'location' => 'string',
         ]);
 
         $data = [
@@ -108,7 +107,6 @@ class OptimizationController
             'role_url' => request()->input('url'),
             'role_company' => request()->input('company'),
             'role_description' => request()->input('description'),
-            'role_location' => request()->input('location'),
             'current_step' => 1,
             'generate_cover_letter' => true,
             'status' => 'draft',
