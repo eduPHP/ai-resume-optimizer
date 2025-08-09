@@ -4,7 +4,7 @@ import { compatibilityStyle, useNavigationItemsStore } from '@/stores/Navigation
 import { Link } from '@inertiajs/vue3'
 import { useIntersectionObserver } from '@vueuse/core'
 import { File } from 'lucide-vue-next'
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 
 const nav = useNavigationItemsStore()
 const { state: sidebarState } = useSidebar()
@@ -15,14 +15,21 @@ useIntersectionObserver(loadMoreTrigger, ([{ isIntersecting }]) => {
         nav.loadItems()
     }
 })
-
-onMounted(() => {
-    nav.loadItems()
-})
 </script>
 
 <template>
     <div :class="{ 'mx-2': sidebarState !== 'collapsed' }">
+        <div v-if="nav.loading && !nav.navigationItems.length" class="pt-32 pl-2 space-y-4">
+        <!-- Repeat for each placeholder row -->
+            <div v-for="i in 10" v-bind:key="i" class="flex items-center space-x-3 animate-pulse">
+                <div class="w-6 h-6 rounded bg-gray-300 dark:bg-gray-600"></div>
+                <div class="flex-1">
+                    <div class="h-4 bg-gray-300 dark:bg-gray-600 rounded w-40 mb-1"></div>
+                    <div class="h-3 bg-gray-200 dark:bg-gray-500 rounded w-28"></div>
+                </div>
+            </div>
+        </div>
+
         <div class="pt-32 text-sm text-gray-700 dark:text-gray-400" v-if="nav.filter.length && !nav.navigationItems.length">
             No entries fround with the keyword <span class="">'{{ nav.filter }}'</span>
         </div>

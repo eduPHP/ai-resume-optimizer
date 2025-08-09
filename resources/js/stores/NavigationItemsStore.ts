@@ -60,7 +60,7 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
         filter: '',
         page: 1,
         hasMore: true,
-        loading: false,
+        loading: true,
     }),
 
     getters: {
@@ -113,7 +113,7 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
         },
 
         async loadItems(reset: boolean = false) {
-            if (this.loading || (!this.hasMore && !reset)) return
+            if (!this.hasMore && !reset) return
 
             if (reset || this.filter !== '') {
                 this.items = []
