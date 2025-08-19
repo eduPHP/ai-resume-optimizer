@@ -39,6 +39,26 @@ class Optimization extends Model
         );
     }
 
+    public function scopeFilterByCompatibility($query, ?string $level, array $levels): \Illuminate\Database\Eloquent\Builder
+    {
+        return $query->when($level, function ($query) use ($level, $levels) {
+            $field = 'ai_response->compatibility_score';
+
+            $query->whereNotNull($field);
+
+            return match ($level) {
+                'top' => $query->where($field, '>=', $levels['top']),
+                'high' => $query->where($field, '>=', $levels['high'])
+                                ->where($field, '<', $levels['top']),
+                'medium' => $query->where($field, '>=', $levels['medium'])
+                                  ->where($field, '<', $levels['high']),
+                'low' => $query->where($field, '>=', $levels['low'])
+                               ->where($field, '<', $levels['medium']),
+                default => $query,
+            };
+        });
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
