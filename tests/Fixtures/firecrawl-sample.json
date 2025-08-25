@@ -1,0 +1,42 @@
+{
+    "success": true,
+    "data": {
+      "metadata": {
+        "ogImage": "https://socialmediaimages.indeed.com/job/g3/064fb3c87a9e2eea.png",
+        "og:title": "Arquiteto de Software PHP Pleno - Remoto - Indeed.com",
+        "og:image:width": "1200",
+        "og:image:height": "630",
+        "og:url": "https://br.indeed.com/viewjob?from=social_other&jk=064fb3c87a9e2eea",
+        "ogDescription": "Join | Creative Tech",
+        "twitter:description": "Join | Creative Tech",
+        "ogUrl": "https://br.indeed.com/viewjob?from=social_other&jk=064fb3c87a9e2eea",
+        "twitter:title": "Arquiteto de Software PHP Pleno - Remoto - Indeed.com",
+        "favicon": "https://br.indeed.com/images/favicon.ico",
+        "twitter:image": "https://socialmediaimages.indeed.com/job/g3/064fb3c87a9e2eea.png",
+        "og:description": "Join | Creative Tech",
+        "title": "Arquiteto de Software PHP Pleno - Remoto - Indeed.com",
+        "language": "pt",
+        "twitter:site": "@indeed",
+        "og:image": "https://socialmediaimages.indeed.com/job/g3/064fb3c87a9e2eea.png",
+        "twitter:card": "summary_large_image",
+        "google": "notranslate",
+        "viewport": "width=device-width, initial-scale=1",
+        "ogTitle": "Arquiteto de Software PHP Pleno - Remoto - Indeed.com",
+        "scrapeId": "ecb3b27f-eb2c-4ce9-9e35-c22cfd5860ee",
+        "sourceURL": "https://br.indeed.com/viewjob?jk=064fb3c87a9e2eea&tk=1j3fs5o3t20me02o&from=serp&vjs=3",
+        "url": "https://br.indeed.com/viewjob?jk=064fb3c87a9e2eea&tk=1j3fs5o3t20me02o&vjs=3",
+        "statusCode": 200,
+        "contentType": "text/html; charset=utf-8",
+        "proxyUsed": "basic",
+        "cacheState": "miss",
+        "creditsUsed": 5
+      },
+      "json": {
+        "company": "Join | Creative Tech",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Integer feugiat, lectus ac ullamcorper gravida, tellus purus luctus orci, at pretium mi tortor in lorem. Curabitur vel arcu eget libero dictum bibendum. Vivamus ut urna a arcu dignissim convallis. Aenean eget nunc in ipsum iaculis sagittis. Phasellus at quam in odio cursus ultrices. Donec ac lorem sit amet nibh viverra pellentesque. Cras id nisl vitae urna lacinia congue.",
+        "location": "Remoto",
+        "role": "Arquiteto de Software PHP Pleno",
+        "url": "https://br.indeed.com/viewjob?jk=1j3g3b841i8pb801&from=mobhp_jobdetails"
+      }
+    }
+  }

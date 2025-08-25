@@ -1,13 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Http;
-use \App\Services\Crawler\JobCrawler;
-
-it('tries to get indeed data', function() {
-    $crawl = new JobCrawler();
-
-    dd($crawl->crawl('https://br.indeed.com/viewjob?jk=064fb3c87a9e2eea&tk=1j3fs5o3t20me02o&from=serp&vjs=3'));
-})->only();
 
 
 test('it sends the resume content as a prompt to OpenAI', function () {

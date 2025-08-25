@@ -16,7 +16,17 @@ class FireCrawlGLobalCrawler implements JobSiteCrawlerInterface
 
     public function __invoke(JobCrawler $jobCrawler, Closure $next): JobCrawler
     {
-        $data = cache()->remember(md5($jobCrawler->url), now()->addMonth(), function() use ($jobCrawler) {
+        if ($jobCrawler->processed) {
+            return $next($jobCrawler);
+        }
+
+        $key = md5($jobCrawler->url);
+
+        if (cache()->has("error-$key")) {
+            cache()->forget($key);
+        }
+
+        $data = cache()->remember($key, now()->addMonth(), function() use ($jobCrawler, $key) {
             $response = Http::withToken(config('services.firecrawl.api_key'))->post('https://api.firecrawl.dev/v2/scrape', [
                 'url' => $jobCrawler->url,
                 'onlyMainContent' => true,
@@ -29,8 +39,13 @@ class FireCrawlGLobalCrawler implements JobSiteCrawlerInterface
             ]);
 
             if (! $response->successful()) {
+                // cache busting flag when something went wrong
+                cache()->remember("error-$key", now()->addMonth(), fn() => $response->body());
+
                 return $jobCrawler->toArray();
             }
+
+            $jobCrawler->processed = true;
 
             return [
                 'title' => $response->json('data.json.role'),
@@ -41,7 +56,6 @@ class FireCrawlGLobalCrawler implements JobSiteCrawlerInterface
         });
 
         $jobCrawler->setFromArray($data);
-        $jobCrawler->processed = !! $jobCrawler->description;
 
         return $next($jobCrawler);
     }
