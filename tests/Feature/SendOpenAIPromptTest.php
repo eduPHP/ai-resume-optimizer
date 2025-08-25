@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Http;
 
+
 test('it sends the resume content as a prompt to OpenAI', function () {
     $optimization = \App\Models\Optimization::factory()->create([
         'role_description' => $desc = "we require a wizard unicorn ninja developer!",
