@@ -23,6 +23,7 @@ class JobCrawler implements Arrayable
             ->through([
                 LinkedinCrawler::class,
                 JobrightCrawler::class,
+                FireCrawlGLobalCrawler::class,
             ])->thenReturn();
     }
 
@@ -39,5 +40,15 @@ class JobCrawler implements Arrayable
             'location' => $this->location,
             'description' => $this->description,
         ];
+    }
+
+    public function setFromArray(array $data): static
+    {
+        $this->title = $data['title'] ?? null;
+        $this->company = $data['company'] ?? null;
+        $this->location = $data['location'] ?? null;
+        $this->description = $data['description'] ?? null;
+
+        return $this;
     }
 }

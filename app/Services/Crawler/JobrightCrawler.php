@@ -10,11 +10,12 @@ class JobrightCrawler implements JobSiteCrawlerInterface
 {
     public function shouldCrawl(string $url): bool
     {
-        return str($url)->contains('');
+        return false;
     }
 
     public function __invoke(JobCrawler $jobCrawler, Closure $next): JobCrawler
     {
+        return $next($jobCrawler);
         if (! $this->shouldCrawl($jobCrawler->url)) {
             return $next($jobCrawler);
         }
