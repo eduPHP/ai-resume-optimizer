@@ -6,7 +6,6 @@ import { completeWizard } from '@/lib/axios';
 import { useToastsStore } from '@/stores/ToastsStore';
 import { useNavigationItemsStore } from '@/stores/NavigationItemsStore';
 import Heading from '@/components/Heading.vue';
-import type { NavItem } from '@/types'
 
 const state = useOptimizationWizardStore()
 const toast = useToastsStore()
