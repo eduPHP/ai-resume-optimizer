@@ -1,4 +1,4 @@
-import{c as d}from"./createLucideIcon-B_kcL_NM.js";import{_ as p}from"./AppLogoIcon.vue_vue_type_script_setup_true_lang-DoNx6Z1e.js";import{d as a,c as _,o as c,b as t,z as i,a as o,w as r,t as s,u as f,P as m,j as u}from"./app-CAwyXgW1.js";/**
+import{c as d}from"./createLucideIcon-CHwD2fBo.js";import{_ as p}from"./AppLogoIcon.vue_vue_type_script_setup_true_lang-BrOYjUA-.js";import{d as a,c as _,o as c,b as t,z as i,a as o,w as r,t as s,u as f,P as m,j as u}from"./app-BpvkVQzf.js";/**
  * @license lucide-vue-next v0.468.0 - ISC
  *
  * This source code is licensed under the ISC license.
