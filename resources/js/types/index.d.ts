@@ -27,6 +27,7 @@ export interface NavItem {
     group?: string
     score?: number
     status?: string
+    applied?: boolean
 }
 
 export interface SharedData extends PageProps {

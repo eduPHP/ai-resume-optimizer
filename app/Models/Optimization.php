@@ -93,6 +93,7 @@ class Optimization extends Model
             'mention_relocation_availability' => 'boolean',
             'status' => 'string',
             'ai_response' => 'json',
+            'applied' => 'boolean',
         ];
     }
 }

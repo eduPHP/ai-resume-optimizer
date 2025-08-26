@@ -30,6 +30,7 @@ class OptimizationController
                 'title' => ($optimization->status === 'draft' ? '[draft] ' : '') . $optimization->role_company,
                 'score' => $this->getCompatibilityScore($optimization),
                 'status' => $optimization->status,
+                'applied' => $optimization->applied,
                 'tooltip' => $optimization->role_name,
                 'created' => $optimization->created_at
                     ->utcOffset(request()->header('X-Timezone-Offset') ?? 0)
@@ -47,6 +48,16 @@ class OptimizationController
     {
         return Inertia::render('Optimization', [
             'optimization' => $optimization,
+        ]);
+    }
+
+    public function toggleApplied(Optimization $optimization): \Illuminate\Http\JsonResponse
+    {
+        $optimization->update(['applied' => !$optimization->applied]);
+
+        return response()->json([
+            'success' => true,
+            'applied' => $optimization->applied,
         ]);
     }
 
@@ -93,7 +104,7 @@ class OptimizationController
         ]);
     }
 
-    public function handleRoleInformation(Optimization $optimization = null): Optimization
+    public function handleRoleInformation(Optimization|null $optimization): Optimization
     {
         request()->validate([
             'name' => 'required',

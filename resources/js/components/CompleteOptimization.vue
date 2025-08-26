@@ -10,6 +10,7 @@ import { onMounted } from 'vue'
 
 const state = useOptimizationWizardStore()
 const page = usePage<SharedData>()
+
 onMounted(() => {
     state.setAISettings(page.props.auth?.user.ai_settings)
 })
@@ -18,7 +19,10 @@ onMounted(() => {
 <template>
     <div class="mx-auto flex h-full w-full flex-1 flex-col gap-4 rounded-xl p-4 xl:w-[950px]">
         <div class="relative bg-gray-300/10 px-8 py-6 dark:bg-[#202020]">
-            <h1 class="text-2xl">{{ state.form.role.company }} {{ state.form.role.name }} Application</h1>
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl">{{ state.form.role.company }} {{ state.form.role.name }} Application</h1>
+                <OptimizationPopover class="absolute right-2 top-3" />
+            </div>
 
             <h2 class="mt-4 text-xl">
                 Compatibility score:
@@ -80,8 +84,6 @@ onMounted(() => {
                 </p>
                 <p>Regards,<br />{{ page.props.auth?.user.name }}</p>
             </div>
-
-            <OptimizationPopover class="absolute right-2 top-3" />
         </div>
 
         <div class="flex flex-col-reverse justify-end gap-2 pb-8 xl:flex-row xl:pb-0">
