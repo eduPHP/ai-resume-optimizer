@@ -193,7 +193,6 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
                     const itemIndex = this.items.findIndex((item: NavItem) => item.id === optimizationId)
 
                     if (itemIndex === -1) {
-
                         return
                     }
 
