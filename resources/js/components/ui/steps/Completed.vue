@@ -12,6 +12,8 @@ const toast = useToastsStore()
 const nav = useNavigationItemsStore()
 
 const finish = () => {
+    state.form.status = 'pending'
+
     completeWizard(state).then(response => {
         state.setOptimization(response.data.optimization)
         state.form.status = 'complete'
