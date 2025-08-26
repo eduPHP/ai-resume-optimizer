@@ -5,6 +5,7 @@ namespace Modules\OpenAI;
 use App\DTO\Contracts\AIInputOptions;
 use App\DTO\Contracts\AIAgentPrompter;
 use App\DTO\Contracts\AIResponseDTO;
+use App\Exceptions\RequestException;
 use Illuminate\Support\Facades\Http;
 
 class OpenAIPrompter implements AIAgentPrompter
@@ -21,6 +22,10 @@ class OpenAIPrompter implements AIAgentPrompter
                     ...array_map(fn($option) => ['role' => 'user', 'content' => $option], $options->user()),
                 ]
             ]);
+
+        if ($response->getStatusCode() !== 200) {
+            Throw new RequestException($response->json('error.message'), $response->getStatusCode());
+        }
 
         return new OpenAiResponse(
             ...$this->cleanup($response->json('output.0.content.0.text'))

@@ -2,12 +2,15 @@ name: Build and Commit
 
 on:
   pull_request:
+    types: [closed]
     branches: [main]
 
 jobs:
   build-and-commit:
     name: Build and Commit Changed Resources
     runs-on: ubuntu-latest
+    # Only run if the PR was merged (not just closed)
+    if: github.event.pull_request.merged == true
     permissions:
       contents: write
 
@@ -15,16 +18,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
+          ref: main
           fetch-depth: 0
 
-      - name: Fetch main branch
-        run: git fetch origin main
-
-      - name: Check if source files changed
+      - name: Check if source files changed in merged PR
         id: source-check
         run: |
-          if git diff --name-only origin/main...HEAD | grep -qE '^resources/(js|css|sass|ts|vue)'; then
+          if git diff --name-only ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.merge_commit_sha }} | grep -qE '^resources/(js|css|sass|ts|vue)'; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"
@@ -72,5 +72,5 @@ jobs:
         if: steps.source-check.outputs.changed == 'true'
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Build: Automated build update"
+          commit_message: "Build: Automated build update after PR merge"
           file_pattern: 'public/build/manifest.json public/build/assets/*'
