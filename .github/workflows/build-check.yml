@@ -13,6 +13,8 @@ jobs:
     if: github.event.pull_request.merged == true
     permissions:
       contents: write
+      pull-requests: write
+      repository-projects: write
 
     steps:
       - name: Checkout repository
@@ -20,6 +22,7 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
+          token: ${{ secrets.ADMIN_TOKEN }}
 
       - name: Check if source files changed in merged PR
         id: source-check
@@ -72,7 +75,7 @@ jobs:
         if: steps.source-check.outputs.changed == 'true'
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Build: Automated build update after PR merge"
+          commit_message: "Build: Automated build update after PR merge [skip ci]"
           file_pattern: 'public/build/manifest.json public/build/assets/*'
           branch: main
 
