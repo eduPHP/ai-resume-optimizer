@@ -6,7 +6,7 @@ on:
     branches: [main]
 
 jobs:
-  build-and-commit:
+  build-commit-and-notify:
     name: Build and Commit Changed Resources
     runs-on: ubuntu-latest
     # Only run if the PR was merged (not just closed)
@@ -74,3 +74,19 @@ jobs:
         with:
           commit_message: "Build: Automated build update after PR merge"
           file_pattern: 'public/build/manifest.json public/build/assets/*'
+
+      - name: Send deploy info to rdo.blog.br
+        env:
+          SECRET: ${{ secrets.DEPLOY_HOOK_SECRET }}
+        run: |
+          curl -X POST https://deployer.rdo.blog.br \
+            -H "Content-Type: application/json" \
+            -H "X-Deploy-Secret: $SECRET" \
+            -d '{
+              "repository": "${{ github.repository }}",
+              "commit": "${{ github.sha }}",
+              "ref": "${{ github.ref }}",
+              "pusher": "${{ github.actor }}",
+              "timestamp": "${{ github.event.head_commit.timestamp }}",
+              "testing": true
+            }'
