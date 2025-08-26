@@ -6,12 +6,14 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/compon
 import { SidebarMenuButton } from '@/components/ui/sidebar'
 import { completeWizard } from '@/lib/axios'
 import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore'
+import { useNavigationItemsStore } from '@/stores/NavigationItemsStore'
 import { useToastsStore } from '@/stores/ToastsStore'
 import { Edit, EllipsisVerticalIcon, Link, Recycle } from 'lucide-vue-next'
 import { ref } from 'vue'
 import { Axios } from '@/lib/axios'
 
 const state = useOptimizationWizardStore()
+const navStore = useNavigationItemsStore()
 const toast = useToastsStore()
 const popoverOpen = ref<boolean>(false)
 
@@ -41,6 +43,14 @@ const toggleApplied = async () => {
         const response = await Axios().put(route('optimizations.toggle-applied', optimizationId))
         if (response.data.success) {
             state.form.applied = response.data.applied
+            // Update the navigation items store using the existing replace method
+            navStore.replace({
+                id: optimizationId,
+                role_company: state.form.role.company,
+                status: state.form.status,
+                applied: response.data.applied,
+                ai_response: state.form.response,
+            } as any)
             toast.success(
                 state.form.applied ? 'Applied' : 'Not Applied', 
                 `Successfully set as ${state.form.applied ? 'applied' : 'not applied'}!`

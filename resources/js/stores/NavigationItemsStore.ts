@@ -96,6 +96,7 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
                 ...this.items[itemIndex],
                 title: optimization.role_company,
                 status: optimization.status,
+                applied: optimization.applied,
                 score: optimization.ai_response?.compatibility_score,
             }
         },
