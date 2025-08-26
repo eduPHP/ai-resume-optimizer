@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { CheckCircle } from 'lucide-vue-next';
 import { Buttons } from '@/components/ui/steps';
-import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
+import { OptimizationType, useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
 import { completeWizard } from '@/lib/axios';
 import { useToastsStore } from '@/stores/ToastsStore';
 import { useNavigationItemsStore } from '@/stores/NavigationItemsStore';
 import Heading from '@/components/Heading.vue';
+import type { NavItem } from '@/types'
 
 const state = useOptimizationWizardStore()
 const toast = useToastsStore()
@@ -22,7 +23,7 @@ const finish = () => {
             status: response.data.optimization.status,
             applied: response.data.optimization.applied,
             ai_response: response.data.optimization.ai_response,
-        } as any)
+        } as OptimizationType)
     })
 }
 

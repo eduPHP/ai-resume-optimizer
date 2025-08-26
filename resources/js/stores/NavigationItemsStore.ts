@@ -42,23 +42,23 @@ const dateGroup = (date: Date): string => {
 
 const maybeApplyFilter = (items: NavItem[], filter: string, scoreLevel: ScoreLevel) => {
     let filteredItems = [...items]
-    
+
     // Apply text filter
     if (filter.trim().length > 0) {
-        filteredItems = filteredItems.filter((item: NavItem) => 
+        filteredItems = filteredItems.filter((item: NavItem) =>
             item.title.toLowerCase().includes(filter.toLowerCase())
         )
     }
-    
+
     // Apply score level filter
     if (scoreLevel !== 'all') {
         const page = usePage<SharedData>()
         const raw = page.props.auth?.user.ai_settings.compatibilityScoreLevels
         const { top, high, medium, low } = normalizeLevels(raw)
-        
+
         filteredItems = filteredItems.filter((item: NavItem) => {
             if (!item.score) return false
-            
+
             switch (scoreLevel) {
                 case 'top':
                     return item.score >= top
@@ -73,7 +73,7 @@ const maybeApplyFilter = (items: NavItem[], filter: string, scoreLevel: ScoreLev
             }
         })
     }
-    
+
     return filteredItems
 }
 
@@ -136,11 +136,6 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
             await this.loadItems(true)
         },
 
-        async updateScoreLevel(level: ScoreLevel): Promise<void> {
-            this.scoreLevel = level
-            await this.loadItems(true)
-        },
-
         // Initialize broadcast listener when store is created
         init() {
             this.initializeBroadcastListener()
@@ -149,17 +144,37 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
         replace(optimization: OptimizationType) {
             const itemIndex: number = this.items.findIndex((item: NavItem) => item.id === optimization.id)
 
+            // Broadcast the update to other tabs
+            if (itemIndex === -1) {
+                return
+            }
+
             this.items[itemIndex] = {
                 ...this.items[itemIndex],
                 title: optimization.role_company,
                 status: optimization.status,
                 applied: optimization.applied,
                 score: optimization.ai_response?.compatibility_score,
-            }
+            } as NavItem
 
-            // Broadcast the update to other tabs
+            this.broadcastChanges(optimization, 'optimization-updated')
+        },
+
+        delete(optimizationId: string) {
+            const itemIndex: number = this.items.findIndex((item: NavItem) => item.id === optimizationId)
+            if (itemIndex === -1) {
+                return
+            }
+            this.items.splice(itemIndex, 1)
             broadcastChannel.postMessage({
-                type: 'optimization-updated',
+                type: 'optimization-deleted',
+                optimizationId: optimizationId,
+            })
+        },
+
+        broadcastChanges(optimization: OptimizationType, type: string) {
+            broadcastChannel.postMessage({
+                type,
                 optimizationId: optimization.id,
                 updates: {
                     title: optimization.role_company,
@@ -176,13 +191,38 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
                 if (event.data.type === 'optimization-updated') {
                     const { optimizationId, updates } = event.data
                     const itemIndex = this.items.findIndex((item: NavItem) => item.id === optimizationId)
-                    
-                    if (itemIndex !== -1) {
-                        this.items[itemIndex] = {
-                            ...this.items[itemIndex],
-                            ...updates
-                        }
+
+                    if (itemIndex === -1) {
+
+                        return
                     }
+
+                    this.items[itemIndex] = {
+                        ...this.items[itemIndex],
+                        ...updates
+                    }
+                }
+
+                if (event.data.type === 'optimization-deleted') {
+                    const { optimizationId } = event.data
+                    const itemIndex = this.items.findIndex((item: NavItem) => item.id === optimizationId)
+                    if (itemIndex === -1) {
+                        return
+                    }
+                    this.items.splice(itemIndex, 1)
+                }
+
+                if (event.data.type === 'optimization-created') {
+                    const { optimizationId, updates } = event.data
+                    const item: NavItem = {
+                        href: route('optimizations.show', optimizationId),
+                        id: optimizationId,
+                        group: 'Today',
+                        created: format(new Date(), 'yyyy-LL-dd h:mm a'), // Y-m-d g:i A
+                        ...updates,
+                    }
+
+                    this.items.unshift(item)
                 }
             }
         },
@@ -197,6 +237,13 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
             }
 
             this.items.unshift(item)
+            this.broadcastChanges({
+                role_company: item.title,
+                id,
+                status: draft ? 'draft' : 'pending',
+                applied: false,
+            } as OptimizationType, 'optimization-created')
+
         },
 
         async loadItems(reset: boolean = false) {

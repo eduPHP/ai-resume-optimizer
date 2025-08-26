@@ -5,7 +5,7 @@ import { Toggle } from '@/components/ui/toggle'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { SidebarMenuButton } from '@/components/ui/sidebar'
 import { completeWizard } from '@/lib/axios'
-import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore'
+import { OptimizationType, useOptimizationWizardStore } from '@/stores/OptimizationWizardStore'
 import { useNavigationItemsStore } from '@/stores/NavigationItemsStore'
 import { useToastsStore } from '@/stores/ToastsStore'
 import { Edit, EllipsisVerticalIcon, Link, Recycle } from 'lucide-vue-next'
@@ -39,11 +39,11 @@ const toggleApplied = async () => {
     try {
         const optimizationId = state.form.optimizationId
         if (!optimizationId) return
-        
+
         const response = await Axios().put(route('optimizations.toggle-applied', optimizationId))
         if (response.data.success) {
             state.form.applied = response.data.applied
-            
+
             // Update the navigation items store - this will trigger the broadcast
             navStore.replace({
                 id: optimizationId,
@@ -51,12 +51,9 @@ const toggleApplied = async () => {
                 status: state.form.status,
                 applied: response.data.applied,
                 ai_response: state.form.response,
-            } as any)
-            
-            toast.success(
-                state.form.applied ? 'Applied' : 'Not Applied', 
-                `Successfully set as ${state.form.applied ? 'applied' : 'not applied'}!`
-            )
+            } as OptimizationType)
+
+            toast.success(state.form.applied ? 'Applied' : 'Not Applied', `Successfully set as ${state.form.applied ? 'applied' : 'not applied'}!`)
         }
     } catch (error) {
         console.error('Error toggling applied status:', error)
@@ -81,7 +78,6 @@ const toggleApplied = async () => {
                 update-position-strategy="always"
             >
                 <div class="flex flex-col items-stretch gap-2">
-                    
                     <Button
                         text-position="left"
                         v-if="state.form.role.url"
@@ -94,17 +90,16 @@ const toggleApplied = async () => {
                     </Button>
                     <!-- Applied Toggle -->
                     <div class="flex items-center justify-between px-3 py-2">
-                        <Toggle
-                            :model-value="state.form.applied"
-                            @update:model-value="toggleApplied"
-                            :disabled="state.loading"
-                        >
-                            <span class="text-sm" :class="state.form.applied ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'">
+                        <Toggle :model-value="state.form.applied" @update:model-value="toggleApplied" :disabled="state.loading">
+                            <span
+                                class="text-sm"
+                                :class="state.form.applied ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'"
+                            >
                                 {{ state.form.applied ? 'Applied' : 'Not Applied' }}
                             </span>
                         </Toggle>
                     </div>
-                    
+
                     <Button
                         text-position="left"
                         :disabled="state.loading"
