@@ -6,9 +6,11 @@ import { OptimizationType, useOptimizationWizardStore } from '@/stores/Optimizat
 import { useToastsStore } from '@/stores/ToastsStore'
 import { router } from '@inertiajs/vue3'
 import { Trash } from 'lucide-vue-next'
+import { useNavigationItemsStore } from '@/stores/NavigationItemsStore'
 
 const state = useOptimizationWizardStore()
 const toast = useToastsStore()
+const nav = useNavigationItemsStore()
 
 defineProps<{
     size?: 'lg' | 'default' | 'sm' | 'icon'
@@ -17,7 +19,9 @@ defineProps<{
 
 const handleDeleteOptimization = () => {
     deleteOptimization()
+    nav.delete(state.form.optimizationId as string)
     state.setOptimization({} as OptimizationType)
+
     toast.success('Removed!', 'The optimization was successfully removed.')
 
     router.visit('/dashboard', { method: 'get', preserveState: true })
