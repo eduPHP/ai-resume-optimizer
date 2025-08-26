@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { useToastsStore } from '@/stores/ToastsStore'
-import { X } from 'lucide-vue-next'
+import Toast from '@/components/Toast.vue'
 
 const toasts = useToastsStore()
 </script>
@@ -9,24 +9,7 @@ const toasts = useToastsStore()
     <!-- ... other template code ... -->
     <ul class="fixed bottom-0 right-0 mb-5 mr-3 p-3">
         <TransitionGroup name="slide-fade" tag="div" class="space-y-4">
-            <li v-for="toast in toasts.toasts" :key="toast.id">
-                <div
-                    class="block w-full rounded p-4 md:min-w-96"
-                    :class="{
-                        'bg-green-600': toast.type === 'success',
-                        'bg-red-600': toast.type === 'error',
-                    }"
-                >
-                    <button type="button" class="absolute right-0 top-0 mr-5 mt-6" @click="toasts.removeToast(toast)">
-                        <X :size="16" />
-                    </button>
-                    <h4 class="font-bold">{{ toast.title }}</h4>
-                    <p class="text-sm">
-                        {{ toast.description }}
-                    </p>
-                </div>
-                <div class="duration-linear -mt-1 h-1 bg-white/30 transition-all" :style="{ width: `${toast.progress.toFixed()}%` }" />
-            </li>
+            <Toast v-for="toast in toasts.toasts" :toast="toast" :key="toast.id" />
         </TransitionGroup>
     </ul>
 </template>
