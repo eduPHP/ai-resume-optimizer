@@ -26,6 +26,13 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.ADMIN_TOKEN }}
 
+      # Pull latest changes to avoid conflicts
+      - name: Pull latest changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git pull origin main --rebase
+
       - name: Check if source files changed in merged PR
         if: github.event_name == 'pull_request'
         id: source-check-pr
@@ -94,13 +101,52 @@ jobs:
         if: steps.source-check.outputs.changed == 'true'
         run: npm run build
 
-      - name: Commit build changes
+      - name: Check for build changes
         if: steps.source-check.outputs.changed == 'true'
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "Build: Automated build update after PR merge [skip ci]"
-          file_pattern: 'public/build/manifest.json public/build/assets/*'
-          branch: main
+        id: build-changes
+        run: |
+          git add public/build/manifest.json public/build/assets/ || true
+          if git diff --staged --quiet; then
+            echo "has-changes=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "has-changes=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit and push build changes
+        if: steps.source-check.outputs.changed == 'true' && steps.build-changes.outputs.has-changes == 'true'
+        run: |
+          # Pull again before committing to ensure we're up to date
+          git pull origin main --rebase --autostash
+
+          # Stage the build files
+          git add public/build/manifest.json public/build/assets/
+
+          # Check if there are still changes to commit after the pull
+          if ! git diff --staged --quiet; then
+            git commit -m "Build: Automated build update after PR merge [skip ci]"
+
+            # Try to push with retry logic
+            max_attempts=3
+            attempt=1
+            while [ $attempt -le $max_attempts ]; do
+              echo "Push attempt $attempt of $max_attempts"
+              if git push origin main; then
+                echo "Successfully pushed on attempt $attempt"
+                break
+              else
+                if [ $attempt -eq $max_attempts ]; then
+                  echo "Failed to push after $max_attempts attempts"
+                  exit 1
+                fi
+                echo "Push failed, pulling latest changes and retrying..."
+                git pull origin main --rebase --autostash
+                attempt=$((attempt + 1))
+                sleep 2
+              fi
+            done
+          else
+            echo "No changes to commit after rebase"
+          fi
 
       - name: Send deploy info to rdo.blog.br
         env:
