@@ -27,9 +27,30 @@ jobs:
           token: ${{ secrets.ADMIN_TOKEN }}
 
       - name: Check if source files changed in merged PR
-        id: source-check
+        if: github.event_name == 'pull_request'
+        id: source-check-pr
         run: |
           if git diff --name-only ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.merge_commit_sha }} | grep -qE '^resources/(js|css|sass|ts|vue)'; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check if source files changed in push
+        if: github.event_name == 'push'
+        id: source-check-push
+        run: |
+          # For push events, check the last commit
+          if git diff --name-only HEAD~1 HEAD | grep -qE '^resources/(js|css|sass|ts|vue)'; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set source check result
+        id: source-check
+        run: |
+          if [[ "${{ steps.source-check-pr.outputs.changed }}" == "true" || "${{ steps.source-check-push.outputs.changed }}" == "true" ]]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"
