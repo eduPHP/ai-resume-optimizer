@@ -3,7 +3,7 @@ import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, Sideba
 import { compatibilityStyle, useNavigationItemsStore } from '@/stores/NavigationItemsStore'
 import { Link } from '@inertiajs/vue3'
 import { useIntersectionObserver } from '@vueuse/core'
-import { File } from 'lucide-vue-next'
+import { File, Check } from 'lucide-vue-next'
 import { ref } from 'vue'
 
 const nav = useNavigationItemsStore()
@@ -31,7 +31,7 @@ useIntersectionObserver(loadMoreTrigger, ([{ isIntersecting }]) => {
         </div>
 
         <div class="pt-32 text-sm text-gray-700 dark:text-gray-400" v-if="nav.filter.length && !nav.navigationItems.length">
-            No entries fround with the keyword <span class="">'{{ nav.filter }}'</span>
+            No entries found with the keyword <span class="">'{{ nav.filter }}'</span>
         </div>
         <SidebarGroup v-for="group in nav.navigationItems" :key="group.title" class="mb-2 mt-3 p-0">
             <SidebarGroupLabel v-if="sidebarState !== 'collapsed'" class="mt-3">{{ group.title }}</SidebarGroupLabel>
@@ -43,8 +43,11 @@ useIntersectionObserver(loadMoreTrigger, ([{ isIntersecting }]) => {
                                 <File class="!h-8 !w-8" />
                                 <span v-if="item.score" class="absolute left-2 top-2 text-[0.6rem]">{{ item.score }}%</span>
                             </div>
-                            <span class="flex flex-col">
-                                <span>{{ item.title }}</span>
+                            <span class="flex flex-col flex-1">
+                                <div class="flex items-center gap-px">
+                                    <Check v-if="item.applied" class="h-4 w-4 text-green-500 flex-shrink-0" />
+                                    <span :class="item.applied && 'text-green-500'">{{ item.title }}</span>
+                                </div>
                                 <span class="text-xs text-gray-400 dark:text-white/40">Sent at {{ item.created }}</span>
                             </span>
                         </Link>
