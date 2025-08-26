@@ -43,7 +43,8 @@ const toggleApplied = async () => {
         const response = await Axios().put(route('optimizations.toggle-applied', optimizationId))
         if (response.data.success) {
             state.form.applied = response.data.applied
-            // Update the navigation items store using the existing replace method
+            
+            // Update the navigation items store - this will trigger the broadcast
             navStore.replace({
                 id: optimizationId,
                 role_company: state.form.role.company,
@@ -51,6 +52,7 @@ const toggleApplied = async () => {
                 applied: response.data.applied,
                 ai_response: state.form.response,
             } as any)
+            
             toast.success(
                 state.form.applied ? 'Applied' : 'Not Applied', 
                 `Successfully set as ${state.form.applied ? 'applied' : 'not applied'}!`

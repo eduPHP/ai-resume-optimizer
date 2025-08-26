@@ -4,11 +4,15 @@ import { compatibilityStyle, useNavigationItemsStore } from '@/stores/Navigation
 import { Link } from '@inertiajs/vue3'
 import { useIntersectionObserver } from '@vueuse/core'
 import { File, Check } from 'lucide-vue-next'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const nav = useNavigationItemsStore()
 const { state: sidebarState } = useSidebar()
 const loadMoreTrigger = ref(null)
+
+onMounted(() => {
+    nav.init()
+})
 
 useIntersectionObserver(loadMoreTrigger, ([{ isIntersecting }]) => {
     if (isIntersecting) {
