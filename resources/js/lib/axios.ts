@@ -78,7 +78,6 @@ const deleteOptimization = async (): Promise<boolean> => {
     state.loading = true
 
     const axios = Axios()
-
     await axios.delete(route('optimizations.destroy', state.form.optimizationId)).then(() => {
         state.clearErrors()
     })
