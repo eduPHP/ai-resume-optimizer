@@ -74,6 +74,7 @@ jobs:
         with:
           commit_message: "Build: Automated build update after PR merge"
           file_pattern: 'public/build/manifest.json public/build/assets/*'
+          branch: main
 
       - name: Send deploy info to rdo.blog.br
         env:
