@@ -58,6 +58,9 @@ const toggleApplied = async () => {
     } catch (error) {
         console.error('Error toggling applied status:', error)
         toast.error('Error', 'Failed to update application status')
+    } finally {
+        popoverOpen.value = false
+        state.loading = false
     }
 }
 </script>
