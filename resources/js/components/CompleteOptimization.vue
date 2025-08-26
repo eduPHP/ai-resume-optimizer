@@ -1,62 +1,27 @@
 <script setup lang="ts">
 import OptimizationPopover from '@/components/OptimizationPopover.vue'
 import { Button } from '@/components/ui/button'
-import { Toggle } from '@/components/ui/toggle'
 import { downloadCoverLetter, downloadOptimizedResume } from '@/lib/axios'
 import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore'
 import { SharedData } from '@/types'
 import { usePage } from '@inertiajs/vue3'
 import { File } from 'lucide-vue-next'
 import { onMounted } from 'vue'
-import { Axios } from '@/lib/axios'
-import { useToastsStore } from '@/stores/ToastsStore'
 
 const state = useOptimizationWizardStore()
 const page = usePage<SharedData>()
-const toast = useToastsStore();
 
 onMounted(() => {
     state.setAISettings(page.props.auth?.user.ai_settings)
 })
-
-const toggleApplied = async () => {
-    try {
-        const optimizationId = route().params.optimization
-        const response = await Axios().put(route('optimizations.toggle-applied', optimizationId))
-        if (response.data.success) {
-            state.form.applied = response.data.applied
-            toast.success(state.form.applied ? 'Applied' : 'Not Applied', `Successfully set as ${state.form.applied ? 'applied' : 'not applied'}!`)
-        }
-    } catch (error) {
-        console.error('Error toggling applied status:', error)
-    }
-}
 </script>
 
 <template>
     <div class="mx-auto flex h-full w-full flex-1 flex-col gap-4 rounded-xl p-4 xl:w-[950px]">
         <div class="relative bg-gray-300/10 px-8 py-6 dark:bg-[#202020]">
             <div class="flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                    <h1 class="text-2xl">{{ state.form.role.company }} {{ state.form.role.name }} Application</h1>
-                    
-                    
-                </div>
-                <div class="mr-6 -mt-2">
-                    <!-- Applied Toggle -->
-                    <div class="flex items-center gap-2">
-                        <Toggle
-                            :model-value="state.form.applied"
-                            @update:model-value="toggleApplied"
-                            :disabled="state.loading"
-                        >
-                            <span class="text-sm " :class="state.form.applied ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'">
-                                Applied
-                            </span>
-                        </Toggle>
-                    </div>
-                    <OptimizationPopover class="absolute right-2 top-3" />
-                </div>
+                <h1 class="text-2xl">{{ state.form.role.company }} {{ state.form.role.name }} Application</h1>
+                <OptimizationPopover class="absolute right-2 top-3" />
             </div>
 
             <h2 class="mt-4 text-xl">

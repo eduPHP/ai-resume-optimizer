@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import DeleteOptimization from '@/components/DeleteOptimization.vue'
 import { Button } from '@/components/ui/button'
+import { Toggle } from '@/components/ui/toggle'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { SidebarMenuButton } from '@/components/ui/sidebar'
 import { completeWizard } from '@/lib/axios'
@@ -8,6 +9,7 @@ import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore'
 import { useToastsStore } from '@/stores/ToastsStore'
 import { Edit, EllipsisVerticalIcon, Link, Recycle } from 'lucide-vue-next'
 import { ref } from 'vue'
+import { Axios } from '@/lib/axios'
 
 const state = useOptimizationWizardStore()
 const toast = useToastsStore()
@@ -19,6 +21,7 @@ const enableEdit = () => {
     state.latestStep = 3
     popoverOpen.value = false
 }
+
 const regenerate = () => {
     state.loading = true
     popoverOpen.value = false
@@ -28,6 +31,25 @@ const regenerate = () => {
         state.form.status = 'complete'
         toast.success('Complete Optimization', 'The optimization was successfully re-generated.')
     })
+}
+
+const toggleApplied = async () => {
+    try {
+        const optimizationId = state.form.optimizationId
+        if (!optimizationId) return
+        
+        const response = await Axios().put(route('optimizations.toggle-applied', optimizationId))
+        if (response.data.success) {
+            state.form.applied = response.data.applied
+            toast.success(
+                state.form.applied ? 'Applied' : 'Not Applied', 
+                `Successfully set as ${state.form.applied ? 'applied' : 'not applied'}!`
+            )
+        }
+    } catch (error) {
+        console.error('Error toggling applied status:', error)
+        toast.error('Error', 'Failed to update application status')
+    }
 }
 </script>
 
@@ -47,6 +69,7 @@ const regenerate = () => {
                 update-position-strategy="always"
             >
                 <div class="flex flex-col items-stretch gap-2">
+                    
                     <Button
                         text-position="left"
                         v-if="state.form.role.url"
@@ -57,6 +80,19 @@ const regenerate = () => {
                     >
                         <Link /> Apply
                     </Button>
+                    <!-- Applied Toggle -->
+                    <div class="flex items-center justify-between px-3 py-2">
+                        <Toggle
+                            :model-value="state.form.applied"
+                            @update:model-value="toggleApplied"
+                            :disabled="state.loading"
+                        >
+                            <span class="text-sm" :class="state.form.applied ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'">
+                                {{ state.form.applied ? 'Applied' : 'Not Applied' }}
+                            </span>
+                        </Toggle>
+                    </div>
+                    
                     <Button
                         text-position="left"
                         :disabled="state.loading"
