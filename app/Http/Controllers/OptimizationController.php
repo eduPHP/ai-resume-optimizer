@@ -104,7 +104,7 @@ class OptimizationController
         ]);
     }
 
-    public function handleRoleInformation(Optimization|null $optimization): Optimization
+    public function handleRoleInformation(Optimization|null $optimization = null): Optimization
     {
         request()->validate([
             'name' => 'required',
