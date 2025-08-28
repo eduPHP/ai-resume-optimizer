@@ -15,7 +15,7 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from '@/components/ui/sidebar'
-import { useNavigationItemsStore } from '@/stores/NavigationItemsStore'
+import { useNavigationItemsStore, SCORE_STYLES, ScoreLevel } from '@/stores/NavigationItemsStore'
 import { type NavItem } from '@/types'
 import { Link } from '@inertiajs/vue3'
 import { Plus, X } from 'lucide-vue-next'
@@ -33,11 +33,31 @@ const footerNavItems: NavItem[] = [
     },
 ]
 
-// watch for filter changes and fetch content
+type Score = {
+    id: ScoreLevel
+    title: string
+    style: string
+}
+
+const scores: Score[] = [
+    { id: 'all', title: 'Any', style: '' },
+    { id: 'top', title: 'Top', style: SCORE_STYLES.TOP },
+    { id: 'high', title: 'High', style: SCORE_STYLES.HIGH },
+    { id: 'medium', title: 'Medium', style: SCORE_STYLES.MEDIUM },
+    { id: 'low', title: 'Low', style: SCORE_STYLES.LOW },
+]
+
+// Create the debounced function outside the watcher
+const debouncedFilterSearch = debounce(() => {
+    // console.log('Debounced filter search triggered:', nav.filter)
+    nav.hasMore = true
+    nav.loadItems(true)
+}, 300)
+
 watch(
     () => nav.filter,
     () => {
-        debounce(() => nav.loadItems(true))
+        debouncedFilterSearch()
     },
 )
 </script>
@@ -80,6 +100,25 @@ watch(
                 >
                     <X :size="16" class="text-red-400" />
                 </Button>
+            </div>
+            <div class="flex justify-center gap-2 px-1 pt-1 text-xs">
+                <ul class="flex gap-2">
+                    <li
+                        v-for="score in scores"
+                        :key="score.id"
+                    >
+                        <button
+                            @click.prevent="() => {
+                                nav.scoreLevel = score.id;
+                                nav.loadItems(true);
+                            }"
+                            :class="{
+                                underline: nav.scoreLevel === score.id,
+                                [score.style]: true,
+                            }"
+                        >{{ score.title }}</button>
+                    </li>
+                </ul>
             </div>
         </div>
         <SidebarContent>
