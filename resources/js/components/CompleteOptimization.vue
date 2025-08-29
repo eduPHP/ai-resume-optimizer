@@ -5,22 +5,21 @@ import { downloadCoverLetter, downloadOptimizedResume } from '@/lib/axios'
 import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore'
 import { SharedData } from '@/types'
 import { usePage } from '@inertiajs/vue3'
-import { File } from 'lucide-vue-next'
-import { onMounted } from 'vue'
+import { File, Check } from 'lucide-vue-next'
 
 const state = useOptimizationWizardStore()
 const page = usePage<SharedData>()
 
-onMounted(() => {
-    state.setAISettings(page.props.auth?.user.ai_settings)
-})
 </script>
 
 <template>
     <div class="mx-auto flex h-full w-full flex-1 flex-col gap-4 rounded-xl p-4 xl:w-[950px]">
         <div class="relative bg-gray-300/10 px-8 py-6 dark:bg-[#202020]">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl">{{ state.form.role.company }} {{ state.form.role.name }} Application</h1>
+                <div class="flex items-center gap-1">
+                    <Check v-if="state.form.applied" class="text-green-400" />
+                    <h1 class="text-2xl">{{ state.form.role.company }} {{ state.form.role.name }} Application</h1>
+                </div>
                 <OptimizationPopover class="absolute right-2 top-3" />
             </div>
 
