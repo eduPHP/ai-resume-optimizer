@@ -28,22 +28,22 @@ const handleSaveAISettings = () => {
         <div class="my-2 grid grid-cols-1 space-x-2 xl:grid-cols-3">
             <div class="gap-2">
                 <Label :class="SCORE_STYLES.HIGH">High</Label>
-                <Input type="number" class="" :class="SCORE_STYLES.HIGH" v-model="settings.compatibilityScoreLevels.high" name="High" />
+                <Input type="number" :class="SCORE_STYLES.HIGH" v-model="settings.compatibilityScoreLevels.high" name="High" />
             </div>
             <div class="gap-2">
                 <Label :class="SCORE_STYLES.MEDIUM">Regular</Label>
-                <Input type="number" class="" :class="SCORE_STYLES.MEDIUM" v-model="settings.compatibilityScoreLevels.medium" name="Medium" />
+                <Input type="number" :class="SCORE_STYLES.MEDIUM" v-model="settings.compatibilityScoreLevels.medium" name="Medium" />
             </div>
             <div class="gap-2">
                 <Label :class="SCORE_STYLES.LOW">Low</Label>
-                <Input type="number" class="" :class="SCORE_STYLES.LOW" v-model="settings.compatibilityScoreLevels.low" name="Low" />
+                <Input type="number" :class="SCORE_STYLES.LOW" v-model="settings.compatibilityScoreLevels.low" name="Low" />
             </div>
         </div>
 
         <div class="my-8">
             <div class="grid gap-2">
-                <Label>Top Choice</Label>
-                <Input type="number" class="w-full" v-model="settings.compatibilityScoreLevels.top" name="Top" />
+                <Label :class="SCORE_STYLES.TOP">Top Choice</Label>
+                <Input :class="SCORE_STYLES.TOP" type="number" class="w-full" v-model="settings.compatibilityScoreLevels.top" name="Top" />
             </div>
         </div>
         <HeadingSmall title="AI Instructions" description="Add custom instructions for optimizations." />
