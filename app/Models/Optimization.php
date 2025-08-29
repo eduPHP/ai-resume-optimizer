@@ -55,7 +55,12 @@ class Optimization extends Model
             }
 
             /* @var Collection $scoreLevels */
-            $scoreLevels = $user->ai_settings['compatibilityScoreLevels'] ?? [];
+            $scoreLevels = $user->ai_settings['compatibilityScoreLevels'] ?? [
+                'top' => 95,
+                'high' => 90,
+                'medium' => 80,
+                'low' => 70,
+            ];
 
             if (! $scoreLevels->has($score)) {
                 return $query;
@@ -64,12 +69,12 @@ class Optimization extends Model
             $query->where('status', 'complete');
 
             return match ($score) {
-                'top' => $query->where('ai_response->compatibility_score', '>=', $scoreLevels['top'] ?? 90),
-                'high' => $query->where('ai_response->compatibility_score', '>=', $scoreLevels['high'] ?? 90),
-                'medium' => $query->where('ai_response->compatibility_score', '<', $scoreLevels['high'] ?? 90)
-                    ->where('ai_response->compatibility_score', '>=', $scoreLevels['medium'] ?? 80),
-                'low' => $query->where('ai_response->compatibility_score', '<', $scoreLevels['medium'] ?? 80)
-                    ->where('ai_response->compatibility_score', '>=', $scoreLevels['low'] ?? 70),
+                'top' => $query->where('ai_response->compatibility_score', '>=', $scoreLevels['top']),
+                'high' => $query->where('ai_response->compatibility_score', '>=', $scoreLevels['high']),
+                'medium' => $query->where('ai_response->compatibility_score', '<', $scoreLevels['high'])
+                    ->where('ai_response->compatibility_score', '>=', $scoreLevels['medium']),
+                'low' => $query->where('ai_response->compatibility_score', '<', $scoreLevels['medium'])
+                    ->where('ai_response->compatibility_score', '>=', $scoreLevels['low']),
                 default => $query,
             };
         });
