@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { LoaderCircle } from 'lucide-vue-next';
 import InputError from '@/components/InputError.vue';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -10,6 +11,7 @@ import { router } from '@inertiajs/vue3';
 import { useNavigationItemsStore } from '@/stores/NavigationItemsStore';
 import debounce from '@/lib/debounce';
 import Heading from '@/components/Heading.vue';
+import { onMounted } from 'vue'
 
 const state = useOptimizationWizardStore()
 const nav = useNavigationItemsStore()
@@ -55,6 +57,7 @@ const getJobInformationHandler = (url: string) => {
     }
 
 
+    state.loading = true
     getJobInformation(url).then(response => {
         state.form.role.url = response.data.url
 
@@ -66,14 +69,14 @@ const getJobInformationHandler = (url: string) => {
             state.form.additional.targetCountry = response.data.location
             state.form.role.location = response.data.location
 
-            submit()
+            // submit()
         } else {
             console.info('Unsupported crawl link: '+url)
         }
+        state.loading = false
     })
 }
 const debouncedGetJobInformation = debounce(() => getJobInformationHandler(state.form.role.url as string));
-
 
 </script>
 
@@ -83,7 +86,11 @@ const debouncedGetJobInformation = debounce(() => getJobInformationHandler(state
 
         <div class="mb-8 grid gap-2">
             <Label class="flex justify-between" for="url">Job Link <span class="text-yellow-500 dark:text-yellow-300 text-xs">Experimental</span></Label>
-            <Input id="url" type="text" :tabindex="1" v-model="state.form.role.url" @input="debouncedGetJobInformation" />
+            <div class="relative">
+                <Input :class="state.loading && 'pr-10'" id="url" type="text" :tabindex="1" v-model="state.form.role.url" @input="debouncedGetJobInformation" />
+                <LoaderCircle class="animate-spin absolute right-3 top-2.5 text-gray-400" v-if="state.loading" />
+            </div>
+
             <span v-show="! state.form.errors.url" class="text-xs text-muted-foreground dark:text-white/50">Automatically fill the role information from a job link.</span>
             <InputError :message="state.form.errors.url" />
         </div>
