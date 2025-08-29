@@ -155,7 +155,7 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
 
     getters: {
         currentStep: (state: State): Step => {
-            return state.steps[state.step]
+            return state.steps[state.step] ?? state.steps[0]
         },
         pageTitle: (state: State) => {
             if (state.form.role.company && state.form.role.name) {
