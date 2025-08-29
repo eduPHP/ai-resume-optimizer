@@ -79,7 +79,7 @@ const maybeApplyFilter = (items: NavItem[], filter: string, scoreLevel: ScoreLev
 
 export const SCORE_STYLES = {
     HIGH: 'text-green-400',
-    MEDIUM: 'text-yellow-400',
+    MEDIUM: 'text-yellow-500 dark:text-yellow-300',
     LOW: 'text-red-400',
     TOP: 'text-blue-300',
 } as const

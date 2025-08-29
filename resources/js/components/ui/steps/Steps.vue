@@ -23,18 +23,18 @@ const { breakpoint } = useBreakpoints()
                         <span class="xl:hidden">{{ step.name }}</span>
                     </button>
 
-                    <template v-if="state.step === stepIdx && stepIdx === state.steps.length - 1 && !['xl', '2xl'].includes(breakpoint)">
+                    <template v-if="state.currentStep && state.step === stepIdx && stepIdx === state.steps.length - 1 && !['xl', '2xl'].includes(breakpoint)">
                         <!-- /* include the step in this position on mobile */ -->
                         <component :is="{...state.currentStep.stepComponent}" />
                     </template>
                 </template>
                 <template v-else-if="state.step === stepIdx && !['xl', '2xl'].includes(breakpoint)">
                     <div class="hidden absolute inset-0 xl:flex items-center" aria-hidden="true">
-                        <div class="ml-12 h-0.5 w-full border-t border-gray-400 dark:border-white/40 border-dashed" />
+                        <div class="ml-12 h-0.5 w-full border-t border-gray-800 dark:border-white/40 border-dashed" />
                     </div>
 
-                    <button type="button" @click="state.setStep(stepIdx)" class="w-full group flex gap-6 items-center text-white hover:text-white/80 cursor-pointer" :class="{'dark:bg-[#202020] rounded-tl-2xl':!['xl', '2xl'].includes(breakpoint)}" aria-current="step">
-                        <span class="relative flex size-12 items-center justify-center rounded-full border-white border group-hover:border-white/80 ">
+                    <button type="button" @click="state.setStep(stepIdx)" class="w-full group flex gap-6 items-center dark:text-white hover:text-white/80 cursor-pointer" :class="{'dark:bg-[#202020] rounded-tl-2xl':!['xl', '2xl'].includes(breakpoint)}" aria-current="step">
+                        <span class="relative flex size-12 items-center justify-center rounded-full border-gray-800 dark:border-white border dark:group-hover:border-white/80 ">
                             <span class="">{{ stepIdx + 1 }}</span>
                             <span class="sr-only">{{ step.name }}</span>
                         </span>
@@ -50,8 +50,8 @@ const { breakpoint } = useBreakpoints()
                         <div class="ml-12 h-0.5 w-full border-t border-gray-400 dark:border-white/40 border-dashed" />
                     </div>
 
-                    <button type="button" @click="state.setStep(stepIdx)" class="group flex gap-6 items-center text-white/40 hover:text-white/80 cursor-pointer" aria-current="step">
-                        <span class="relative flex size-12 items-center justify-center rounded-full border-white/40 border group-hover:border-white/80 ">
+                    <button type="button" @click="state.setStep(stepIdx)" class="group flex gap-6 items-center text-gray-400 dark:text-white/40 dark:hover:text-white/80 cursor-pointer" aria-current="step">
+                        <span class="relative flex size-12 items-center justify-center rounded-full border-gray-300 dark:border-white/40 border dark:group-hover:border-white/80 ">
                             <span class="">{{ stepIdx + 1 }}</span>
                             <span class="sr-only">{{ step.name }}</span>
                         </span>

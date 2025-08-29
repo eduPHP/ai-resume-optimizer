@@ -18,20 +18,22 @@ class OptimizationFactory extends Factory
      */
     public function definition(): array
     {
+        $step = fake()->numberBetween(0, 3);
         return [
             'user_id' => User::factory(),
             'role_name' => fake()->randomElement(['Developer', 'Designer', 'Manager', 'Engineer', 'Tester']),
+            'role_url' => fake()->url(),
             'role_company' => fake()->company(),
             'role_description' => fake()->sentence(),
             'resume_id' => Resume::factory(),
             'role_location' => fake()->city(),
-            'current_step' => fake()->numberBetween(1, 5),
+            'current_step' => $step,
             'make_grammatical_corrections' => fake()->boolean(),
             'change_professional_summary' => fake()->boolean(),
             'generate_cover_letter' => fake()->boolean(),
             'change_target_role' => fake()->boolean(),
             'mention_relocation_availability' => fake()->boolean(),
-            'status' => fake()->randomElement(['pending', 'in_progress', 'complete']),
+            'status' => $step === 3 ? 'completed' : 'pending',
             'optimized_result' => fake()->randomHtml(),
             'ai_response' => [
                 "resume" => fake()->randomHtml(),
