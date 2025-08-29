@@ -47,13 +47,13 @@ const page = usePage<SharedData>()
                 <p class="text-gray-600 dark:text-gray-400">{{ alignment.description }}</p>
             </div>
 
-            <h2 v-if="state.form.response.moderate_gaps.length" class="mt-6 text-xl text-yellow-400">Moderate Gaps:</h2>
+            <h2 v-if="state.form.response.moderate_gaps.length" class="mt-6 text-xl text-yellow-500 bg-clip-text bg-gray-400 dark:bg-transparent dark:text-yellow-400">Moderate Gaps:</h2>
 
-            <div v-if="state.form.response.moderate_gaps.length" class="text-yellow-400">
+            <div v-if="state.form.response.moderate_gaps.length" class="text-yellow-500 bg-clip-text bg-gray-400 dark:bg-transparent dark:text-yellow-400">
                 <ul>
                     <li v-for="gap in state.form.response.moderate_gaps" :key="gap.title">
                         <span class="block">{{ gap.title }}</span>
-                        <span class="block text-yellow-400/70">{{ gap.description }}</span>
+                        <span class="block text-yellow-500 bg-clip-text bg-gray-400 dark:bg-transparent dark:text-yellow-400/70">{{ gap.description }}</span>
                     </li>
                 </ul>
             </div>

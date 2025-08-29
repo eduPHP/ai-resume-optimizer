@@ -82,16 +82,16 @@ const debouncedGetJobInformation = debounce(() => getJobInformationHandler(state
         <Heading title="Role Information" description="A resume should be role specific, <br>Please provide the role information to optimize the resume for the role you are applying for." />
 
         <div class="mb-8 grid gap-2">
-            <Label class="flex justify-between" for="url">Job Link <span class="text-yellow-300 text-xs">Experimental</span></Label>
+            <Label class="flex justify-between" for="url">Job Link <span class="text-yellow-500 dark:text-yellow-300 text-xs">Experimental</span></Label>
             <Input id="url" type="text" :tabindex="1" v-model="state.form.role.url" @input="debouncedGetJobInformation" />
-            <span v-show="! state.form.errors.url" class="text-xs text-white/50">Automatically fill the role information from a job link, currently works for Linkedin.</span>
+            <span v-show="! state.form.errors.url" class="text-xs text-muted-foreground dark:text-white/50">Automatically fill the role information from a job link.</span>
             <InputError :message="state.form.errors.url" />
         </div>
         <div class="mb-8 grid xl:grid-cols-2 items-start gap-4">
             <div class="grid gap-2">
                 <Label for="name">Role Name</Label>
                 <Input id="name" type="text" :tabindex="1" v-model="state.form.role.name" @input="state.clearErrors('name')" />
-                <span v-show="! state.form.errors.name" class="text-xs text-white/50">i.e. Backend Engineer</span>
+                <span v-show="! state.form.errors.name" class="text-xs text-muted-foreground dark:text-white/50">i.e. Backend Engineer</span>
                 <InputError :message="state.form.errors.name" />
             </div>
             <div class="grid gap-2">
