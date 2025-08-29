@@ -15,11 +15,13 @@ class OptimizationController
         $perPage = request()->integer('per_page', 10);
 
         $query = request()->input('q');
+        $score = request()->input('score');
         $user = request()->user();
 
         $optimizations = $user->optimizations()
-            ->searchByRoleCompany($query) // Use the newly introduced scope
-            ->latest('created_at');        // Keep the ordering logic clean
+            ->filterByScoreLevel($score)
+            ->searchByRoleCompany($query)
+            ->latest('created_at');
 
 //        $optimizations->dd();
 
@@ -39,8 +41,9 @@ class OptimizationController
 
         return response()->json([
             'data' => $optimizations->items(),
-            'next_page_url' => $optimizations->nextPageUrl(),
-            'q' => request()->input('q'),
+            'next_page_url' => $optimizations->hasMorePages() ? $optimizations->nextPageUrl() : null,
+            'q' => $query,
+            'score' => $score,
         ]);
     }
 

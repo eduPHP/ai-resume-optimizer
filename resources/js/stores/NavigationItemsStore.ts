@@ -5,7 +5,7 @@ import { usePage } from '@inertiajs/vue3'
 import { format, isToday, isYesterday } from 'date-fns'
 import { defineStore } from 'pinia'
 
-type ScoreLevel = 'top' | 'high' | 'medium' | 'low' | 'all'
+export type ScoreLevel = 'top' | 'high' | 'medium' | 'low' | 'all'
 
 type State = {
     items: NavItem[]
@@ -81,17 +81,19 @@ export const SCORE_STYLES = {
     HIGH: 'text-green-400',
     MEDIUM: 'text-yellow-400',
     LOW: 'text-red-400',
+    TOP: 'text-blue-300',
 } as const
 
 export const compatibilityStyle = (score: number | undefined) => {
     const page = usePage<SharedData>()
 
-    const { high, medium } = page.props.auth?.user.ai_settings.compatibilityScoreLevels
+    const { top, high, medium } = page.props.auth?.user.ai_settings.compatibilityScoreLevels
 
     if (!score) {
         return ''
     }
 
+    if (score >= top) return SCORE_STYLES.TOP
     if (score >= high) return SCORE_STYLES.HIGH
     if (score >= medium) return SCORE_STYLES.MEDIUM
     if (score < medium) return SCORE_STYLES.LOW
@@ -132,6 +134,12 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
     actions: {
         async resetFilter(): Promise<void> {
             this.filter = ''
+            this.page = 1
+            await this.loadItems(this.scoreLevel === 'all')
+        },
+
+        async resetFilters(): Promise<void> {
+            this.filter = ''
             this.scoreLevel = 'all'
             await this.loadItems(true)
         },
@@ -139,6 +147,7 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
         // Initialize broadcast listener when store is created
         init() {
             this.initializeBroadcastListener()
+            this.loadItems(true)
         },
 
         replace(optimization: OptimizationType) {
@@ -165,6 +174,7 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
             if (itemIndex === -1) {
                 return
             }
+
             this.items.splice(itemIndex, 1)
             broadcastChannel.postMessage({
                 type: 'optimization-deleted',
@@ -246,9 +256,12 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
         },
 
         async loadItems(reset: boolean = false) {
-            if (!this.hasMore && !reset) return
+            console.log('loadItems called with reset:', reset, 'page:', this.page, 'hasMore:', this.hasMore, 'loading:', this.loading)
 
-            if (reset || this.filter !== '') {
+            if (!this.hasMore) return
+
+            if (reset) {
+                console.log('Resetting items and page')
                 this.items = []
                 this.page = 1
                 this.hasMore = true
@@ -256,15 +269,20 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
 
             this.loading = true
 
+            console.log('Making request for page:', this.page, 'filter:', this.filter, 'scoreLevel:', this.scoreLevel)
+
             const request = await Axios().get(
                 route('optimizations.index', {
                     page: this.page,
                     q: this.filter,
+                    score: this.scoreLevel,
                 }),
             )
 
             const data = request.data.data as NavItem[]
             const next = request.data.next_page_url
+
+            console.log('Received data:', data.length, 'items, next_page_url:', next)
 
             const mapped = data.map((item: NavItem): NavItem => {
                 const created = new Date(item.created as string)
@@ -275,10 +293,19 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
                 }
             })
 
-            this.items.push(...mapped)
+            if (reset) {
+                this.items = mapped
+            } else {
+                this.items.push(...mapped)
+            }
+
+            console.log('Total items after update:', this.items.length)
+
             this.page += 1
             this.hasMore = Boolean(next)
             this.loading = false
+
+            console.log('Updated page to:', this.page, 'hasMore:', this.hasMore)
         },
     },
 })

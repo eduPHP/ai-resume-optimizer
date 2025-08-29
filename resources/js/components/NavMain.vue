@@ -9,16 +9,26 @@ import { ref, onMounted } from 'vue'
 const nav = useNavigationItemsStore()
 const { state: sidebarState } = useSidebar()
 const loadMoreTrigger = ref(null)
+const debug = ref<boolean>(false)
 
 onMounted(() => {
     nav.init()
 })
 
-useIntersectionObserver(loadMoreTrigger, ([{ isIntersecting }]) => {
-    if (isIntersecting) {
-        nav.loadItems()
+useIntersectionObserver(
+    loadMoreTrigger,
+    ([{ isIntersecting }]) => {
+        // console.log('Intersection observer triggered:', isIntersecting, 'hasMore:', nav.hasMore, 'loading:', nav.loading)
+        if (isIntersecting && nav.hasMore && !nav.loading) {
+            // console.log('Calling loadItems from intersection observer')
+            nav.loadItems(false)
+        }
+    },
+    {
+        threshold: 0.1,
+        rootMargin: '50px'
     }
-})
+)
 </script>
 
 <template>
@@ -59,6 +69,17 @@ useIntersectionObserver(loadMoreTrigger, ([{ isIntersecting }]) => {
                 </SidebarMenuItem>
             </SidebarMenu>
         </SidebarGroup>
-        <div ref="loadMoreTrigger" class="h-4"></div>
+
+        <!-- Debug info and load more trigger -->
+        <div v-if="debug" class="p-2 text-xs text-gray-500 border-t">
+            <div>Page: {{ nav.page }}</div>
+            <div>Has More: {{ nav.hasMore }}</div>
+            <div>Loading: {{ nav.loading }}</div>
+            <div>Items: {{ nav.items.length }}</div>
+        </div>
+
+        <div ref="loadMoreTrigger">
+            <div v-if="debug" class="h-20 flex items-center justify-center bg-red-100 text-xs">Load More Trigger</div>
+        </div>
     </div>
 </template>
