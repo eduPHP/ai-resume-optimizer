@@ -11,7 +11,6 @@ import { router } from '@inertiajs/vue3';
 import { useNavigationItemsStore } from '@/stores/NavigationItemsStore';
 import debounce from '@/lib/debounce';
 import Heading from '@/components/Heading.vue';
-import { onMounted } from 'vue'
 
 const state = useOptimizationWizardStore()
 const nav = useNavigationItemsStore()
@@ -68,8 +67,6 @@ const getJobInformationHandler = (url: string) => {
             // set location for both role and additional info state
             state.form.additional.targetCountry = response.data.location
             state.form.role.location = response.data.location
-
-            // submit()
         } else {
             console.info('Unsupported crawl link: '+url)
         }
@@ -85,7 +82,7 @@ const debouncedGetJobInformation = debounce(() => getJobInformationHandler(state
         <Heading title="Role Information" description="A resume should be role specific, <br>Please provide the role information to optimize the resume for the role you are applying for." />
 
         <div class="mb-8 grid gap-2">
-            <Label class="flex justify-between" for="url">Job Link <span class="text-yellow-500 dark:text-yellow-300 text-xs">Experimental</span></Label>
+            <Label for="url">Job Link <span class="text-yellow-500 dark:text-yellow-300 text-xs">(Experimental)</span></Label>
             <div class="relative">
                 <Input :class="state.loading && 'pr-10'" id="url" type="text" :tabindex="1" v-model="state.form.role.url" @input="debouncedGetJobInformation" />
                 <LoaderCircle class="animate-spin absolute right-3 top-2.5 text-gray-400" v-if="state.loading" />
