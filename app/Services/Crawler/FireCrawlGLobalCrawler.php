@@ -45,7 +45,7 @@ class FireCrawlGLobalCrawler implements JobSiteCrawlerInterface
                 return $jobCrawler->toArray();
             }
 
-            $jobCrawler->processed = true;
+            $jobCrawler->processed = $response->json('data.json.is_job_page');
 
             return [
                 'title' => $response->json('data.json.role'),
@@ -87,6 +87,11 @@ class FireCrawlGLobalCrawler implements JobSiteCrawlerInterface
                 'url' => [
                     'type' => 'string'
                 ],
+                'is_job_page' => [
+                    'type' => 'boolean',
+                    'default' => true,
+                    'description' => 'Is this a job page?',
+                ]
             ],
         ];
     }

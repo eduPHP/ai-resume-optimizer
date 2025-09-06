@@ -5,18 +5,25 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { OptimizationType, useOptimizationWizardStore } from '@/stores/OptimizationWizardStore';
-import { Buttons } from '@/components/ui/steps';
-import { createOrUpdateOptimization, getJobInformation } from '@/lib/axios';
+import { Buttons } from '@/components/ui/steps'
+import { createOrUpdateOptimization, getJobInformation, createUnattendedOptimization } from '@/lib/axios';
 import { router } from '@inertiajs/vue3';
 import { useNavigationItemsStore } from '@/stores/NavigationItemsStore';
 import debounce from '@/lib/debounce';
 import Heading from '@/components/Heading.vue';
+import { ref } from 'vue'
+import { useToastsStore } from '@/stores/ToastsStore'
+import { Button } from '@/components/ui/button'
 
 const state = useOptimizationWizardStore()
 const nav = useNavigationItemsStore()
+const toast = useToastsStore()
 
-const submit = () => {
-    createOrUpdateOptimization().then(response => {
+const showComplete = ref(false)
+
+
+const submit = async () => {
+    return createOrUpdateOptimization().then(response => {
         if (response.data.created) {
             state.setOptimization(response.data.optimization as OptimizationType)
             nav.addItem(response.data.optimization.role_company, response.data.optimization.id as string, true)
@@ -24,12 +31,28 @@ const submit = () => {
         }
     })
 }
+
+const finish = () => {
+    createUnattendedOptimization().then(response => {
+        nav.replace({
+            id: response.data.optimization.id,
+            role_company: response.data.optimization.role_company,
+            status: response.data.optimization.status,
+            applied: response.data.optimization.applied,
+            ai_response: response.data.optimization.ai_response,
+        } as OptimizationType)
+        toast.success('Complete', 'Optimization was successfully completed.')
+        router.visit(route('optimizations.show', response.data.optimization.id), { preserveState: true })
+    })
+}
+
 const toTitleCase = (str: string) => {
     return str.replace(
         /\w\S*/g,
         text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
     ).replace('Php', 'PHP')
 }
+
 const getJobInformationHandler = (url: string) => {
     if (url.trim().length === 0) {
         return
@@ -44,6 +67,8 @@ const getJobInformationHandler = (url: string) => {
             state.form.role.description = parsed.description
             state.form.additional.targetCountry = parsed.location
             state.form.role.location = parsed.location
+
+            showComplete.value = true
 
             return
         }
@@ -67,6 +92,7 @@ const getJobInformationHandler = (url: string) => {
             // set location for both role and additional info state
             state.form.additional.targetCountry = response.data.location
             state.form.role.location = response.data.location
+            showComplete.value = true
         } else {
             console.info('Unsupported crawl link: '+url)
         }
@@ -113,5 +139,13 @@ const debouncedGetJobInformation = debounce(() => getJobInformationHandler(state
 
     </div>
 
-    <Buttons :action="submit" />
+    <Buttons :action="submit">
+        <Button v-if="showComplete" type="button"
+                size="lg"
+                class="flex-1 xl:flex-none select-none"
+                :class="{'cursor-not-allowed': state.loading}"
+                :disabled="state.loading"
+                @click.prevent="finish"
+        >Optimize</Button>
+    </Buttons>
 </template>
