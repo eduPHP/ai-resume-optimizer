@@ -10,7 +10,6 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::inertia('/optimizations/create', 'Optimization')->name('optimizations.create');
     Route::get('/optimizations/{optimization}', [\App\Http\Controllers\OptimizationController::class, 'show'])->name('optimizations.show');
     Route::post('/optimizations/create', [\App\Http\Controllers\OptimizationController::class, 'store'])->name('optimizations.store');
-    Route::post('/optimizations/unattended', [\App\Http\Controllers\UnattendedOptimizationController::class, 'store'])->name('optimizations.unattended-store');
     Route::put('/optimizations/{optimization}', [\App\Http\Controllers\OptimizationController::class, 'update'])->name('optimizations.update');
     Route::put('/optimizations/{optimization}/cancel', [\App\Http\Controllers\OptimizationController::class, 'cancel'])->name('optimizations.cancel');
     Route::put('/optimizations/{optimization}/toggle-applied', [\App\Http\Controllers\OptimizationController::class, 'toggleApplied'])->name('optimizations.toggle-applied');
