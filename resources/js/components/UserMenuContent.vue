@@ -4,6 +4,7 @@ import { DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSep
 import type { User } from '@/types'
 import { Link } from '@inertiajs/vue3'
 import { LogOut, Settings } from 'lucide-vue-next'
+import Horizon from '@/components/icons/Horizon.vue'
 
 interface Props {
     user: User
@@ -24,6 +25,12 @@ defineProps<Props>()
             <Link class="block w-full" :href="route('profile.edit')" as="button">
                 <Settings class="mr-2 h-4 w-4" />
                 Settings
+            </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem v-if="user.role === 'admin'" :as-child="true">
+            <Link class="block w-full" :href="route('horizon.index')" as="button">
+                <Horizon class="mr-2 h-4 w-4" />
+                Horizon
             </Link>
         </DropdownMenuItem>
     </DropdownMenuGroup>
