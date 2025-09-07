@@ -9,7 +9,6 @@ use App\Models\Optimization;
 
 trait PromptsAIAgent
 {
-
     public function agentQuery(Optimization $optimization): array
     {
         $content = $optimization->resume->detected_content;

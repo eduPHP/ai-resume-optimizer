@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\OptimizeResume;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class UnattendedOptimizationController
 {
-    use PromptsAIAgent;
-
     public function store(Request $request)
     {
         $request->validate([
@@ -42,24 +40,14 @@ class UnattendedOptimizationController
             'mention_relocation_availability' => $this->relocationRequired(),
         ];
 
-        return DB::transaction(function () use ($data) {
+        $optimization = request()->user()->optimizations()->create($data);
 
-            $optimization = request()->user()->optimizations()->create($data);
+        OptimizeResume::dispatch($optimization);
 
-            $result = $this->agentQuery($optimization);
-
-            $optimization->update([
-                'status' => 'complete',
-                'optimized_result' => $result['resume'],
-                'ai_response' => $result['response'],
-                'reasoning' => $result['reasoning'],
-            ]);
-
-            return [
-                'created' => true,
-                'optimization' => $optimization->fresh(),
-            ];
-        }, attempts: 2);
+        return [
+            'created' => true,
+            'optimization' => $optimization,
+        ];
     }
 
     private function relocationRequired()

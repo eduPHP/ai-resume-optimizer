@@ -35,13 +35,7 @@ const submit = async () => {
 const finish = () => {
     createUnattendedOptimization().then(response => {
         state.setOptimization(response.data.optimization as OptimizationType)
-        nav.replace({
-            id: response.data.optimization.id,
-            role_company: response.data.optimization.role_company,
-            status: response.data.optimization.status,
-            applied: response.data.optimization.applied,
-            ai_response: response.data.optimization.ai_response,
-        } as OptimizationType)
+        nav.replace(response.data.optimization)
         toast.success('Complete', 'Optimization was successfully completed.')
         router.visit(route('optimizations.show', response.data.optimization.id), { preserveState: true })
     })
