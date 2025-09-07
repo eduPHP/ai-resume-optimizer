@@ -10,6 +10,7 @@
     "license": "GNU",
     "require": {
         "php": "^8.2",
+        "ably/laravel-broadcaster": "^1.0",
         "barryvdh/laravel-dompdf": "^3.1",
         "inertiajs/inertia-laravel": "^2.0",
         "laravel/framework": "^12.0",

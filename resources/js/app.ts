@@ -1,3 +1,8 @@
+import { configureEcho } from '@laravel/echo-vue';
+
+configureEcho({
+    broadcaster: 'ably',
+});
 import '../css/app.css'
 
 import { createInertiaApp } from '@inertiajs/vue3'
