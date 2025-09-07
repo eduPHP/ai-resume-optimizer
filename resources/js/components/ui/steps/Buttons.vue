@@ -56,5 +56,6 @@ const cancelEdit = () => {
                 :disabled="state.loading"
                 @click.prevent="action"
         >Optimize</Button>
+        <slot />
     </div>
 </template>

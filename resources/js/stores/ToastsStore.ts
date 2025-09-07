@@ -9,6 +9,8 @@ export type Toast = {
     state: 'active' | 'closed'
 }
 
+export type ToastsStore = ReturnType<typeof useToastsStore>
+
 export const useToastsStore = defineStore('toasts', {
     state: () => ({
         toasts: [] as Toast[],

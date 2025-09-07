@@ -106,10 +106,34 @@ const createOrUpdateOptimization = (): AxiosPromise<{ optimization: Optimization
     request
         .then(() => {
             state.clearErrors()
-            state.nextStep()
         })
         .finally(() => {
             state.loading = false
+        })
+
+    return request
+}
+const createUnattendedOptimization = (): AxiosPromise<{ optimization: OptimizationType; created: boolean }> => {
+    const state = useOptimizationWizardStore()
+
+    state.loading = true
+    state.optimizing = true
+
+    const axios = Axios()
+
+    const request = axios.post(
+        route('optimizations.unattended-store'),
+        state.form.role,
+        { timeout: 360000 }
+    )
+
+    request
+        .then(() => {
+            state.clearErrors()
+        })
+        .finally(() => {
+            state.loading = false
+            state.optimizing = false
         })
 
     return request
@@ -294,6 +318,7 @@ export {
     cancelOptimizationEdit,
     completeWizard,
     createOrUpdateOptimization,
+    createUnattendedOptimization,
     deleteOptimization,
     deleteResume,
     downloadCoverLetter,

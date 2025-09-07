@@ -2,12 +2,10 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Collection;
 
 /**
  * @property array ai_settings
@@ -25,6 +23,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'role',
         'password',
     ];
 
@@ -78,5 +77,10 @@ class User extends Authenticatable
             get: fn() => $default->deepMerge(collect(json_decode($this->attributes['ai_settings'] ?? '[]', true))),
             set: fn($value) => json_encode($default->deepMerge(collect($value)))
         );
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
     }
 }

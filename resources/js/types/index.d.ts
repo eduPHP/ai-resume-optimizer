@@ -56,6 +56,7 @@ export interface User {
     ai_settings: AiSettings
     created_at: string
     updated_at: string
+    role: 'user' | 'admin'
 }
 
 export type BreadcrumbItemType = BreadcrumbItem

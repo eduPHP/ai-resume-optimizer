@@ -2,5 +2,6 @@
 
 return [
     App\Providers\AppServiceProvider::class,
-    \Modules\OpenAI\OpenAIServiceProvider::class,
+    App\Providers\HorizonServiceProvider::class,
+    Modules\OpenAI\OpenAIServiceProvider::class,
 ];
