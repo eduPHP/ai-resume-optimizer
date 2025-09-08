@@ -1,5 +1,8 @@
 <?php
 
+use App\Jobs\OptimizeResume;
+use App\Models\Optimization;
+use App\Models\Resume;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
@@ -8,11 +11,17 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     Http::preventStrayRequests();
+
+    // Mocking the necessary external HTTP request
+    Http::fake([
+        'https://api.openai.com/v1/responses' => Http::response(json_decode(
+            file_get_contents(__DIR__.'/../Fixtures/response-sample.json'), true
+        )),
+    ]);
 });
 
 it('does not work if a resume is not uploaded yet', function () {
     $user = User::factory()->create();
-    $this->actingAs($user);
 
     // Arrange: Creating required request data
     $data = [
@@ -24,7 +33,7 @@ it('does not work if a resume is not uploaded yet', function () {
     ];
 
     // Act: Send a POST request to the controller's store method
-    $response = $this->postJson(route('optimizations.unattended-store'), $data);
+    $response = $this->withToken($user->api_token)->postJson(route('optimizations.unattended-store'), $data);
 
     $response->assertStatus(422);
 
@@ -34,17 +43,9 @@ it('does not work if a resume is not uploaded yet', function () {
 it('stores an unattended optimization successfully', function () {
     // Arrange: Create a user and log in
     $user = User::factory()->create();
-    $this->actingAs($user);
-    \App\Models\Resume::factory()->create([
+    Resume::factory()->create([
         'user_id' => $user->id,
         'detected_content' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus, aspernatur.'
-    ]);
-
-    // Mocking the necessary external HTTP request
-    Http::fake([
-        'https://api.openai.com/v1/responses' => Http::response(json_decode(
-            file_get_contents(__DIR__.'/../Fixtures/response-sample.json'), true
-        )),
     ]);
 
     // Arrange: Creating required request data
@@ -57,7 +58,7 @@ it('stores an unattended optimization successfully', function () {
     ];
 
     // Act: Send a POST request to the controller's store method
-    $response = $this->postJson(route('optimizations.unattended-store'), $data);
+    $response = $this->withToken($user->api_token)->postJson(route('optimizations.unattended-store'), $data);
 
     $response->assertStatus(200);
 
@@ -67,6 +68,38 @@ it('stores an unattended optimization successfully', function () {
         'role_company' => $data['company'],
         'role_description' => $data['description'],
         'role_location' => $data['location'],
-        'status' => 'complete',
+        'status' => 'processing',
     ]);
+});
+
+it('dispatches a job for AI process', function () {
+    Queue::fake();
+    $optimization = Optimization::factory()->create();
+
+    OptimizeResume::dispatch($optimization);
+
+    Queue::assertPushed(OptimizeResume::class, function ($job) use ($optimization) {
+        return $job->optimization->id === $optimization->id;
+    });
+});
+
+it('dispatches an event when optimization is ready', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+    $resume = Resume::factory()->create([
+        'user_id' => $user->id,
+        'detected_content' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus, aspernatur.'
+    ]);
+    $optimization = Optimization::factory()->create([
+        'resume_id' => $resume->id,
+    ]);
+
+    Event::fake();
+
+
+    OptimizeResume::dispatch($optimization);
+
+    Event::assertDispatched(\App\Events\OptimizationComplete::class, function ($job) use ($optimization) {
+        return $job->optimization->id === $optimization->id;
+    });
 });

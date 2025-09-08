@@ -11,7 +11,9 @@ class JobsController
     {
         request()->validate(['url' => 'required|url']);
 
-        return cache()->remember('crawl-'.str(request()->input('url'))->slug(), now()->addDay(), function () use ($crawler) {
+        $key = str(request()->input('url'))->slug()->hash('sha1');
+
+        return cache()->remember('crawl-'. $key, now()->addDay(), function () use ($crawler) {
             $crawler->crawl(request()->input('url'));
 
             return response()->json([

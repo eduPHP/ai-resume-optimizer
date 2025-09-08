@@ -7,23 +7,31 @@ use App\Http\Controllers\PromptsAIAgent;
 use App\Models\Optimization;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
 
 class OptimizeResume implements ShouldQueue
 {
     use Queueable;
     use PromptsAIAgent;
+    use InteractsWithQueue;
 
-    public function __construct()
+    public function attempts(): int
     {
-        Log::info('Instantiate job');
+        return 2;
     }
 
-    public function handle(Optimization $optimization): void
+    public function __construct(public Optimization $optimization)
     {
-        Log::info('OptimizeResume job ran for user: ' . $optimization->user_id);
+        //
+    }
+
+    public function handle(): void
+    {
+
+        Log::info('OptimizeResume job ran for optimization: ' . $this->optimization->id);
         // $result = $this->agentQuery($optimization);
-        $optimization->update(['status' => 'processing']);
+        $this->optimization->update(['status' => 'processing']);
 
         // $optimization->update([
         //     'status' => 'complete',
@@ -32,6 +40,6 @@ class OptimizeResume implements ShouldQueue
         //     'reasoning' => $result['reasoning'],
         // ]);
 
-        event(new OptimizationComplete($optimization));
+        event(new OptimizationComplete($this->optimization));
     }
 }
