@@ -33,9 +33,10 @@ const { listen, leave } = useEcho<OptimizationComplete>(
     (e: OptimizationComplete) => {
         Axios().get<{optimization: OptimizationType}>(route('api.optimizations.show', e.optimization.id)).then((response) => {
             const optimization = response.data.optimization
-            state.setOptimization(optimization)
+            // state.setOptimization(optimization)
             nav.replace(optimization)
             router.reload({only: ['optimization']})
+            console.log(route().current())
             toast.success('Optimized!', 'The optimization was successfully completed!')
         })
     }

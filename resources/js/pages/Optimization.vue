@@ -10,7 +10,6 @@ import { Button } from '@/components/ui/button'
 import { createUnattendedOptimization } from '@/lib/axios'
 import { useNavigationItemsStore } from '@/stores/NavigationItemsStore'
 import { useToastsStore } from '@/stores/ToastsStore'
-import OptimizationListener from '@/components/ui/OptimizationListener.vue'
 
 const state = useOptimizationWizardStore()
 const nav = useNavigationItemsStore()
@@ -70,7 +69,6 @@ onMounted(() => {
         <div v-if="state.form.status === 'processing'" class="flex flex-col items-center justify-center h-[85vh]">
             <h1 class="text-2xl font-bold">Optimization In Progress</h1>
             <p class="mt-2 text-gray-400 text-center">This might take a minute or two or three... <br> You will be notified (here) when it is done ;)</p>
-            <OptimizationListener />
         </div>
         <div v-if="state.form.status === 'failed'" class="flex flex-col items-center justify-center h-[85vh]">
             <h1 class="text-2xl font-bold">Optimization Failed</h1>
