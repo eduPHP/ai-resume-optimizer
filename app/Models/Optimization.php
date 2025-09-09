@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Enums\OptimizationStatuses;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 /**
@@ -132,7 +133,7 @@ class Optimization extends Model
             'generate_cover_letter' => 'boolean',
             'change_target_role' => 'boolean',
             'mention_relocation_availability' => 'boolean',
-            'status' => 'string',
+            'status' => OptimizationStatuses::class,
             'ai_response' => 'json',
             'applied' => 'boolean',
         ];
