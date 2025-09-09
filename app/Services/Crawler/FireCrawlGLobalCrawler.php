@@ -45,7 +45,7 @@ class FireCrawlGLobalCrawler implements JobSiteCrawlerInterface
                 return $jobCrawler->toArray();
             }
 
-            $jobCrawler->processed = $response->json('data.json.is_job_page');
+            $jobCrawler->processed = !! $response->json('data.json.is_job_page');
 
             return [
                 'title' => $response->json('data.json.role'),
