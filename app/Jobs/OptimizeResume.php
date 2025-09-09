@@ -22,8 +22,6 @@ class OptimizeResume implements ShouldQueue
         return 2;
     }
 
-    public $queue = 'default-long-jobs';
-
     public function __construct(public Optimization $optimization)
     {
         //

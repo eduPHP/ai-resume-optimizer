@@ -207,7 +207,7 @@ return [
                 'timeout' => 90,
             ],
             'long-running-jobs' => [
-                'connection' => 'redis-long-running',
+                'connection' => 'redis',
                 'queue' => env('REDIS_QUEUE', 'default') . '-long-jobs',
                 'balance' => 'auto',
                 'processes' => 2,
