@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Http\Controllers\PresentOptimization;
 use App\Models\Optimization;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 
 class OptimizationComplete implements ShouldBroadcast
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable, InteractsWithSockets, SerializesModels, PresentOptimization;
 
     public function __construct(public Optimization $optimization)
     {
@@ -22,11 +23,7 @@ class OptimizationComplete implements ShouldBroadcast
     public function broadcastWith(): array
     {
         return [
-            'optimization' => $this->optimization->only([
-                'id',
-                'role_company',
-                'role_name',
-            ]),
+            'optimization' => $this->presentForListing($this->optimization),
         ];
     }
 
