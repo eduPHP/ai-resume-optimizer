@@ -15,6 +15,7 @@ class ResumeFactory extends Factory
             'type' => 'application/pdf',
             'size' => fn() => random_int(1234, 4333),
             'path' => $this->faker->filePath(),
+            'detected_content' => $this->faker->text(),
         ];
     }
 

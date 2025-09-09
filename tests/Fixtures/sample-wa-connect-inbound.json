@@ -1,0 +1,23 @@
+{
+    "sessionId": "resumes",
+    "message": {
+        "id": "3AEE36148064FE1BBD60",
+        "from": "555491111111@s.whatsapp.net",
+        "to": "555481111111:17@s.whatsapp.net",
+        "fromMe": false,
+        "type": "chat",
+        "body": "Confira esta vaga na micro1: Fullstack Software Engineer https://br.indeed.com/viewjob?jk=5f8e547b44db127f&from=shareddesktop_copy",
+        "timestamp": 1756865794
+    },
+    "chat": {
+        "id": "555491111111@s.whatsapp.net",
+        "name": "Edu",
+        "isGroup": false
+    },
+    "contact": {
+        "id": "555491111111@s.whatsapp.net",
+        "name": "Edu",
+        "number": "555491111111@s.whatsapp.net"
+    },
+    "author": null
+}

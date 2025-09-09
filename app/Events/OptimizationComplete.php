@@ -9,7 +9,6 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 class OptimizationComplete implements ShouldBroadcast
 {
@@ -17,7 +16,7 @@ class OptimizationComplete implements ShouldBroadcast
 
     public function __construct(public Optimization $optimization)
     {
-        Log::info('OptimizationComplete event fired for user: ' . $this->optimization->user_id);
+        //
     }
 
     public function broadcastWith(): array
