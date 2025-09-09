@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\DTO\AIInputOptions;
-use App\DTO\Contracts\AIAgentPrompter;
 use App\Models\Optimization;
 use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;
@@ -11,6 +9,7 @@ use Inertia\Inertia;
 class OptimizationController
 {
     use PromptsAIAgent;
+    use PresentOptimization;
 
     public function index(): JsonResponse
     {
@@ -28,18 +27,7 @@ class OptimizationController
 //        $optimizations->dd();
 
         $optimizations = $optimizations->paginate($perPage)
-            ->through(fn (Optimization $optimization) => [
-                'id' => $optimization->id,
-                'href' => route('optimizations.show', $optimization),
-                'title' => ($optimization->status === 'draft' ? '[draft] ' : '') . $optimization->role_company,
-                'score' => $this->getCompatibilityScore($optimization),
-                'status' => $optimization->status,
-                'applied' => $optimization->applied,
-                'tooltip' => $optimization->role_name,
-                'created' => $optimization->created_at
-                    ->utcOffset(request()->header('X-Timezone-Offset') ?? 0)
-                    ->toDateTimeString(),
-            ]);
+            ->through(fn (Optimization $optimization) => $this->presentForListing($optimization));
 
         return response()->json([
             'data' => $optimizations->items(),
@@ -216,14 +204,5 @@ class OptimizationController
         return response()->json([
             'optimization' => $optimization->fresh(),
         ]);
-    }
-
-    private function getCompatibilityScore(Optimization $optimization): int
-    {
-        if ($optimization->status !== 'complete') {
-            return 0;
-        }
-
-        return $optimization->ai_response['compatibility_score'];
     }
 }
