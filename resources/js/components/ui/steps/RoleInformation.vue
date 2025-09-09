@@ -28,6 +28,7 @@ const submit = async () => {
             state.setOptimization(response.data.optimization as OptimizationType)
             nav.addItem(response.data.optimization.role_company, response.data.optimization.id as string, true)
             router.visit(route('optimizations.show', response.data.optimization.id), { preserveState: true })
+            state.nextStep()
         }
     })
 }
