@@ -51,7 +51,7 @@ const toTitleCase = (str: string) => {
     return str.replace(
         /\w\S*/g,
         text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
-    ).replace('Php', 'PHP')
+    ).replace('Php', 'PHP').replace('Full-stack', 'Full Stack').replace('Llc', 'LLC').replace('Ltda', 'LTDA')
 }
 
 const getJobInformationHandler = (url: string) => {
