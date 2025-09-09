@@ -29,9 +29,7 @@ class OptimizeResume implements ShouldQueue
 
     public function handle(): void
     {
-        Log::info('OptimizeResume job ran for optimization: ' . $this->optimization->id);
         try {
-
             $result = $this->agentQuery($this->optimization);
             $this->optimization->update([
                 'status' => OptimizationStatuses::Complete,

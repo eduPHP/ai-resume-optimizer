@@ -30,6 +30,7 @@ trait PresentOptimization
         return [
             'id' => $optimization->id,
             'href' => route('optimizations.show', $optimization),
+            'role' => $optimization->role_name,
             'title' => ($optimization->status === OptimizationStatuses::Draft ? '[draft] ' : '') . $optimization->role_company,
             'score' => $this->getCompatibilityScore($optimization),
             'status' => $optimization->status->value,
