@@ -81,7 +81,7 @@ onMounted(() => {
                     @click.prevent="retry"
             >Retry</Button>
         </div>
-        <OptimizationWizard v-else-if="['draft', 'pending'].includes(state.form.status)" />
+        <OptimizationWizard v-else-if="['draft', 'pending', 'editing'].includes(state.form.status)" />
         <CompleteOptimization v-else-if="state.form.status === 'complete'" />
     </AppLayout>
 </template>
