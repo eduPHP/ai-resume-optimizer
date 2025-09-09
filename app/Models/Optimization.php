@@ -22,7 +22,7 @@ use Illuminate\Support\Collection;
  * @property string $role_company
  * @property string $role_description
  * @property array $ai_response;
- * @property string $status
+ * @property OptimizationStatuses $status
  * @property \Carbon\Carbon $created_at
  * @property \App\Models\User $user
  * @property \App\Models\Resume $resume
