@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\OptimizationStatuses;
 use App\Models\Resume;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -33,7 +34,7 @@ class OptimizationFactory extends Factory
             'generate_cover_letter' => fake()->boolean(),
             'change_target_role' => fake()->boolean(),
             'mention_relocation_availability' => fake()->boolean(),
-            'status' => $step === 3 ? 'completed' : 'pending',
+            'status' => $step === 3 ? OptimizationStatuses::Complete : OptimizationStatuses::Draft,
             'optimized_result' => fake()->randomHtml(),
             'ai_response' => [
                 "resume" => fake()->randomHtml(),
