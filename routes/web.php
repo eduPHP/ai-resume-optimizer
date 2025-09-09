@@ -6,6 +6,12 @@ Route::inertia('/', 'Welcome')->name('home');
 
 Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
+    Route::get('test', function () {
+        $optimization = \App\Models\Optimization::query()->latest()->first();
+
+        \App\Jobs\OptimizeResume::dispatch($optimization);
+        // event(new \App\Events\OptimizationComplete($optimization));
+    });
 
     Route::inertia('/optimizations/create', 'Optimization')->name('optimizations.create');
     Route::get('/optimizations/{optimization}', [\App\Http\Controllers\OptimizationController::class, 'show'])->name('optimizations.show');

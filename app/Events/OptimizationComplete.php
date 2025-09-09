@@ -19,6 +19,17 @@ class OptimizationComplete implements ShouldBroadcast
         Log::info('OptimizationComplete event fired for user: ' . $this->optimization->user_id);
     }
 
+    public function broadcastWith(): array
+    {
+        return [
+            'optimization' => $this->optimization->only([
+                'id',
+                'role_company',
+                'role_name',
+            ]),
+        ];
+    }
+
     /**
      * Get the channels the event should broadcast on.
      *
@@ -29,5 +40,10 @@ class OptimizationComplete implements ShouldBroadcast
         return [
             new PrivateChannel('optimizations.' . $this->optimization->user_id),
         ];
+    }
+
+    public function broadcastAs(): string
+    {
+        return 'optimization.complete';
     }
 }

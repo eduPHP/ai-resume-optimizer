@@ -9,7 +9,7 @@ import { initializeTheme } from './composables/useAppearance'
 import { configureEcho } from '@laravel/echo-vue';
 
 configureEcho({
-    broadcaster: 'ably',
+    broadcaster: 'pusher',
 });
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel'

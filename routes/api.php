@@ -12,5 +12,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('download-optimized/{optimization}', [\App\Http\Controllers\DownloadOptimizedResumeController::class, 'resume'])->name('optimizations.download');
     Route::post('download-cover/{optimization}', [\App\Http\Controllers\DownloadOptimizedResumeController::class, 'cover'])->name('optimizations.download-cover');
     Route::post('/optimizations/create', [\App\Http\Controllers\UnattendedOptimizationController::class, 'store'])->name('optimizations.unattended-store');
+    Route::get('/optimizations/{optimization}', [\App\Http\Controllers\UnattendedOptimizationController::class, 'show'])->name('api.optimizations.show');
 });
 Route::get('view',[ \App\Http\Controllers\DownloadOptimizedResumeController::class, 'sample']);

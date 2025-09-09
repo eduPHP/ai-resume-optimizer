@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\OptimizeResume;
+use App\Models\Optimization;
 use Illuminate\Http\Request;
 
 class UnattendedOptimizationController
@@ -48,6 +49,13 @@ class UnattendedOptimizationController
             'created' => true,
             'optimization' => $optimization,
         ];
+    }
+
+    public function show(Optimization $optimization)
+    {
+        return response()->json([
+            'optimization' => $optimization,
+        ]);
     }
 
     private function relocationRequired()
