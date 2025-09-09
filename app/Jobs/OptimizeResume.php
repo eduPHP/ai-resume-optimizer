@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Enums\OptimizationStatuses;
 use App\Events\OptimizationComplete;
 use App\Http\Controllers\PromptsAIAgent;
 use App\Models\Optimization;
@@ -33,7 +34,7 @@ class OptimizeResume implements ShouldQueue
 
             $result = $this->agentQuery($this->optimization);
             $this->optimization->update([
-                'status' => 'complete',
+                'status' => OptimizationStatuses::Complete,
                 'optimized_result' => $result['resume'],
                 'ai_response' => $result['response'],
                 'reasoning' => $result['reasoning'],
