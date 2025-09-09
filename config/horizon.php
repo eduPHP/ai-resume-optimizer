@@ -180,48 +180,51 @@ return [
     */
 
     'defaults' => [
-        'supervisor-1' => [
+        'supervisor' => [
             'connection' => 'redis',
             'queue' => ['default'],
             'balance' => 'auto',
-            'autoScalingStrategy' => 'time',
-            'maxProcesses' => 1,
-            'maxTime' => 0,
-            'maxJobs' => 0,
-            'memory' => 128,
-            'tries' => 1,
-            'timeout' => 300,
-            'nice' => 0,
+            'processes' => 3,
+            'tries' => 3,
         ],
     ],
 
     'environments' => [
         'production' => [
-            'jobs' => [
+            'supervisor-default' => [
                 'connection' => 'redis',
-                'queue' => env('REDIS_QUEUE', 'default'),
+                'queue' => ['default'],
                 'balance' => 'auto',
-                'processes' => 8,
-                'tries' => 1,
-                'memory' => 128,
-                'timeout' => 90,
+                'processes' => 5,
+                'tries' => 3,
             ],
-            'long-running-jobs' => [
+
+            'supervisor-long-jobs' => [
                 'connection' => 'redis',
-                'queue' => env('REDIS_QUEUE', 'default') . '-long-jobs',
-                'balance' => 'auto',
-                'processes' => 2,
+                'queue' => ['long-jobs'],
+                'balance' => 'simple',
+                'processes' => 1,
                 'tries' => 1,
-                'memory' => 128,
-                'timeout' => 3615,
+                'timeout' => 3600, // 1 hour max
             ],
         ],
 
         'local' => [
-            'supervisor-1' => [
-                'maxProcesses' => 3,
-                'memory' => 128,
-                'timeout' => 3615,
+            'supervisor-default' => [
+                'connection' => 'redis',
+                'queue' => ['default'],
+                'balance' => 'auto',
+                'processes' => 3,
+                'tries' => 3,
+            ],
+
+            'supervisor-long-jobs' => [
+                'connection' => 'redis',
+                'queue' => ['long-jobs'],
+                'balance' => 'simple',
+                'processes' => 1,
+                'tries' => 1,
+                'timeout' => 3600,
             ],
         ],
     ],

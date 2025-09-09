@@ -43,7 +43,7 @@ class UnattendedOptimizationController
 
         $optimization = request()->user()->optimizations()->create($data);
 
-        OptimizeResume::dispatch($optimization)->onQueue('long-running-jobs');
+        OptimizeResume::dispatch($optimization)->onQueue('long-jobs');
 
         return [
             'created' => true,
