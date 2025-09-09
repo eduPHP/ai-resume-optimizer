@@ -33,10 +33,16 @@ const { listen, leave } = useEcho<OptimizationComplete>(
     (e: OptimizationComplete) => {
         Axios().get<{optimization: OptimizationType}>(route('api.optimizations.show', e.optimization.id)).then((response) => {
             const optimization = response.data.optimization
-            // state.setOptimization(optimization)
-            nav.replace(optimization)
-            router.reload({only: ['optimization']})
-            console.log(route().current())
+            if (state.form.optimizationId === optimization.id) {
+                state.setOptimization(optimization)
+            }
+            nav.replace({
+                id: response.data.optimization.id,
+                role_company: response.data.optimization.role_company,
+                status: response.data.optimization.status,
+                applied: response.data.optimization.applied,
+                ai_response: response.data.optimization.ai_response,
+            } as OptimizationType)
             toast.success('Optimized!', 'The optimization was successfully completed!')
         })
     }
