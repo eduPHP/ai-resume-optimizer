@@ -97,7 +97,7 @@ test('it can cancel an edit and restore the optimization', function () {
 
     $optimization->refresh();
 
-    expect($optimization->status)->toBe('complete')
+    expect($optimization->status)->toBe(\App\Enums\OptimizationStatuses::Complete)
         ->and($optimization->current_step)->toBe(3);
 });
 

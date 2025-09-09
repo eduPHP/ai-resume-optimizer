@@ -68,7 +68,7 @@ it('stores an unattended optimization successfully', function () {
         'role_company' => $data['company'],
         'role_description' => $data['description'],
         'role_location' => $data['location'],
-        'status' => 'processing',
+        'status' => \App\Enums\OptimizationStatuses::Complete,
     ]);
 });
 
