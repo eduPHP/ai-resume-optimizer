@@ -33,7 +33,7 @@ export default defineConfig({
             plugins: [tailwindcss, autoprefixer],
         },
     },
-    esbuild: {
+    esbuild: process.env.APP_ENV === 'production' ? {
         drop: ['console', 'debugger'],
-    },
+    } : {},
 });
