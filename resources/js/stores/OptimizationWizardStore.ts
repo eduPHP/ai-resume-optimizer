@@ -68,6 +68,7 @@ export type OptimizationType = {
     status: string
     applied: boolean
     ai_response: AIResponse
+    created_at?: string
 }
 
 export type AdditionalInformationForm = {

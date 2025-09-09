@@ -155,6 +155,7 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
 
             // Broadcast the update to other tabs
             if (itemIndex === -1) {
+                this.addItem(optimization.role_company, optimization.id as string, optimization.status === 'draft')
                 return
             }
 
@@ -163,7 +164,7 @@ export const useNavigationItemsStore = defineStore('navigation-items', {
                 title: optimization.role_company,
                 status: optimization.status,
                 applied: optimization.applied,
-                score: optimization.ai_response?.compatibility_score,
+                score: optimization.status === 'complete' ? optimization.ai_response?.compatibility_score : 0,
             } as NavItem
 
             this.broadcastChanges(optimization, 'optimization-updated')

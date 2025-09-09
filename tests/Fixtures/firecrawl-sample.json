@@ -36,7 +36,8 @@
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Integer feugiat, lectus ac ullamcorper gravida, tellus purus luctus orci, at pretium mi tortor in lorem. Curabitur vel arcu eget libero dictum bibendum. Vivamus ut urna a arcu dignissim convallis. Aenean eget nunc in ipsum iaculis sagittis. Phasellus at quam in odio cursus ultrices. Donec ac lorem sit amet nibh viverra pellentesque. Cras id nisl vitae urna lacinia congue.",
         "location": "Remoto",
         "role": "Arquiteto de Software PHP Pleno",
-        "url": "https://br.indeed.com/viewjob?jk=1j3g3b841i8pb801&from=mobhp_jobdetails"
+        "url": "https://br.indeed.com/viewjob?jk=1j3g3b841i8pb801&from=mobhp_jobdetails",
+        "is_job_page": true
       }
     }
   }

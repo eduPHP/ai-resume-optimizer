@@ -3,6 +3,7 @@
 namespace App\DTO;
 
 use App\DTO\Contracts\AIInputOptions as AIInputOptionsInterface;
+use App\Models\User;
 use Illuminate\Support\Collection;
 
 class AIInputOptions implements AIInputOptionsInterface
@@ -19,10 +20,11 @@ class AIInputOptions implements AIInputOptionsInterface
         public string  $roleName = '',
         public string  $roleDescription = '',
         public ?string $roleLocation = '',
-        public string  $roleCompany = ''
+        public string  $roleCompany = '',
+        Collection     $options = null,
     )
     {
-        $this->settings = auth()->user()->ai_settings;
+        $this->settings = $options ?? collect();
     }
 
     public function system(): array

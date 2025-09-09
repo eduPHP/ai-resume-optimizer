@@ -166,7 +166,7 @@ return [
     |
     */
 
-    'memory_limit' => 64,
+    'memory_limit' => 128,
 
     /*
     |--------------------------------------------------------------------------
@@ -190,23 +190,38 @@ return [
             'maxJobs' => 0,
             'memory' => 128,
             'tries' => 1,
-            'timeout' => 60,
+            'timeout' => 300,
             'nice' => 0,
         ],
     ],
 
     'environments' => [
         'production' => [
-            'supervisor-1' => [
-                'maxProcesses' => 10,
-                'balanceMaxShift' => 1,
-                'balanceCooldown' => 3,
+            'jobs' => [
+                'connection' => 'redis',
+                'queue' => env('REDIS_QUEUE', 'default'),
+                'balance' => 'auto',
+                'processes' => 8,
+                'tries' => 1,
+                'memory' => 128,
+                'timeout' => 90,
+            ],
+            'long-running-jobs' => [
+                'connection' => 'redis-long-running',
+                'queue' => env('REDIS_QUEUE', 'default') . '-long-jobs',
+                'balance' => 'auto',
+                'processes' => 2,
+                'tries' => 1,
+                'memory' => 128,
+                'timeout' => 3615,
             ],
         ],
 
         'local' => [
             'supervisor-1' => [
                 'maxProcesses' => 3,
+                'memory' => 128,
+                'timeout' => 3615,
             ],
         ],
     ],

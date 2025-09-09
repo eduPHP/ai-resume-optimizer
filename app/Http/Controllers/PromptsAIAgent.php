@@ -6,10 +6,10 @@ namespace App\Http\Controllers;
 use App\DTO\AIInputOptions;
 use App\DTO\Contracts\AIAgentPrompter;
 use App\Models\Optimization;
+use App\Models\User;
 
 trait PromptsAIAgent
 {
-
     public function agentQuery(Optimization $optimization): array
     {
         $content = $optimization->resume->detected_content;
@@ -28,6 +28,7 @@ trait PromptsAIAgent
             roleDescription: $optimization->role_description,
             roleLocation: $optimization->role_location,
             roleCompany: $optimization->role_company,
+            options: $optimization->user->ai_settings,
         ));
 
         return [

@@ -10,11 +10,13 @@
     "license": "GNU",
     "require": {
         "php": "^8.2",
+        "ably/laravel-broadcaster": "^1.0",
         "barryvdh/laravel-dompdf": "^3.1",
         "inertiajs/inertia-laravel": "^2.0",
         "laravel/framework": "^12.0",
         "laravel/horizon": "^5.33",
         "laravel/tinker": "^2.10.1",
+        "pusher/pusher-php-server": "^7.2",
         "spatie/pdf-to-text": "^1.54",
         "symfony/css-selector": "^7.3",
         "symfony/dom-crawler": "^7.3",

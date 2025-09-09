@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Http;
 
 class OpenAIPrompter implements AIAgentPrompter
 {
+    protected ?\App\Models\User $user = null;
+
     public function handle(AIInputOptions $options): AIResponseDTO
     {
         $response = Http::withToken(config('openai.openai_api_key'))
@@ -35,5 +37,12 @@ class OpenAIPrompter implements AIAgentPrompter
     private function cleanup(string $response): array
     {
         return json_decode($response, true);
+    }
+
+    public function setUser(?\App\Models\User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
     }
 }

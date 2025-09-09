@@ -42,7 +42,7 @@ const finish = () => {
             applied: response.data.optimization.applied,
             ai_response: response.data.optimization.ai_response,
         } as OptimizationType)
-        toast.success('Complete', 'Optimization was successfully completed.')
+        toast.success('Created', 'Optimization was created.')
         router.visit(route('optimizations.show', response.data.optimization.id), { preserveState: true })
     })
 }
@@ -51,7 +51,7 @@ const toTitleCase = (str: string) => {
     return str.replace(
         /\w\S*/g,
         text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
-    ).replace('Php', 'PHP')
+    ).replace('Php', 'PHP').replace('Full-stack', 'Full Stack').replace('Llc', 'LLC').replace('Ltda', 'LTDA')
 }
 
 const getJobInformationHandler = (url: string) => {
