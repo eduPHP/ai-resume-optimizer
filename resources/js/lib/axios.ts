@@ -221,7 +221,7 @@ const deleteResume = (state: OptimizationWizardStore, id: number): AxiosPromise<
 
 const completeWizard = (state: OptimizationWizardStore): AxiosPromise<{ optimization: OptimizationType; errors: { [key: string]: string } }> => {
     state.loading = true
-    state.optimizing = true
+    state.form.status = 'processing'
 
     const axios = Axios()
     const options: AxiosRequestConfig = {
@@ -237,8 +237,8 @@ const completeWizard = (state: OptimizationWizardStore): AxiosPromise<{ optimiza
             errors: { [key: string]: string }
         }>(route('optimizations.update', state.form.optimizationId), {}, options)
         .finally(() => {
+            state.form.status = 'complete'
             state.loading = false
-            state.optimizing = false
         })
 }
 
