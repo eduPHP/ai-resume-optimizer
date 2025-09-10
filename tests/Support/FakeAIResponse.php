@@ -17,9 +17,9 @@ class FakeAIResponse implements AIResponseDTO, Arrayable {
         return 'Beer drinking is such a great skill to have on a job interview.';
     }
 
-    public function getCompatibilityScore(): string
+    public function getCompatibilityScore(): int
     {
-        return "";
+        return 0;
     }
 
     public function getProfessionalSummary(): string
@@ -27,17 +27,7 @@ class FakeAIResponse implements AIResponseDTO, Arrayable {
         return "";
     }
 
-    public function getStrongAlignments(): array
-    {
-        return [];
-    }
-
-    public function getModerateGaps(): array
-    {
-        return [];
-    }
-
-    public function getMissingRequirements(): array
+    public function getFindings(): array
     {
         return [];
     }
