@@ -8,15 +8,13 @@ use Illuminate\Contracts\Support\Arrayable;
 class OpenAiResponse implements AIResponseDTO, Arrayable
 {
     public function __construct(
-        public string $resume,
-        public string $compatibility_score,
-        public string $professional_summary,
+        public ?string $resume = null,
+        public int $compatibility_score = 0,
+        public ?string $top_choice = null,
+        public ?string $professional_summary = null,
         public array $cover_letter = [],
-        public array $strong_alignments = [],
-        public array $moderate_gaps = [],
-        public array $missing_requirements = [],
-        public string $top_choice,
-        public string $reasoning,
+        public array $findings = [],
+        public ?string $reasoning = null,
     ) {
     }
 
@@ -25,29 +23,19 @@ class OpenAiResponse implements AIResponseDTO, Arrayable
         return $this->resume;
     }
 
-    public function getCompatibilityScore(): string
+    public function getCompatibilityScore(): int
     {
         return $this->compatibility_score;
     }
 
-    public function getProfessionalSummary(): string
+    public function getProfessionalSummary(): ?string
     {
         return $this->professional_summary;
     }
 
-    public function getStrongAlignments(): array
+    public function getFindings(): array
     {
-        return $this->strong_alignments;
-    }
-
-    public function getModerateGaps(): array
-    {
-        return $this->moderate_gaps;
-    }
-
-    public function getMissingRequirements(): array
-    {
-        return $this->missing_requirements;
+        return $this->findings;
     }
 
     public function getReasoning(): string

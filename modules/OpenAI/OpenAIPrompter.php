@@ -10,23 +10,26 @@ use Illuminate\Support\Facades\Http;
 
 class OpenAIPrompter implements AIAgentPrompter
 {
-    protected ?\App\Models\User $user = null;
-
     public function handle(AIInputOptions $options): AIResponseDTO
     {
+        // OpenAI streaming request
         $response = Http::withToken(config('openai.openai_api_key'))
-            ->timeout(300)
+            ->withOptions(['timeout' => 300])
             ->post('https://api.openai.com/v1/responses', [
                 'model' => 'gpt-4.1',
                 'store' => true,
                 'input' => [
-                    ...array_map(fn($option) => ['role' => 'system', 'content' => $option], $options->system()),
-                    ...array_map(fn($option) => ['role' => 'user', 'content' => $option], $options->user()),
+                    ...array_map(fn($o) => ['role' => 'system', 'content' => $o], $options->system()),
+                    ...array_map(fn($o) => ['role' => 'user', 'content' => $o], $options->user()),
+                ],
+                'response_format' => [
+                    'type' => 'json_schema',
+                    'json_schema' => $options->schema()
                 ]
             ]);
 
         if ($response->getStatusCode() !== 200) {
-            Throw new RequestException($response->json('error.message'), $response->getStatusCode());
+            throw new RequestException($response->json('error.message'), $response->getStatusCode());
         }
 
         return new OpenAiResponse(
@@ -37,12 +40,5 @@ class OpenAIPrompter implements AIAgentPrompter
     private function cleanup(string $response): array
     {
         return json_decode($response, true);
-    }
-
-    public function setUser(?\App\Models\User $user): static
-    {
-        $this->user = $user;
-
-        return $this;
     }
 }
