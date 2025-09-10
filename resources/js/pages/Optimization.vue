@@ -68,7 +68,7 @@ onMounted(() => {
     <Head :title="state.pageTitle" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div v-if="state.form.status === 'processing'" class="flex flex-col items-center justify-center h-[85vh] space-y-2">
+        <div v-if="state.form.status === 'processing'" class="flex flex-col items-center justify-center h-full space-y-2">
             <h1 class="text-2xl font-bold">Optimization In Progress</h1>
             <InfiniteProgressBar class="max-w-xs" />
             <p class="text-gray-400 text-center">This might take a minute or two or three... <br> You will be notified (here) when it is done ;)</p>
