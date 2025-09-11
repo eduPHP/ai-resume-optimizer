@@ -1,5 +1,6 @@
 <?php
 
+use App\DTO\Contracts\AIAgentPrompter;
 use App\Jobs\OptimizeResume;
 use App\Models\Optimization;
 use App\Models\Resume;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Http;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
+    $this->instance(AiAgentPrompter::class, app('agents.openai'));
     Http::preventStrayRequests();
 
     // Mocking the necessary external HTTP request

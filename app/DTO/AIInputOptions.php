@@ -59,7 +59,7 @@ class AIInputOptions implements AIInputOptionsInterface
                 : false,
 
             $this->mentionRelocationAvailability
-                ? "If the company does not sponsor visas, include this fact in the 'issues' output list."
+                ? "If the company does not sponsor visas, include this fact in the 'findings' output list as a missing_requirement."
                 : false,
 
             $this->makeGrammaticalCorrections
@@ -81,8 +81,7 @@ class AIInputOptions implements AIInputOptionsInterface
     public function user(): array
     {
         return [
-            "Base resume (source of truth):\n\n{$this->resume}",
-            "Please optimize this resume for the {$this->roleLocation} market.
+            "Please optimize the resume for the {$this->roleLocation} market.
              - Reorganize sections to match {$this->roleLocation}'s best practices.
              - Improve content for higher selection rate.
              - Keep the title intact.
@@ -96,10 +95,10 @@ class AIInputOptions implements AIInputOptionsInterface
             "name" => "candidate_evaluation",
             "schema" => [
                 "type" => "object",
+                "additionalProperties" => false,
                 "properties" => [
                     "resume" => [
                         "type" => "string",
-                        "format" => "HTML",
                         "description" => "HTML formatted resume, body content only, with basic styling"
                     ],
                     "compatibility_score" => [
@@ -129,6 +128,7 @@ class AIInputOptions implements AIInputOptionsInterface
                         "description" => "Consolidated evaluation items: strong alignments, moderate gaps, missing requirements, or issues.",
                         "items" => [
                             "type" => "object",
+                            "additionalProperties" => false,
                             "properties" => [
                                 "group" => [
                                     "type" => "string",

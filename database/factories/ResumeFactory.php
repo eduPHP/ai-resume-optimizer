@@ -15,7 +15,11 @@ class ResumeFactory extends Factory
             'type' => 'application/pdf',
             'size' => fn() => random_int(1234, 4333),
             'path' => $this->faker->filePath(),
-            'detected_content' => $this->faker->text(),
+            'detected_content' => function () {
+                $data = json_decode(file_get_contents(base_path('tests/Fixtures/parsed-resume-sample.json')), true);
+
+                return $data['markdown_content'];
+            },
         ];
     }
 

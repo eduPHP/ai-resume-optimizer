@@ -13,7 +13,6 @@ import { OptimizationType, useOptimizationWizardStore } from '@/stores/Optimizat
 import { useNavigationItemsStore } from '@/stores/NavigationItemsStore'
 import { Axios } from '@/lib/axios'
 import { useToastsStore } from '@/stores/ToastsStore'
-import { router } from '@inertiajs/vue3'
 
 const page = usePage<SharedData>()
 const message = ref<string | null>(null);
@@ -43,7 +42,13 @@ const { listen, leave } = useEcho<OptimizationComplete>(
                 applied: response.data.optimization.applied,
                 ai_response: response.data.optimization.ai_response,
             } as OptimizationType)
-            toast.success('Optimized!', 'The optimization was successfully completed!')
+
+            if (response.data.optimization.status === 'complete') {
+                toast.success('Complete', 'Optimization was successfully completed.')
+            }
+            if (response.data.optimization.status === 'failed') {
+                toast.error('Failed', 'There was an error processing the optimization, try again later.')
+            }
         })
     }
 );

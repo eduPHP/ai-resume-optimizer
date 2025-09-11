@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OptimizationStatuses;
+use App\Events\OptimizationComplete;
+use App\Jobs\OptimizeResume;
 use App\Models\Optimization;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UnattendedOptimizationController
 {
     use CreateUnattendedOptimization;
 
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $request->validate([
             'name' => 'required',
@@ -27,10 +31,24 @@ class UnattendedOptimizationController
 
         $optimization = $this->createOptimizationFor($resume, data: collect($request->all()));
 
-        return [
+        return response()->json([
             'created' => true,
             'optimization' => $optimization,
-        ];
+        ]);
+    }
+
+    public function update(Optimization $optimization)
+    {
+        $optimization->update([
+            'status' => OptimizationStatuses::Processing,
+        ]);
+
+        OptimizeResume::dispatch($optimization)->onQueue('long-jobs');
+
+        return response()->json([
+            'updated' => true,
+            'optimization' => $optimization,
+        ]);
     }
 
     public function show(Optimization $optimization)

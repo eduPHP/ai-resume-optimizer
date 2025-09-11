@@ -121,7 +121,11 @@ const createUnattendedOptimization = (): AxiosPromise<{ optimization: Optimizati
 
     const axios = Axios()
 
-    const request = axios.post(
+    const request = state.form.optimizationId ? axios.patch(
+        route('optimizations.unattended-update', state.form.optimizationId),
+        {},
+        { timeout: 360000 }
+    ) : axios.post(
         route('optimizations.unattended-store'),
         state.form.role,
         { timeout: 360000 }

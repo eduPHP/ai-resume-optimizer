@@ -15,16 +15,18 @@ class OpenAIPrompter implements AIAgentPrompter
         // OpenAI streaming request
         $response = Http::withToken(config('openai.openai_api_key'))
             ->withOptions(['timeout' => 300])
-            ->post('https://api.openai.com/v1/responses', [
-                'model' => 'gpt-4.1',
+            ->post(config('openai.endpoint'), [
+                'model' => config('openai.model'),
                 'store' => true,
                 'input' => [
-                    ...array_map(fn($o) => ['role' => 'system', 'content' => $o], $options->system()),
-                    ...array_map(fn($o) => ['role' => 'user', 'content' => $o], $options->user()),
+                    ...array_map(fn($instruction) => ['role' => 'system', 'content' => $instruction], $options->system()),
+                    ...array_map(fn($instruction) => ['role' => 'user', 'content' => $instruction], $options->user()),
                 ],
-                'response_format' => [
-                    'type' => 'json_schema',
-                    'json_schema' => $options->schema()
+                'text' => [
+                    'format' => [
+                        'type' => 'json_schema',
+                        ...$options->schema()
+                    ],
                 ]
             ]);
 
