@@ -25,7 +25,7 @@ class MigrateOptimizationResponses extends Command
             $new = $this->convertToNewSchema($old);
 
             if ($this->option('dry-run')) {
-                $this->info("ID {$record->id} would be updated.");
+                $this->info("ID {$record->id} would be updated. usage: {$new['usage']}");
             } else {
                 $record->ai_response = $new;
                 $record->usage_tokens = $new['usage'];
