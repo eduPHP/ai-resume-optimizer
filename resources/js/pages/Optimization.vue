@@ -4,16 +4,14 @@ import OptimizationWizard from '@/components/OptimizationWizard.vue'
 import AppLayout from '@/layouts/AppLayout.vue'
 import { OptimizationType, useOptimizationWizardStore } from '@/stores/OptimizationWizardStore'
 import type { BreadcrumbItem } from '@/types'
-import { Head, router } from '@inertiajs/vue3'
+import { Head } from '@inertiajs/vue3'
 import { onMounted, ref } from 'vue'
-import { Button } from '@/components/ui/button'
-import { createUnattendedOptimization } from '@/lib/axios'
-import { useNavigationItemsStore } from '@/stores/NavigationItemsStore'
 import InfiniteProgressBar from '@/components/ui/InfiniteProgressBar.vue'
 import { TriangleAlert } from 'lucide-vue-next'
+import { differenceInMinutes } from 'date-fns'
+import RetryBlock from '@/components/RetryBlock.vue'
 
 const state = useOptimizationWizardStore()
-const nav = useNavigationItemsStore()
 
 const props = defineProps({
     step: {
@@ -33,14 +31,6 @@ const breadcrumbs = ref<BreadcrumbItem[]>([
     },
 ])
 
-const retry = () => {
-    state.form.status = 'processing'
-    createUnattendedOptimization().then(response => {
-        state.setOptimization(response.data.optimization as OptimizationType)
-        nav.replace(response.data.optimization)
-        router.visit(route('optimizations.show', response.data.optimization.id), { preserveState: true })
-    })
-}
 
 onMounted(() => {
     state.setOptimization(props.optimization as OptimizationType)
@@ -59,27 +49,31 @@ onMounted(() => {
         ]
     }
 })
+
 </script>
 
 <template>
     <Head :title="state.pageTitle" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div v-if="state.form.status === 'processing'" class="flex flex-col items-center justify-center h-full space-y-2">
+        <div v-if="state.form.status === 'processing'" class="flex h-full flex-col items-center justify-center space-y-2">
             <h1 class="text-2xl font-bold">Optimization In Progress</h1>
             <InfiniteProgressBar class="max-w-xs" />
-            <p class="text-gray-400 text-center">This might take a minute or two or three... <br> You will be notified (here) when it is done ;)</p>
+            <p class="text-center text-gray-400">
+                This might take a minute or two or three... <br />
+                You will be notified (here) when it is done ;)
+            </p>
+            <RetryBlock v-if="differenceInMinutes(new Date(), state.form.updated) > 6" />
         </div>
-        <div v-if="state.form.status === 'failed'" class="px-4 flex flex-col items-center justify-center h-[85vh]">
-            <h1 class="text-2xl font-bold flex items-center"><TriangleAlert class="mb-1 mr-2 text-yellow-600 dark:text-yellow-300" />Optimization Failed</h1>
-            <p class="mt-2 text-gray-400 text-center">There were some problem processing this optimization request. <br> Although we won't provide you with an specific reason yet, you can retry it if you want.</p>
-            <Button type="button"
-                    size="lg"
-                    class="mt-6 xl:flex-none select-none"
-                    :class="{'cursor-not-allowed': state.loading}"
-                    :disabled="state.loading"
-                    @click.prevent="retry"
-            >Retry</Button>
+        <div v-if="state.form.status === 'failed'" class="flex h-[85vh] flex-col items-center justify-center px-4">
+            <h1 class="flex items-center text-2xl font-bold">
+                <TriangleAlert class="mb-1 mr-2 text-yellow-600 dark:text-yellow-300" />Optimization Failed
+            </h1>
+            <p class="mt-2 text-center text-gray-400">
+                There were some problem processing this optimization request. <br />
+                Although we won't provide you with an specific reason yet, you can retry it if you want.
+            </p>
+            <RetryBlock />
         </div>
         <OptimizationWizard v-else-if="['draft', 'pending', 'editing'].includes(state.form.status)" />
         <CompleteOptimization v-else-if="state.form.status === 'complete'" />

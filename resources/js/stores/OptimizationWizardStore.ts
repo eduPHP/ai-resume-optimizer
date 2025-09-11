@@ -69,6 +69,7 @@ export type OptimizationType = {
     applied: boolean
     ai_response: AIResponse
     created_at?: string
+    updated_at?: string
 }
 
 export type AdditionalInformationForm = {
@@ -84,6 +85,7 @@ export type Form = {
     optimizationId: string | undefined
     status: Status
     applied: boolean
+    updated: string
     role: RoleForm
     resume: {
         id: number | undefined
@@ -133,6 +135,7 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
             status: 'draft',
             optimizationId: undefined,
             applied: false,
+            updated: '',
             role: {
                 company: '',
                 description: '',
@@ -221,6 +224,7 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
             this.form.additional.targetCountry = optimization.role_location ?? this.form.additional.targetCountry
             this.form.additional.mentionRelocationAvailability = optimization.mention_relocation_availability ?? true
             this.form.applied = optimization.applied ?? false
+            this.form.updated = optimization.updated_at ?? ''
         },
         nextStep() {
             this.step++
