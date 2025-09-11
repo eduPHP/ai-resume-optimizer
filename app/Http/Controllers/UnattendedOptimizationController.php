@@ -24,7 +24,7 @@ class UnattendedOptimizationController
 
         if (! $resume = auth()->user()->resumes()->latest()->first()) {
             return response()->json(['errors' => [
-                'resume' => [config('setup.errors.resume_not_found')],
+                'message' => [config('setup.errors.resume_not_found')],
             ]], 422);
         }
 

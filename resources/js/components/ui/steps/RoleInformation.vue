@@ -28,8 +28,8 @@ const submit = async () => {
             state.setOptimization(response.data.optimization as OptimizationType)
             nav.addItem(response.data.optimization.role_company, response.data.optimization.id as string, true)
             router.visit(route('optimizations.show', response.data.optimization.id), { preserveState: true })
-            state.nextStep()
         }
+        state.nextStep()
     })
 }
 
@@ -43,7 +43,6 @@ const finish = () => {
             applied: response.data.optimization.applied,
             ai_response: response.data.optimization.ai_response,
         } as OptimizationType)
-        toast.success('Created', 'Optimization was created.')
         router.visit(route('optimizations.show', response.data.optimization.id), { preserveState: true })
     })
 }

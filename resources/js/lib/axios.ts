@@ -135,6 +135,13 @@ const createUnattendedOptimization = (): AxiosPromise<{ optimization: Optimizati
         .then(() => {
             state.clearErrors()
         })
+        .catch((error: any) => {
+            if (error.response.data?.errors.message) {
+                const toast = useToastsStore()
+
+                toast.error('Optimization Error', error.response.data?.errors.message[0])
+            }
+        })
         .finally(() => {
             state.loading = false
             state.optimizing = false
