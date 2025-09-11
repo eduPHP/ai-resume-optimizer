@@ -22,7 +22,6 @@ import { Plus, X } from 'lucide-vue-next'
 import AppLogo from './AppLogo.vue'
 import debounce from '@/lib/debounce'
 import { watch } from 'vue'
-import OptimizationListener from '@/components/ui/OptimizationListener.vue'
 
 const nav = useNavigationItemsStore()
 const { state: sidebarState } = useSidebar()
@@ -65,7 +64,6 @@ watch(
 
 <template>
     <Sidebar collapsible="icon" variant="inset">
-        <OptimizationListener />
         <SidebarHeader>
             <SidebarMenu>
                 <SidebarMenuItem>
