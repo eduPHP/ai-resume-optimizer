@@ -85,7 +85,8 @@ class AIInputOptions implements AIInputOptionsInterface
              - Reorganize sections to match {$this->roleLocation}'s best practices.
              - Improve content for higher selection rate.
              - Keep the title intact.
-             - Role description is: {$this->roleDescription}"
+             - Role description is: {$this->roleDescription}
+             - Translate the output resume to its language!"
         ];
     }
 
