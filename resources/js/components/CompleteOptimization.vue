@@ -2,14 +2,23 @@
 import OptimizationPopover from '@/components/OptimizationPopover.vue'
 import { Button } from '@/components/ui/button'
 import { downloadCoverLetter, downloadOptimizedResume } from '@/lib/axios'
-import { useOptimizationWizardStore } from '@/stores/OptimizationWizardStore'
+import { Finding, useOptimizationWizardStore } from '@/stores/OptimizationWizardStore'
 import { SharedData } from '@/types'
 import { usePage } from '@inertiajs/vue3'
 import { File, Check } from 'lucide-vue-next'
+import { computed } from 'vue'
 
 const state = useOptimizationWizardStore()
 const page = usePage<SharedData>()
 
+const groupedFindings = computed(() => {
+    const groups: Record<string, Finding[]> = {}
+    for (const f of state.form.response.findings) {
+        if (!groups[f.group]) groups[f.group] = []
+        groups[f.group].push(f)
+    }
+    return groups
+})
 </script>
 
 <template>
@@ -23,48 +32,73 @@ const page = usePage<SharedData>()
                 <OptimizationPopover class="absolute right-2 top-3" />
             </div>
 
-            <h2 class="mt-4 text-xl">
+            <h2 class="mt-6 mb-4 text-xl">
                 Compatibility score:
                 <span class="font-bold" :class="state.compatibilityStyle">{{ state.form.response.compatibility_score }}%</span> Match
             </h2>
             <p class="text-gray-600 dark:text-gray-400">{{ state.form.response.reasoning }}</p>
             <div v-if="state.form.response.top_choice?.length">
                 <hr class="mx-auto my-8 max-w-xl border-t border-gray-300 dark:border-gray-500" />
-                <h2 class="mt-4 text-xl">Top Choice Message</h2>
+                <h2 class="mt-6 mb-4 text-xl">Top Choice Message</h2>
                 <p class="text-gray-600 dark:text-gray-400">{{ state.form.response.top_choice }}</p>
             </div>
 
             <hr class="mx-auto my-8 max-w-xl border-t border-gray-300 dark:border-gray-500" />
 
-            <h2 class="mt-6 text-xl">Role Specific Professional Summary</h2>
+            <h2 class="mt-6 mb-4 text-xl">Role Specific Professional Summary</h2>
             <p class="text-gray-600 dark:text-gray-400">{{ state.form.response.professional_summary }}</p>
 
             <hr class="mx-auto my-8 max-w-xl border-t border-gray-300 dark:border-gray-500" />
 
-            <h2 class="mt-4 text-xl">Alignments:</h2>
-            <div v-for="alignment in state.form.response.strong_alignments" :key="alignment.title" class="mt-4">
-                <h3>{{ alignment.title }}</h3>
-                <p class="text-gray-600 dark:text-gray-400">{{ alignment.description }}</p>
-            </div>
+            <h2 class="my-4 text-xl">Alignments:</h2>
+            <ul class="space-y-2">
+                <li v-for="alignment in groupedFindings.strong_alignment" :key="alignment.title">
+                    <span class="block">{{ alignment.title }}</span>
+                    <span class="block text-gray-600 dark:text-gray-400">{{
+                        alignment.description
+                    }}</span>
+                </li>
+            </ul>
 
-            <h2 v-if="state.form.response.moderate_gaps.length" class="mt-6 text-xl text-yellow-500 bg-clip-text bg-gray-400 dark:bg-transparent dark:text-yellow-400">Moderate Gaps:</h2>
+            <h2
+                v-if="groupedFindings.moderate_gap?.length"
+                class="mt-6 mb-4 bg-gray-400 bg-clip-text text-xl text-yellow-500 dark:bg-transparent dark:text-yellow-400"
+            >
+                Moderate Gaps:
+            </h2>
 
-            <div v-if="state.form.response.moderate_gaps.length" class="text-yellow-500 bg-clip-text bg-gray-400 dark:bg-transparent dark:text-yellow-400">
-                <ul>
-                    <li v-for="gap in state.form.response.moderate_gaps" :key="gap.title">
+            <div
+                v-if="groupedFindings.moderate_gap?.length"
+                class="bg-gray-400 bg-clip-text text-yellow-500 dark:bg-transparent dark:text-yellow-400"
+            >
+                <ul class="space-y-2">
+                    <li v-for="gap in groupedFindings.moderate_gap" :key="gap.title">
                         <span class="block">{{ gap.title }}</span>
-                        <span class="block text-yellow-500 bg-clip-text bg-gray-400 dark:bg-transparent dark:text-yellow-400/70">{{ gap.description }}</span>
+                        <span class="block bg-gray-400 bg-clip-text text-yellow-500 dark:bg-transparent dark:text-yellow-400/70">{{
+                            gap.description
+                        }}</span>
                     </li>
                 </ul>
             </div>
 
-            <h2 v-if="state.form.response.missing_requirements.length" class="mt-6 text-xl text-red-400">Missing Requirements:</h2>
+            <h2 v-if="groupedFindings.missing_requirement?.length" class="mt-6 mb-4 text-xl text-red-400">Missing Requirements:</h2>
 
-            <div v-if="state.form.response.missing_requirements.length" class="text-red-400">
+            <div v-if="groupedFindings.missing_requirement?.length" class="text-red-400">
                 <ul>
-                    <li v-for="missing in state.form.response.missing_requirements" :key="missing.title">
+                    <li v-for="missing in groupedFindings.missing_requirement" :key="missing.title">
                         <span class="block">{{ missing.title }}</span>
                         <span class="block text-red-400/70">{{ missing.description }}</span>
+                    </li>
+                </ul>
+            </div>
+
+            <h2 v-if="groupedFindings.issue?.length" class="mt-6 mb-4 text-xl text-red-400">Issues:</h2>
+
+            <div v-if="groupedFindings.issue?.length" class="text-red-400">
+                <ul>
+                    <li v-for="issue in groupedFindings.issue" :key="issue.title">
+                        <span class="block">{{ issue.title }}</span>
+                        <span class="block text-red-400/70">{{ issue.description }}</span>
                     </li>
                 </ul>
             </div>

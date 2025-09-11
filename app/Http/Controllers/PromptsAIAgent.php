@@ -6,7 +6,6 @@ namespace App\Http\Controllers;
 use App\DTO\AIInputOptions;
 use App\DTO\Contracts\AIAgentPrompter;
 use App\Models\Optimization;
-use App\Models\User;
 
 trait PromptsAIAgent
 {
@@ -15,7 +14,7 @@ trait PromptsAIAgent
         $content = $optimization->resume->detected_content;
 
         /** @var AIAgentPrompter $prompter */
-        $prompter = app()->make(AIAgentPrompter::class);
+        $prompter = app(AIAgentPrompter::class);
 
         $agentResponse = $prompter->handle(new AIInputOptions(
             resume: $content,

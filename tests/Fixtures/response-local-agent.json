@@ -1,0 +1,35 @@
+{
+    "resume": "\n<h1 class=\"name\">Eduardo Fleck Dalla Vecchia</h1>\n<h3 class=\"job-title\">Full Stack Developer</h3>\n<p class=\"contact-info\">eduphp83@gmail.com | +55 54 981212631 | Itapema, SC, Brazil | github.com/eduPHP | linkedin.com/in/eduphp</p>\n\n<h2 class=\"section-title\">Professional Summary</h2>\n<div>Full Stack Developer with 7+ years of experience building performance-driven SaaS platforms. Specializes in Laravel ecosystem with proven track record in commission engines, payment systems, and scheduling tools. Experienced in TDD, BDD, DDD, and SOLID principles across full product cycles.</div>\n\n<h2 class=\"section-title\">Technical Skills</h2>\n<div>\n<strong>Core Technologies:</strong> Laravel, PHP, MySQL, Vue.js, Alpine.js, Tailwind CSS<br>\n<strong>Backend Engineering:</strong> Redis, REST APIs, Docker, Testing (PHPUnit), Payment Integration<br>\n<strong>DevOps & CI/CD:</strong> Git, GitHub Actions, AWS S3, Laravel Forge<br>\n<strong>Other:</strong> TypeScript, JavaScript, React, MongoDB\n</div>\n\n<h2 class=\"section-title\">Professional Experience</h2>\n<div>\n  <h3 class=\"exp-title\">Full Stack Engineer</h3>\n  <p class=\"exp-period\">NeonBang, San Francisco, CA (Remote) | 2022 - 2025</p>\n  <ul>\n    <li>Developed TALL stack applications serving B2B clients across multiple industries</li>\n    <li>Built commission calculators and reporting tools for enterprise customers</li>\n    <li>Implemented secure, encrypted storage for sensitive customer files</li>\n    <li>Applied TDD and DDD practices across new features</li>\n  </ul>\n  \n  <h3 class=\"exp-title\">Backend Engineer</h3>\n  <p class=\"exp-period\">Atlas Technologies, Brazil (Remote) | 2021 - 2022</p>\n  <ul>\n    <li>Maintained Laravel-based microservices for payment processing</li>\n    <li>Deployed hotfixes for high-severity bugs with zero downtime</li>\n  </ul>\n  \n  <h3 class=\"exp-title\">Project Leader / Full Stack Developer</h3>\n  <p class=\"exp-period\">BuilderAll, Orlando, FL (Remote) | 2017 - 2021</p>\n  <ul>\n    <li>Led team of 5 in delivery of mission-critical checkout and subscription tools</li>\n    <li>Designed multi-gateway payment platform processing $3M+ in transactions</li>\n    <li>Built real-time auction platform using WebSockets</li>\n  </ul>\n</div>\n\n<h2 class=\"section-title\">Education</h2>\n<div>\nDegree in Systems Analysis and Development<br>\nUniversity of Passo Fundo (UPF) | 2015 - 2018\n</div>",
+    "compatibility_score": 70,
+    "top_choice": "Strong technical foundation with 7+ years of hands-on experience in modern web development. Proven ability to lead teams and deliver complex projects from conception to deployment. Experience with payment systems and scalable architecture makes this candidate well-suited for challenging development roles.",
+    "professional_summary": "Full Stack Developer with 7+ years of experience in PHP, Laravel, and modern web technologies. Proven track record in building scalable applications and leading development teams.",
+    "cover_letter": [],
+    "findings": [
+        {
+            "group": "strong_alignment",
+            "title": "Strength 1: Technical Expertise",
+            "description": "Strong technical background with relevant experience"
+        },
+        {
+            "group": "strong_alignment",
+            "title": "Strength 2: Technical Expertise",
+            "description": "Good understanding of modern development practices"
+        },
+        {
+            "group": "strong_alignment",
+            "title": "Strength 3: Technical Expertise",
+            "description": "Solid foundation in required technologies"
+        },
+        {
+            "group": "moderate_gap",
+            "title": "Improvement Area 1",
+            "description": "Could benefit from more specific quantified achievements"
+        },
+        {
+            "group": "moderate_gap",
+            "title": "Improvement Area 2",
+            "description": "Additional domain-specific experience would strengthen the application"
+        }
+    ],
+    "reasoning": "Based on the analysis, this candidate shows moderate potential for the role. This candidate shows promise and could be a good fit with some additional consideration. To improve their candidacy: focus on quantifying achievements with specific metrics, highlight domain-specific experience, and ensure technical skills align closely with job requirements."
+}

@@ -34,9 +34,10 @@ export type Resume = {
     created: string
 }
 
-type Alignment = {
+export type Finding = {
     title: string
     description: string
+    group: 'strong_alignment' | 'moderate_gap' | 'missing_requirement' | 'issue'
 }
 
 type AIResponse = {
@@ -44,12 +45,11 @@ type AIResponse = {
     compatibility_score: number
     professional_summary: string
     cover_letter: string[]
-    strong_alignments: Alignment[]
-    moderate_gaps: Alignment[]
-    missing_requirements: Alignment[]
+    findings: Finding[]
     reasoning: string
     top_choice?: string
 }
+type Status = 'complete' | 'draft' | 'failed' | 'processing' | 'editing'
 
 export type OptimizationType = {
     id?: string
@@ -65,7 +65,7 @@ export type OptimizationType = {
     change_target_role: boolean
     mention_relocation_availability: boolean
     current_step: number
-    status: string
+    status: Status
     applied: boolean
     ai_response: AIResponse
     created_at?: string
@@ -82,7 +82,7 @@ export type AdditionalInformationForm = {
 
 export type Form = {
     optimizationId: string | undefined
-    status: string
+    status: Status
     applied: boolean
     role: RoleForm
     resume: {
@@ -130,7 +130,7 @@ export const useOptimizationWizardStore = defineStore('resume-wizard', {
         ],
 
         form: {
-            status: 'pending',
+            status: 'draft',
             optimizationId: undefined,
             applied: false,
             role: {

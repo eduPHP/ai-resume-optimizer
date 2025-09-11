@@ -2,6 +2,7 @@
 import Toaster from '@/components/Toaster.vue'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import { onMounted, ref } from 'vue'
+import OptimizationListener from '@/components/ui/OptimizationListener.vue'
 
 interface Props {
     variant?: 'header' | 'sidebar'
@@ -29,4 +30,5 @@ const handleSidebarChange = (open: boolean) => {
         <slot />
     </SidebarProvider>
     <Toaster />
+    <OptimizationListener />
 </template>

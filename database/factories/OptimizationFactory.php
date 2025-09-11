@@ -39,40 +39,41 @@ class OptimizationFactory extends Factory
             'ai_response' => [
                 "resume" => fake()->randomHtml(),
                 "compatibility_score" => fake()->numberBetween(50, 100),
+                "top_choice" => fake()->sentence(),
                 "professional_summary" => fake()->paragraph(),
                 "cover_letter" => [
                     fake()->sentence(),
                     fake()->sentence(),
                     fake()->sentence(),
                 ],
-                "strong_alignments" => [
+                "findings" => [
                     [
                         "title" => fake()->sentence(),
                         "description" => fake()->sentence(),
+                        "group" => 'strong_alignment',
                     ],
                     [
                         "title" => fake()->sentence(),
                         "description" => fake()->sentence(),
-                    ],
-                ],
-                "moderate_gaps" => [
-                    [
-                        "title" => fake()->sentence(),
-                        "description" => fake()->sentence(),
+                        "group" => 'strong_alignment',
                     ],
                     [
                         "title" => fake()->sentence(),
                         "description" => fake()->sentence(),
+                        "group" => 'moderate_gap',
                     ],
-                ],
-                "missing_requirements" => [
                     [
                         "title" => fake()->sentence(),
                         "description" => fake()->sentence(),
+                        "group" => 'moderate_gap',
+                    ],
+                    [
+                        "title" => fake()->sentence(),
+                        "description" => fake()->sentence(),
+                        "group" => 'missing_requirement',
                     ],
                 ],
                 "reasoning" => fake()->paragraph(),
-                "top_choice" => fake()->sentence(),
             ],
             'reasoning' => fake()->paragraph(),
             'created_at' => now(),

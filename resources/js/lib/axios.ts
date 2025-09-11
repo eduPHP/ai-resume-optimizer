@@ -121,7 +121,11 @@ const createUnattendedOptimization = (): AxiosPromise<{ optimization: Optimizati
 
     const axios = Axios()
 
-    const request = axios.post(
+    const request = state.form.optimizationId ? axios.patch(
+        route('optimizations.unattended-update', state.form.optimizationId),
+        {},
+        { timeout: 360000 }
+    ) : axios.post(
         route('optimizations.unattended-store'),
         state.form.role,
         { timeout: 360000 }
@@ -130,6 +134,13 @@ const createUnattendedOptimization = (): AxiosPromise<{ optimization: Optimizati
     request
         .then(() => {
             state.clearErrors()
+        })
+        .catch((error: any) => {
+            if (error.response.data?.errors.message) {
+                const toast = useToastsStore()
+
+                toast.error('Optimization Error', error.response.data?.errors.message[0])
+            }
         })
         .finally(() => {
             state.loading = false
@@ -221,7 +232,7 @@ const deleteResume = (state: OptimizationWizardStore, id: number): AxiosPromise<
 
 const completeWizard = (state: OptimizationWizardStore): AxiosPromise<{ optimization: OptimizationType; errors: { [key: string]: string } }> => {
     state.loading = true
-    state.optimizing = true
+    state.form.status = 'processing'
 
     const axios = Axios()
     const options: AxiosRequestConfig = {
@@ -237,8 +248,8 @@ const completeWizard = (state: OptimizationWizardStore): AxiosPromise<{ optimiza
             errors: { [key: string]: string }
         }>(route('optimizations.update', state.form.optimizationId), {}, options)
         .finally(() => {
+            state.form.status = 'complete'
             state.loading = false
-            state.optimizing = false
         })
 }
 

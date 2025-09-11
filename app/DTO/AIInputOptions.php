@@ -3,7 +3,6 @@
 namespace App\DTO;
 
 use App\DTO\Contracts\AIInputOptions as AIInputOptionsInterface;
-use App\Models\User;
 use Illuminate\Support\Collection;
 
 class AIInputOptions implements AIInputOptionsInterface
@@ -30,66 +29,50 @@ class AIInputOptions implements AIInputOptionsInterface
     public function system(): array
     {
         $config = [
-            'You are an experienced HR manager, your role is to answer questions about a resume.
-            No compliments, softening, or beating around the bush.
-            If the resume is bad, just say it.
-            If there is no change of getting the job, say so.
-            When a compatibility score is below '.$this->settings['compatibilityScoreLevels']['medium'].', present immediate or long term plans to improve.',
-            "The following resume is your source of truth and should be the base of your answer:\n\n$this->resume",
-            'resume contact information should be kept in one like separated by a pipe symbol (|) and have the following template: <p class="contact-info">contact info</p>
-              sections should have a consistent format with the following template: <h2 class="section-title">Section Title</h2><div>Section Content</div>
-              title (name) should have a consistent format with the following template: <h1 class="name">Full Name</h1><h3 class"job-title">Job Title</h3>
-              experience should have a consistent format with the following template: <h3 class="exp-title">Title</h3><p class"exp-period">place and period</p><ul>Description</ul>',
-            'You are an API that optimizes resumes. Always reply ONLY with a single, valid JSON object in this format: {
-                "resume": "html formatted resume, body content only, with basic styling",
-                "compatibility_score": "a REALISTIC compatibility percentage score based on the requirements from 0 to 100, i.e. 90",
-                "professional_summary": "same professional summary returned on the resume",
-                "cover_letter": "' . ($this->generateCoverLetter ? 'a cover letter, with casual phrasing,
-                    3 paragraphs as an array, no introduction (i.e. dear hiring manager or so), no signature,
-                    i.e. [
-                        \"paragraph 1, why am I a good fit\",
-                        \"paragraph 2, emphasise accomplishments\",
-                        \"paragraph 3 emphasise strengths and the need to get in touch\"]' : 'an empty array: []') . '",
-                "strong_alignments": [
-                  {
-                      "title": "strong alignment title",
-                      "description": "strong alignment description"
-                  {
-                      "title": "another strong alignment title",
-                      "description": "another strong alignment description"
-                  },
-                  ...remaining strong alignments
-                ],
-                "moderate_gaps": [
-                  {
-                      "title": "moderate gap title",
-                      "description": "moderate gap description"
-                  },
-                  ...remaining moderate gaps
-                ],
-                "missing_requirements": [
-                  {
-                      "title": "missing requirement title",
-                      "description": "missing requirement description"
-                  },
-                  ...remaining missing requirements
-                ],
-                "reasoning": "Would you recommend this candidate for the job? How can he improve his base resume to match the job description?",
-                "top_choice": "if compatibility_score is greater or equals '.($this->settings['compatibilityScoreLevels']['top'] ?? 95).',
-                               In first person, as if you are talking to a potential employer,
-                               Briefly describe (up to 400 chars) why this job is your top choice and why you’re a good fit.
-                               Otherwise the value is an empty string",
-            }
-            Do NOT include any other text.',
-            !empty($this->settings['instructions']) ? $this->settings['instructions'] : false,
-            $this->changeProfessionalSummary ? 'should replace the Professional Summary section with a role specific summary emphasizing the candidate\'s strengths (keep the title)' : false,
-            $this->changeTargetRole ? "should replace the \"Target Role\" (below the name on title) with: {$this->roleName}" : false,
-            $this->mentionRelocationAvailability ? "at the bottom, using the class \"footer\" on the element, should add
-                                                      \"Available for remote work or relocation to [country] through visa sponsorship\"
-                                                      where the country/city is: {$this->roleLocation}.
-                                                      If a city name is provided, use it's country name instead" : false,
-            $this->makeGrammaticalCorrections ? 'should make grammatical corrections' : false,
-            $this->mentionRelocationAvailability ? 'Include in the missing_requirements output if the company has no history of sponsoring a visa.' : false,
+            // Role + tone
+            'You are an experienced HR manager. Answer ONLY in JSON. Be direct: no compliments, no softening.
+            If the resume is bad, say so. If there is no chance of getting the job, state it directly.',
+
+            // Resume context
+            "The following resume is your single source of truth:\n\n{$this->resume}",
+
+            // Resume formatting rules
+            'Resume formatting rules:
+             - Contact info → <p class="contact-info">text | text | text</p>
+             - Section titles → <h2 class="section-title">Section Title</h2><div>Content</div>
+             - Name → <h1 class="name">Full Name</h1><h3 class="job-title">Job Title</h3>
+             - Experience → <h3 class="exp-title">Title</h3><p class="exp-period">place and period</p><ul>Description</ul>',
+
+            // Resume improvement instructions
+            $this->changeProfessionalSummary
+                ? "Replace the Professional Summary with a role-specific one, emphasizing candidate strengths (keep the title)."
+                : false,
+
+            $this->changeTargetRole
+                ? "Replace the Target Role (below the name) with: {$this->roleName}."
+                : false,
+
+            $this->mentionRelocationAvailability
+                ? "At the bottom (class=\"footer\"), add:
+               'Available for remote work or relocation to {$this->roleLocation} through visa sponsorship'.
+               If only a city is given, replace it with its country."
+                : false,
+
+            $this->mentionRelocationAvailability
+                ? "If the company does not sponsor visas, include this fact in the 'findings' output list as a missing_requirement."
+                : false,
+
+            $this->makeGrammaticalCorrections
+                ? "Correct grammar across the resume."
+                : false,
+
+            // Scoring logic
+            "When compatibility_score < {$this->settings['compatibilityScoreLevels']['medium']},
+         provide short-term and long-term improvement plans.",
+
+            // API enforcement
+            'Always reply ONLY with a valid JSON object that matches the schema.
+         Do not add explanations, prefaces, or comments outside JSON.',
         ];
 
         return array_filter($config);
@@ -98,10 +81,79 @@ class AIInputOptions implements AIInputOptionsInterface
     public function user(): array
     {
         return [
-            "Please improve the resume, following {$this->roleLocation}'s pattern and best practices
-             for a higher employee selection rate, reorganize the sections according with the country's
-             requirements and keep the title.
-             Role description is: {$this->roleDescription}"
+            "Please optimize the resume for the {$this->roleLocation} market.
+             - Reorganize sections to match {$this->roleLocation}'s best practices.
+             - Improve content for higher selection rate.
+             - Keep the title intact.
+             - Role description is: {$this->roleDescription}"
+        ];
+    }
+
+    public function schema(): array
+    {
+        return [
+            "name" => "candidate_evaluation",
+            "schema" => [
+                "type" => "object",
+                "additionalProperties" => false,
+                "properties" => [
+                    "resume" => [
+                        "type" => "string",
+                        "description" => "HTML resume, body content only, with basic styling"
+                    ],
+                    "compatibility_score" => [
+                        "type" => "integer",
+                        "description" => "REALISTIC 0-100 score"
+                    ],
+                    "top_choice" => [
+                        "type" => "string",
+                        "maxLength" => 400,
+                        "description" => "If compatibility_score >= {$this->settings['compatibilityScoreLevels']['top']}, first-person pitch explaining why this is a top choice. Otherwise empty string."
+                    ],
+                    "professional_summary" => [
+                        "type" => "string",
+                        "description" => "Same professional summary included in the resume"
+                    ],
+                    "cover_letter" => [
+                        "type" => "array",
+                        "description" => $this->generateCoverLetter
+                            ? "Return 3 paragraphs with casual phrasing, no intro or signature."
+                            : "Empty array.",
+                        "items" => ["type" => "string"]
+                    ],
+                    "findings" => [
+                        "type" => "array",
+                        "description" => "Consolidated evaluation items: strong alignments, moderate gaps, missing requirements, or issues.",
+                        "items" => [
+                            "type" => "object",
+                            "additionalProperties" => false,
+                            "properties" => [
+                                "group" => [
+                                    "type" => "string",
+                                    "enum" => ["strong_alignment", "moderate_gap", "missing_requirement", "issue"],
+                                    "description" => "Classification of the finding."
+                                ],
+                                "title" => ["type" => "string"],
+                                "description" => ["type" => "string"]
+                            ],
+                            "required" => ["group", "title", "description"]
+                        ]
+                    ],
+                    "reasoning" => [
+                        "type" => "string",
+                        "description" => "Would you recommend this candidate? How can they improve their resume to match the job description?"
+                    ],
+                ],
+                "required" => [
+                    "resume",
+                    "compatibility_score",
+                    "professional_summary",
+                    "cover_letter",
+                    "findings",
+                    "reasoning",
+                    "top_choice"
+                ]
+            ]
         ];
     }
 }

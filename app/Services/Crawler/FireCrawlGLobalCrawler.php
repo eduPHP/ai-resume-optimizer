@@ -64,7 +64,7 @@ class FireCrawlGLobalCrawler implements JobSiteCrawlerInterface
     {
         return [
             'type' => 'object',
-            'requried' => [
+            'required' => [
                 'company',
                 'description',
                 'role',

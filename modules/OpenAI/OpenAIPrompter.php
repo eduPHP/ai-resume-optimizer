@@ -10,27 +10,28 @@ use Illuminate\Support\Facades\Http;
 
 class OpenAIPrompter implements AIAgentPrompter
 {
-    protected ?\App\Models\User $user = null;
-
     public function handle(AIInputOptions $options): AIResponseDTO
     {
+        // OpenAI streaming request
         $response = Http::withToken(config('openai.openai_api_key'))
-            ->timeout(300)
-            ->post('https://api.openai.com/v1/responses', [
-                'model' => 'gpt-4.1',
+            ->withOptions(['timeout' => 300])
+            ->post(config('openai.endpoint'), [
+                'model' => config('openai.model'),
                 'store' => true,
                 'input' => [
-                    ...array_map(fn($option) => ['role' => 'system', 'content' => $option], $options->system()),
-                    ...array_map(fn($option) => ['role' => 'user', 'content' => $option], $options->user()),
-                ]
+                    ...array_map(fn($instruction) => ['role' => 'system', 'content' => $instruction], $options->system()),
+                    ...array_map(fn($instruction) => ['role' => 'user', 'content' => $instruction], $options->user()),
+                ],
+                ...$this->getSchemaSettings($options)
             ]);
 
         if ($response->getStatusCode() !== 200) {
-            Throw new RequestException($response->json('error.message'), $response->getStatusCode());
+            throw new RequestException($response->json('error.message'), $response->getStatusCode());
         }
 
         return new OpenAiResponse(
-            ...$this->cleanup($response->json('output.0.content.0.text'))
+            ...$this->cleanup($response->json('output.0.content.0.text')),
+            usage: $response->json('usage.total_tokens'),
         );
     }
 
@@ -39,10 +40,26 @@ class OpenAIPrompter implements AIAgentPrompter
         return json_decode($response, true);
     }
 
-    public function setUser(?\App\Models\User $user): static
+    private function getSchemaSettings(AIInputOptions $options): array
     {
-        $this->user = $user;
+        $textFormat = ['gpt-4.1', 'gpt-4o-mini'];
 
-        return $this;
+        if (in_array(config('openai.model'), $textFormat)) {
+            return [
+                'text' => [
+                    'format' => [
+                        'type' => 'json_schema',
+                        ...$options->schema(),
+                    ],
+                ],
+            ];
+        }
+
+        return [
+            'response_format' => [
+                'type' => 'json_schema',
+                'json_schema' => $options->schema(),
+            ]
+        ];
     }
 }

@@ -1,26 +1,27 @@
 <?php
 
 use App\DTO\Contracts\AIAgentPrompter;
-use Illuminate\Support\Facades\Http;
 use App\Exceptions\RequestException;
 
 beforeEach(function () {
-    Http::preventStrayRequests();
-    $this->instance(AiAgentPrompter::class, app('agents.openai'));
+    \Illuminate\Support\Facades\Http::preventStrayRequests();
+    $this->instance(AiAgentPrompter::class, app('agents.local'));
 });
 
 
 test('it sends the resume content as a prompt to OpenAI', function () {
+    $user = \App\Models\User::factory()->create();
     $optimization = \App\Models\Optimization::factory()->create([
+        'user_id' => $user->id,
         'role_description' => $desc = "we require a wizard unicorn ninja developer!",
         'resume_id' => \App\Models\Resume::factory()->create([
-            'detected_content' => $resume = 'Hey, I\'m good',
+            'user_id' => $user->id,
         ])->id,
     ]);
 
-    Http::fake([
-        config('openai.endpoint') => Http::response(json_decode(
-            file_get_contents(__DIR__.'/../Fixtures/response-sample.json'), true
+    \Illuminate\Support\Facades\Http::fake([
+        config('local-agent.endpoint') => \Illuminate\Support\Facades\Http::response(json_decode(
+            file_get_contents(__DIR__.'/../Fixtures/response-local-agent.json'), true
         )),
     ]);
 
@@ -32,9 +33,10 @@ test('it sends the resume content as a prompt to OpenAI', function () {
 
     $this->assertStringContainsString('TDD', $response->json('optimization.optimized_result'));
     $this->assertStringContainsString(
-        'Canadian employers will appreciate your readiness and impact!',
+        'this candidate shows moderate potential for the role',
         $response->json('optimization.ai_response.reasoning')
     );
+    $this->assertSame(70, $response->json('optimization.ai_response.compatibility_score'));
 });
 
 test('it throws exception from OpenAI bad response', function () {
@@ -45,8 +47,8 @@ test('it throws exception from OpenAI bad response', function () {
         ])->id,
     ]);
 
-    Http::fake([
-        config('openai.endpoint') => Http::response(json_decode(
+    \Illuminate\Support\Facades\Http::fake([
+        config('local-agent.endpoint') => \Illuminate\Support\Facades\Http::response(json_decode(
             '{"error": {"message": "mocked"}}', true
         ), 400),
     ]);

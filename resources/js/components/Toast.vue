@@ -92,7 +92,7 @@ onUnmounted(() => {
 <template>
     <li>
         <div
-            class="block w-full rounded p-4 md:min-w-96"
+            class="block w-full rounded p-4 md:w-96"
             :class="{
                 'bg-green-600': toast.type === 'success',
                 'bg-red-600': toast.type === 'error',
