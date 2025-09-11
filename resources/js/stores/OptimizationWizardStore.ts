@@ -37,7 +37,7 @@ export type Resume = {
 export type Finding = {
     title: string
     description: string
-    group: 'strong_alignment' | 'moderate_gap' | 'missing_requirement'
+    group: 'strong_alignment' | 'moderate_gap' | 'missing_requirement' | 'issue'
 }
 
 type AIResponse = {

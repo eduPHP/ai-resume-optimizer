@@ -41,7 +41,7 @@ class MigrateOptimizationResponses extends Command
 
     protected function convertToNewSchema(array $old): array
     {
-        $findings = [];
+        $findings = $old['findings'] ?? [];
 
         foreach (['strong_alignments' => 'strong_alignment',
                   'moderate_gaps' => 'moderate_gap',
@@ -57,7 +57,7 @@ class MigrateOptimizationResponses extends Command
             }
         }
 
-        return [
+        $normalized = [
             'resume' => $old['resume'] ?? '',
             'compatibility_score' => $old['compatibility_score'] ?? 0,
             'professional_summary' => $old['professional_summary'] ?? '',
@@ -66,5 +66,28 @@ class MigrateOptimizationResponses extends Command
             'reasoning' => $old['reasoning'] ?? '',
             'top_choice' => $old['top_choice'] ?? '',
         ];
+
+        // If old payload already had usage, keep it; otherwise estimate
+        $normalized['usage'] = $old['usage'] ?? $this->estimateTokens($normalized);
+
+        return $normalized;
+    }
+
+    /**
+     * Approximate token usage:
+     * tokens ≈ ceil(total_characters / 4)
+     */
+    protected function estimateTokens(array $data): int
+    {
+        // let's apply KISS here
+        $chars = count_chars(json_encode($data));
+
+        // Conservative floor to at least a minimal overhead
+        $approx = (int) ceil(max($chars, 1) / 4);
+
+        // Add overhead to account for prompt/system tokens we don't have here
+        $overhead = (int) ceil($approx * 0.65);
+
+        return $approx + $overhead;
     }
 }

@@ -72,12 +72,12 @@ onMounted(() => {
             <InfiniteProgressBar class="max-w-xs" />
             <p class="text-gray-400 text-center">This might take a minute or two or three... <br> You will be notified (here) when it is done ;)</p>
         </div>
-        <div v-if="state.form.status === 'failed'" class="flex flex-col items-center justify-center h-[85vh]">
+        <div v-if="state.form.status === 'failed'" class="px-4 flex flex-col items-center justify-center h-[85vh]">
             <h1 class="text-2xl font-bold flex items-center"><TriangleAlert class="mb-1 mr-2 text-yellow-600 dark:text-yellow-300" />Optimization Failed</h1>
-            <p class="mt-2 text-gray-400 text-center">There were some problem processing this optimization request <br> Although we won't provide you with an specific reason yet, you can retry it if you want.</p>
+            <p class="mt-2 text-gray-400 text-center">There were some problem processing this optimization request. <br> Although we won't provide you with an specific reason yet, you can retry it if you want.</p>
             <Button type="button"
                     size="lg"
-                    class="mt-6 flex-1 xl:flex-none select-none"
+                    class="mt-6 xl:flex-none select-none"
                     :class="{'cursor-not-allowed': state.loading}"
                     :disabled="state.loading"
                     @click.prevent="retry"

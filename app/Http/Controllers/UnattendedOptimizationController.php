@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Enums\OptimizationStatuses;
-use App\Events\OptimizationComplete;
 use App\Jobs\OptimizeResume;
 use App\Models\Optimization;
 use Illuminate\Http\JsonResponse;
@@ -39,16 +38,23 @@ class UnattendedOptimizationController
 
     public function update(Optimization $optimization)
     {
-        $optimization->update([
-            'status' => OptimizationStatuses::Processing,
-        ]);
+        try {
+            $optimization->update([
+                'status' => OptimizationStatuses::Processing,
+            ]);
 
-        OptimizeResume::dispatch($optimization)->onQueue('long-jobs');
-
-        return response()->json([
-            'updated' => true,
-            'optimization' => $optimization,
-        ]);
+            OptimizeResume::dispatch($optimization)->onQueue('long-jobs');
+        } catch (\Exception $exception) {
+            $optimization->update([
+                'status' => OptimizationStatuses::Failed,
+                'reasoning' => $exception->getMessage(),
+            ]);
+        } finally {
+            return response()->json([
+                'updated' => true,
+                'optimization' => $optimization,
+            ]);
+        }
     }
 
     public function show(Optimization $optimization)

@@ -15,6 +15,7 @@ class OpenAiResponse implements AIResponseDTO, Arrayable
         public array $cover_letter = [],
         public array $findings = [],
         public ?string $reasoning = null,
+        public int $usage = 0,
     ) {
     }
 

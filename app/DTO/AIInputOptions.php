@@ -99,18 +99,16 @@ class AIInputOptions implements AIInputOptionsInterface
                 "properties" => [
                     "resume" => [
                         "type" => "string",
-                        "description" => "HTML formatted resume, body content only, with basic styling"
+                        "description" => "HTML resume, body content only, with basic styling"
                     ],
                     "compatibility_score" => [
                         "type" => "integer",
-                        "minimum" => 0,
-                        "maximum" => 100,
-                        "description" => "Realistic compatibility percentage score, e.g., 90"
+                        "description" => "REALISTIC 0-100 score"
                     ],
                     "top_choice" => [
                         "type" => "string",
                         "maxLength" => 400,
-                        "description" => "If compatibility_score >= threshold, a first-person pitch (<=400 chars) explaining why this is a top choice. Otherwise empty string."
+                        "description" => "If compatibility_score >= {$this->settings['compatibilityScoreLevels']['top']}, first-person pitch explaining why this is a top choice. Otherwise empty string."
                     ],
                     "professional_summary" => [
                         "type" => "string",

@@ -61,14 +61,14 @@ const groupedFindings = computed(() => {
             </ul>
 
             <h2
-                v-if="groupedFindings.moderate_gap.length"
+                v-if="groupedFindings.moderate_gap?.length"
                 class="mt-6 mb-4 bg-gray-400 bg-clip-text text-xl text-yellow-500 dark:bg-transparent dark:text-yellow-400"
             >
                 Moderate Gaps:
             </h2>
 
             <div
-                v-if="groupedFindings.moderate_gap.length"
+                v-if="groupedFindings.moderate_gap?.length"
                 class="bg-gray-400 bg-clip-text text-yellow-500 dark:bg-transparent dark:text-yellow-400"
             >
                 <ul class="space-y-2">
@@ -81,13 +81,24 @@ const groupedFindings = computed(() => {
                 </ul>
             </div>
 
-            <h2 v-if="groupedFindings.missing_requirement.length" class="mt-6 mb-4 text-xl text-red-400">Missing Requirements:</h2>
+            <h2 v-if="groupedFindings.missing_requirement?.length" class="mt-6 mb-4 text-xl text-red-400">Missing Requirements:</h2>
 
-            <div v-if="groupedFindings.missing_requirement.length" class="text-red-400">
+            <div v-if="groupedFindings.missing_requirement?.length" class="text-red-400">
                 <ul>
                     <li v-for="missing in groupedFindings.missing_requirement" :key="missing.title">
                         <span class="block">{{ missing.title }}</span>
                         <span class="block text-red-400/70">{{ missing.description }}</span>
+                    </li>
+                </ul>
+            </div>
+
+            <h2 v-if="groupedFindings.issue?.length" class="mt-6 mb-4 text-xl text-red-400">Issues:</h2>
+
+            <div v-if="groupedFindings.issue?.length" class="text-red-400">
+                <ul>
+                    <li v-for="issue in groupedFindings.issue" :key="issue.title">
+                        <span class="block">{{ issue.title }}</span>
+                        <span class="block text-red-400/70">{{ issue.description }}</span>
                     </li>
                 </ul>
             </div>

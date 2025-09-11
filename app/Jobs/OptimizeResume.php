@@ -36,6 +36,7 @@ class OptimizeResume implements ShouldQueue
                 'optimized_result' => $result['resume'],
                 'ai_response' => $result['response'],
                 'reasoning' => $result['reasoning'],
+                'usage_tokens' => $result['usage'],
             ]);
         } catch (\Exception $exception) {
             $message = $exception->getMessage();

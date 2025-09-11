@@ -22,12 +22,7 @@ class OpenAIPrompter implements AIAgentPrompter
                     ...array_map(fn($instruction) => ['role' => 'system', 'content' => $instruction], $options->system()),
                     ...array_map(fn($instruction) => ['role' => 'user', 'content' => $instruction], $options->user()),
                 ],
-                'text' => [
-                    'format' => [
-                        'type' => 'json_schema',
-                        ...$options->schema()
-                    ],
-                ]
+                ...$this->getSchemaSettings($options)
             ]);
 
         if ($response->getStatusCode() !== 200) {
@@ -35,12 +30,36 @@ class OpenAIPrompter implements AIAgentPrompter
         }
 
         return new OpenAiResponse(
-            ...$this->cleanup($response->json('output.0.content.0.text'))
+            ...$this->cleanup($response->json('output.0.content.0.text')),
+            usage: $response->json('usage.total_tokens'),
         );
     }
 
     private function cleanup(string $response): array
     {
         return json_decode($response, true);
+    }
+
+    private function getSchemaSettings(AIInputOptions $options): array
+    {
+        $textFormat = ['gpt-4.1', 'gpt-4o-mini'];
+
+        if (in_array(config('openai.model'), $textFormat)) {
+            return [
+                'text' => [
+                    'format' => [
+                        'type' => 'json_schema',
+                        ...$options->schema(),
+                    ],
+                ],
+            ];
+        }
+
+        return [
+            'response_format' => [
+                'type' => 'json_schema',
+                'json_schema' => $options->schema(),
+            ]
+        ];
     }
 }
