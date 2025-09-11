@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Enums\OptimizationStatuses;
 use Illuminate\Console\Command;
 use App\Models\Optimization;
 
@@ -15,11 +14,11 @@ class MigrateOptimizationResponses extends Command
     {
         $this->info("Starting migration of Optimization.ai_response...");
 
-        $records = Optimization::where('status', OptimizationStatuses::Complete)->get();
+        $records = Optimization::whereNotNull('ai_response')->get();
 
         foreach ($records as $record) {
             $old = $record->ai_response;
-            if (empty($old)) {
+            if (empty($old) || (isset($old['findings']) && isset($old['usage']))) {
                 continue;
             }
 
@@ -29,6 +28,7 @@ class MigrateOptimizationResponses extends Command
                 $this->info("ID {$record->id} would be updated.");
             } else {
                 $record->ai_response = $new;
+                $record->usage_tokens = $new['usage'];
                 $record->save();
                 $this->info("ID {$record->id} updated successfully.");
             }
@@ -80,7 +80,7 @@ class MigrateOptimizationResponses extends Command
     protected function estimateTokens(array $data): int
     {
         // let's apply KISS here
-        $chars = count_chars(json_encode($data));
+        $chars = strlen(json_encode($data));
 
         // Conservative floor to at least a minimal overhead
         $approx = (int) ceil(max($chars, 1) / 4);
