@@ -86,8 +86,6 @@ class MigrateOptimizationResponses extends Command
         $approx = (int) ceil(max($chars, 1) / 4);
 
         // Add overhead to account for prompt/system tokens we don't have here
-        $overhead = (int) ceil($approx * 0.65);
-
-        return $approx + $overhead;
+        return (int) ceil($approx * 1.65);
     }
 }
