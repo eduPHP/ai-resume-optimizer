@@ -9,13 +9,11 @@ import { onMounted, ref } from 'vue'
 import { Button } from '@/components/ui/button'
 import { createUnattendedOptimization } from '@/lib/axios'
 import { useNavigationItemsStore } from '@/stores/NavigationItemsStore'
-import { useToastsStore } from '@/stores/ToastsStore'
 import InfiniteProgressBar from '@/components/ui/InfiniteProgressBar.vue'
 import { TriangleAlert } from 'lucide-vue-next'
 
 const state = useOptimizationWizardStore()
 const nav = useNavigationItemsStore()
-const toast = useToastsStore()
 
 const props = defineProps({
     step: {
