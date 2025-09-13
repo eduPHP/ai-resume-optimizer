@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OptimizationComplete;
 use App\Jobs\OptimizeResume;
+use App\Models\Optimization;
 use App\Services\Crawler\JobCrawler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -22,7 +24,7 @@ class JobsController
     {
         $message = $request->input('message');
         if (preg_match('/https?:\/\/\S+/', $message['body'], $matches)) {
-            $data = $this->doCrawl($crawler, $matches[0]);
+            $data = $this->doCrawl($crawler, $url = $matches[0]);
 
             if ($data['supported'] ?? false) {
                 if (! $resume = auth()->user()->resumes()->latest()->first()) {
@@ -32,6 +34,15 @@ class JobsController
                     ], 422);
                 }
 
+                // check if it exists already
+                if ($existing = auth()->user()->optimizations()->where('role_url', $url)->first()) {
+                    event(new OptimizationComplete($existing));
+                    return response()->json([
+                        'supported' => true,
+                        'exists' => true,
+                        'optimization' => $this->presentForListing($existing),
+                    ]);
+                }
 
                 $optimization = $this->createOptimizationFor($resume, collect([
                     ...$data,

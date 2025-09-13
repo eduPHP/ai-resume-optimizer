@@ -15,7 +15,7 @@ class NotifyOptimizationComplete
      */
     public function handle(OptimizationComplete $event): void
     {
-        if (!$replyTo = MessageDTO::fromCache($key = 'message-' . $event->optimization->id)) {
+        if (!$replyTo = MessageDTO::fromCache('message-' . $event->optimization->id)) {
             return;
         }
 
@@ -27,18 +27,14 @@ class NotifyOptimizationComplete
         \Log::debug('reply', ['reply' => $reply->toArray()]);
 
         app(Messenger::class)->text($reply);
-
-        if ($event->optimization->status === OptimizationStatuses::Complete) {
-            // cache()->forget($key);
-        }
     }
 
     private function getMessage(Optimization $optimization): string
     {
         if ($optimization->status === OptimizationStatuses::Complete) {
-            return "*Completed!*\n*Score*: {$optimization->ai_response['compatibility_score']}\n".route('optimizations.show', $optimization);
+            return "✅ *Completo!*\n*Compatibilidade*: {$optimization->ai_response['compatibility_score']}%\n".route('optimizations.show', $optimization);
         }
 
-        return '*Result*: '.$optimization->status->title();
+        return '*⚠️ Resultado*: '.$optimization->status->title();
     }
 }
