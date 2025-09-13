@@ -76,6 +76,23 @@ it('stores an unattended optimization successfully', function () {
     ]);
 });
 
+it('returns response id for storage', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+    $resume = Resume::factory()->create([
+        'user_id' => $user->id,
+    ]);
+    $optimization = Optimization::factory()->create([
+        'user_id' => $user->id,
+        'resume_id' => $resume->id,
+    ]);
+
+    $response = $this->agentQuery($optimization);
+
+    expect(array_key_exists('id', $response))->toBeTrue('`id` key is missing from the response')
+        ->and($response['id'])->toBe('resp_6841fd4c3c9c8191a236ba4724aee7100efe21695d87bfcf');
+});
+
 it('returns tokens usage [regression]', function () {
     $user = User::factory()->create();
     $this->actingAs($user);
@@ -89,7 +106,8 @@ it('returns tokens usage [regression]', function () {
     ]);
     $response = $this->agentQuery($optimization);
 
-    expect(array_key_exists('usage', $response))->toBeTrue('`usage` key is missing from the response');
+    expect(array_key_exists('usage', $response))->toBeTrue('`usage` key is missing from the response')
+        ->and($response['usage'])->toBe(3540);
 });
 
 it('dispatches a job for AI process', function () {

@@ -46,4 +46,9 @@ class FakeAIResponse implements AIResponseDTO, Arrayable {
     {
         return 0;
     }
+
+    public function getId(): ?string
+    {
+        return 'some-key';
+    }
 }

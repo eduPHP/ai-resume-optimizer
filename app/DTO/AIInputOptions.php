@@ -20,6 +20,7 @@ class AIInputOptions implements AIInputOptionsInterface
         public string  $roleDescription = '',
         public ?string $roleLocation = '',
         public string  $roleCompany = '',
+        public array   $metadata = [],
         Collection     $options = null,
     )
     {
@@ -156,5 +157,10 @@ class AIInputOptions implements AIInputOptionsInterface
                 ]
             ]
         ];
+    }
+
+    public function metadata(): array
+    {
+        return $this->metadata;
     }
 }

@@ -27,6 +27,9 @@ trait PromptsAIAgent
             roleDescription: $optimization->role_description,
             roleLocation: $optimization->role_location,
             roleCompany: $optimization->role_company,
+            metadata: [
+                'optimization_id' => $optimization->id,
+            ],
             options: $optimization->user->ai_settings,
         ));
 
@@ -35,6 +38,7 @@ trait PromptsAIAgent
             'resume' => $agentResponse->getResume(),
             'reasoning' => $agentResponse->getReasoning(),
             'usage' => $agentResponse->getUsage(),
+            'id' => $agentResponse->getId(),
         ];
     }
 }

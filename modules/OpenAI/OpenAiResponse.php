@@ -16,6 +16,7 @@ class OpenAiResponse implements AIResponseDTO, Arrayable
         public array $findings = [],
         public ?string $reasoning = null,
         public int $usage = 0,
+        public ?string $id = null,
     ) {
     }
 
@@ -57,5 +58,10 @@ class OpenAiResponse implements AIResponseDTO, Arrayable
     public function getUsage(): int
     {
         return $this->usage;
+    }
+
+    public function getId(): ?string
+    {
+        return $this->id;
     }
 }

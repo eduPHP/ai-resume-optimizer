@@ -31,6 +31,10 @@ class OptimizeResume implements ShouldQueue
     {
         try {
             $result = $this->agentQuery($this->optimization);
+
+            // just to be sure the result is saved
+            $this->optimization->update(['ai_response' => $result]);
+
             $this->optimization->update([
                 'status' => OptimizationStatuses::Complete,
                 'optimized_result' => $result['resume'],

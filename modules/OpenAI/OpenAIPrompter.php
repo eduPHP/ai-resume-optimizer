@@ -18,6 +18,7 @@ class OpenAIPrompter implements AIAgentPrompter
             ->post(config('openai.endpoint'), [
                 'model' => config('openai.model'),
                 'store' => true,
+                'metadata' => $options->metadata(),
                 'input' => [
                     ...array_map(fn($instruction) => ['role' => 'system', 'content' => $instruction], $options->system()),
                     ...array_map(fn($instruction) => ['role' => 'user', 'content' => $instruction], $options->user()),
@@ -31,7 +32,8 @@ class OpenAIPrompter implements AIAgentPrompter
 
         return new OpenAiResponse(
             ...$this->cleanup($response->json('output.0.content.0.text')),
-             usage: $response->json('usage.total_tokens'),
+            usage: $response->json('usage.total_tokens'),
+            id: $response->json('id'),
         );
     }
 
