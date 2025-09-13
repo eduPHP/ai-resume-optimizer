@@ -53,4 +53,9 @@ class OpenAiResponse implements AIResponseDTO, Arrayable
     {
         return $this->top_choice;
     }
+
+    public function getUsage(): int
+    {
+        return $this->usage;
+    }
 }

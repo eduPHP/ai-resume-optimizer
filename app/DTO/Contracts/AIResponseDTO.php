@@ -11,4 +11,5 @@ interface AIResponseDTO
     public function getFindings(): array;
     public function getReasoning(): ?string;
     public function getTopChoiceMessage(): ?string;
+    public function getUsage(): int;
 }

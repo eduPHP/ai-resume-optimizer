@@ -41,4 +41,9 @@ class FakeAIResponse implements AIResponseDTO, Arrayable {
     {
         return '';
     }
+
+    public function getUsage(): int
+    {
+        return 0;
+    }
 }

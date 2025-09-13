@@ -20,40 +20,32 @@ class FireCrawlGLobalCrawler implements JobSiteCrawlerInterface
             return $next($jobCrawler);
         }
 
-        $key = md5($jobCrawler->url);
+        $response = Http::withToken(config('services.firecrawl.api_key'))
+            ->timeout(300)
+            ->post('https://api.firecrawl.dev/v2/scrape', [
+            'url' => $jobCrawler->url,
+            'onlyMainContent' => true,
+            'formats' => [
+                [
+                    'type' => 'json',
+                    'schema' => $this->getSchema(),
+                ]
+            ],
+        ]);
 
-        if (cache()->has("error-$key")) {
-            cache()->forget($key);
+        if (! $response->successful()) {
+            $data = $jobCrawler->toArray();
         }
 
-        $data = cache()->remember($key, now()->addMonth(), function() use ($jobCrawler, $key) {
-            $response = Http::withToken(config('services.firecrawl.api_key'))->post('https://api.firecrawl.dev/v2/scrape', [
-                'url' => $jobCrawler->url,
-                'onlyMainContent' => true,
-                'formats' => [
-                    [
-                        'type' => 'json',
-                        'schema' => $this->getSchema(),
-                    ]
-                ],
-            ]);
+        $jobCrawler->processed = !! $response->json('data.json.is_job_page');
 
-            if (! $response->successful()) {
-                // cache busting flag when something went wrong
-                cache()->remember("error-$key", now()->addMonth(), fn() => $response->body());
-
-                return $jobCrawler->toArray();
-            }
-
-            $jobCrawler->processed = !! $response->json('data.json.is_job_page');
-
-            return [
-                'title' => $response->json('data.json.role'),
-                'company' => $response->json('data.json.company'),
-                'location' => $response->json('data.json.location'),
-                'description' => $response->json('data.json.description'),
-            ];
-        });
+        $data = [
+            'title' => $response->json('data.json.role'),
+            'company' => $response->json('data.json.company'),
+            'location' => $response->json('data.json.location'),
+            'description' => $response->json('data.json.description'),
+            'is_job_page' => $response->json('data.json.is_job_page'),
+        ];
 
         $jobCrawler->setFromArray($data);
 

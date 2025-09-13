@@ -30,10 +30,8 @@ class OpenAIPrompter implements AIAgentPrompter
         }
 
         return new OpenAiResponse(
-            ...[
-                ...$this->cleanup($response->json('output.0.content.0.text')),
-                'usage' => $response->json('usage.total_tokens'),
-            ],
+            ...$this->cleanup($response->json('output.0.content.0.text')),
+             usage: $response->json('usage.total_tokens'),
         );
     }
 

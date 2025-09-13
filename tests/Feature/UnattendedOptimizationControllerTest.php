@@ -1,6 +1,7 @@
 <?php
 
 use App\DTO\Contracts\AIAgentPrompter;
+use App\Http\Controllers\PromptsAIAgent;
 use App\Jobs\OptimizeResume;
 use App\Models\Optimization;
 use App\Models\Resume;
@@ -8,7 +9,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 
-uses(RefreshDatabase::class);
+uses(RefreshDatabase::class, PromptsAIAgent::class);
 
 beforeEach(function () {
     $this->instance(AiAgentPrompter::class, app('agents.openai'));
@@ -39,7 +40,7 @@ it('does not work if a resume is not uploaded yet', function () {
 
     $response->assertStatus(422);
 
-    expect($response->json('errors.resume'))->toContain('A resume must be uploaded before creating an unattended optimization. Try creating an optimization manually before trying to create an unattended one.');
+    expect($response->json('errors.message'))->toContain('A resume must be uploaded before creating an unattended optimization. Try creating an optimization manually before trying to create an unattended one.');
 });
 
 it('stores an unattended optimization successfully', function () {
@@ -60,7 +61,8 @@ it('stores an unattended optimization successfully', function () {
     ];
 
     // Act: Send a POST request to the controller's store method
-    $response = $this->withToken($user->api_token)->postJson(route('optimizations.unattended-store'), $data);
+    $response = $this->withToken($user->api_token)
+        ->postJson(route('optimizations.unattended-store'), $data);
 
     $response->assertStatus(200);
 
@@ -72,6 +74,22 @@ it('stores an unattended optimization successfully', function () {
         'role_location' => $data['location'],
         'status' => \App\Enums\OptimizationStatuses::Complete,
     ]);
+});
+
+it('returns tokens usage [regression]', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+    $resume = Resume::factory()->create([
+        'user_id' => $user->id,
+        'detected_content' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus, aspernatur.'
+    ]);
+    $optimization = Optimization::factory()->create([
+        'resume_id' => $resume->id,
+        'user_id' => $user->id,
+    ]);
+    $response = $this->agentQuery($optimization);
+
+    expect(array_key_exists('usage', $response))->toBeTrue('`usage` key is missing from the response');
 });
 
 it('dispatches a job for AI process', function () {

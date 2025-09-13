@@ -34,6 +34,7 @@ trait PromptsAIAgent
             'response' => $agentResponse->toArray(),
             'resume' => $agentResponse->getResume(),
             'reasoning' => $agentResponse->getReasoning(),
+            'usage' => $agentResponse->getUsage(),
         ];
     }
 }

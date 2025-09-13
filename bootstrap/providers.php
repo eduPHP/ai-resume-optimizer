@@ -7,4 +7,5 @@ return [
     Modules\OpenAI\OpenAIServiceProvider::class,
     Modules\LocalAgent\LocalAgentServiceProvider::class,
     App\Providers\AIAgentServiceProvider::class,
+    \Modules\WAConnect\WAConnectServiceProvider::class,
 ];

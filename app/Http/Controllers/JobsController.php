@@ -20,8 +20,8 @@ class JobsController
 
     public function unattended(Request $request, JobCrawler $crawler)
     {
-        $text = $request->input('message.body');
-        if (preg_match('/https?:\/\/\S+/', $text, $matches)) {
+        $message = $request->input('message');
+        if (preg_match('/https?:\/\/\S+/', $message['body'], $matches)) {
             $data = $this->doCrawl($crawler, $matches[0]);
 
             if ($data['supported'] ?? false) {
@@ -37,6 +37,8 @@ class JobsController
                     ...$data,
                     'name' => $data['position'],
                 ]));
+
+                cache(['message-' . $optimization->id => json_encode($message)], now()->addMinutes(10));
 
                 return response()->json([
                     'supported' => true,
